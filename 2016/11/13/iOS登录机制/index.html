@@ -1,0 +1,701 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="登录机制第一种情况 登录验证，客户端提供用户名和密码，发送请求到服务器 登录保持 登出  一般情况，客户端明文不加密，服务器进行MD5加密 第二种情况采用非对称加密  第一次发送请求，客户端不发送用户名和密码，只是发送请求 服务端利用RSA生成公钥私钥，保留私钥，将公钥发给客户端 客户端收到公钥后加密用用户密码，再一次向服务器发送请求（传输加密后的用户密码） 服务器利用私钥进行解码   前面两种情">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS登录机制">
+<meta property="og:url" content="http://yoursite.com/2016/11/13/iOS登录机制/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="登录机制第一种情况 登录验证，客户端提供用户名和密码，发送请求到服务器 登录保持 登出  一般情况，客户端明文不加密，服务器进行MD5加密 第二种情况采用非对称加密  第一次发送请求，客户端不发送用户名和密码，只是发送请求 服务端利用RSA生成公钥私钥，保留私钥，将公钥发给客户端 客户端收到公钥后加密用用户密码，再一次向服务器发送请求（传输加密后的用户密码） 服务器利用私钥进行解码   前面两种情">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-65d794e5cca0fb7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-9274e2ae55e06bd2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-13T03:16:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS登录机制">
+<meta name="twitter:description" content="登录机制第一种情况 登录验证，客户端提供用户名和密码，发送请求到服务器 登录保持 登出  一般情况，客户端明文不加密，服务器进行MD5加密 第二种情况采用非对称加密  第一次发送请求，客户端不发送用户名和密码，只是发送请求 服务端利用RSA生成公钥私钥，保留私钥，将公钥发给客户端 客户端收到公钥后加密用用户密码，再一次向服务器发送请求（传输加密后的用户密码） 服务器利用私钥进行解码   前面两种情">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-65d794e5cca0fb7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/13/iOS登录机制/"/>
+
+
+
+
+
+  <title>iOS登录机制 | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/13/iOS登录机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS登录机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-13T01:46:10+08:00">
+                2016-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="登录机制"><a href="#登录机制" class="headerlink" title="登录机制"></a>登录机制</h2><h3 id="第一种情况"><a href="#第一种情况" class="headerlink" title="第一种情况"></a>第一种情况</h3><ol>
+<li>登录验证，客户端提供用户名和密码，发送请求到服务器</li>
+<li>登录保持</li>
+<li>登出<br><img src="http://upload-images.jianshu.io/upload_images/2329629-65d794e5cca0fb7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第一种"></li>
+</ol>
+<p>一般情况，客户端明文不加密，服务器进行MD5加密</p>
+<h3 id="第二种情况"><a href="#第二种情况" class="headerlink" title="第二种情况"></a>第二种情况</h3><p>采用非对称加密</p>
+<ol>
+<li>第一次发送请求，客户端不发送用户名和密码，只是发送请求</li>
+<li>服务端利用RSA生成公钥私钥，保留私钥，将公钥发给客户端</li>
+<li>客户端收到公钥后加密用用户密码，再一次向服务器发送请求（传输加密后的用户密码）</li>
+<li>服务器利用私钥进行解码<br><img src="http://upload-images.jianshu.io/upload_images/2329629-9274e2ae55e06bd2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第二种.png"></li>
+</ol>
+<blockquote>
+<p>前面两种情况，登录状态标识完全取决于UserID，所有的请求也是基于UserId,容易被黑客劫持</p>
+</blockquote>
+<h3 id="第三种情况"><a href="#第三种情况" class="headerlink" title="第三种情况"></a>第三种情况</h3><ol>
+<li>第一次发送请求，客户端不发送用户密码，发送请求</li>
+<li>服务器利用RSA生成公钥1、私钥1，保留私钥1，将公钥1发送给客户端</li>
+<li>客户端利用<code>公钥1</code>加密密码，生成公钥2、私钥2，保留私钥2，把公钥2的密码发送给服务器</li>
+<li>服务器用私钥1解密登录密码，生成UserID和token,再用公钥2加密token,返回把UserID和token给客户端</li>
+<li>客户端用私钥2解密token</li>
+</ol>
+<h2 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h2><p>采用 xml 或者json格式传送注册。<br>首先在本地进行处理对密码进行 md5加密。<br>然后发送到服务器，返回成功与否。<br><code>errorcode</code>用于客户端判断出错情况。 另外可以在客户端加超时处理登录同理。 区别在于。登录过后可以获得一个token。用于接下来分。通信免登录。token 保存在内存中。这便是最简单的方式。 </p>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><p>我拿我最近做的一个APP举个例子<br>一个关于点餐的APP<br>一进入APP可以选择注册或者登陆选项，刚开始我没有帐号，所以选择了注册选项，啪啪啪 填写了帐号两遍密码确认，以及个人信息等，点击注册，然后就把 数据封装成json格式：<br>例如{‘action’:”register”,”data”:[“username”:”张三”,”password”:”我是密码”]}<br>那我的服务器是<code>http://xxxxxxxxxxxxx.es/api/xxxxx**</code><br>我的服务器收到消息后，啪啪啪查数据库，看看有没有重名呢，如果用户名被占用了那么喀喀喀返回{“mas”:”no”,”errorCode”:”换个名字把”}<br>要是没问题的话就写入数据库并且返回信息{“mas”:”ok”,”errorCode”:”成功啦”}<br>这边客户端接受到后根据消息做相应的动作<br>接下来的登陆基本同理：<br>我填了帐号密码之后点击登陆，发送例如{‘action’:”login”,”data”:[“username”:”张三”,”password”:”我是密码”]}<br>服务器经过验证以后就会有返回信息登陆成功{“mas”:”ok”,”errorCode”:”你登陆成功啦”,“token”:”这是你的token哦，下次找我的时候跟我说你的token我就知道你是谁啦，老跟我说帐号密码啥的不安全”}<br>登陆失败{“mas”:”ok”,”errorCode”:”失败啦”,“token”:”像登陆，没门啊”}<br><code>token</code>相当于用户的临时身份证,保存在内存中,和帐号是唯一对应的，另外有一个失效时间，多久就需要重新换一个token，接下来的获取用户信息啊，修改啊什么的这些操作同理 ，这就是最简单的登陆与注册流程了。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/13/KVC和KVO/" rel="next" title="KVC和KVO">
+                <i class="fa fa-chevron-left"></i> KVC和KVO
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/iOS集成高德地图SDK/" rel="prev" title="iOS集成高德地图SDK">
+                iOS集成高德地图SDK <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#登录机制"><span class="nav-number">1.</span> <span class="nav-text">登录机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一种情况"><span class="nav-number">1.1.</span> <span class="nav-text">第一种情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二种情况"><span class="nav-number">1.2.</span> <span class="nav-text">第二种情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三种情况"><span class="nav-number">1.3.</span> <span class="nav-text">第三种情况</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#格式"><span class="nav-number">2.</span> <span class="nav-text">格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流程"><span class="nav-number">3.</span> <span class="nav-text">流程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

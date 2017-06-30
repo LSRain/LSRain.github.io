@@ -1,0 +1,759 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="FMDB 实现客户端数据库操作的第三方框架.  操作数据库的类 : FMDatabase.h  队列调度数据库执行的类 : FMDatabaseQueue.h  查询数据的类 : FMResultSet.h    FMDB的FMDatabaseQueue底层是用GCD的串行队列调度数据库在同步函数里面操作数据的.  FMDatabaseQueueManager设计单例模式 把FMDatabaseQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FMDB">
+<meta property="og:url" content="http://yoursite.com/2016/11/13/FMDB/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="FMDB 实现客户端数据库操作的第三方框架.  操作数据库的类 : FMDatabase.h  队列调度数据库执行的类 : FMDatabaseQueue.h  查询数据的类 : FMResultSet.h    FMDB的FMDatabaseQueue底层是用GCD的串行队列调度数据库在同步函数里面操作数据的.  FMDatabaseQueueManager设计单例模式 把FMDatabaseQ">
+<meta property="og:updated_time" content="2016-12-21T19:54:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FMDB">
+<meta name="twitter:description" content="FMDB 实现客户端数据库操作的第三方框架.  操作数据库的类 : FMDatabase.h  队列调度数据库执行的类 : FMDatabaseQueue.h  查询数据的类 : FMResultSet.h    FMDB的FMDatabaseQueue底层是用GCD的串行队列调度数据库在同步函数里面操作数据的.  FMDatabaseQueueManager设计单例模式 把FMDatabaseQ">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/13/FMDB/"/>
+
+
+
+
+
+  <title>FMDB | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/13/FMDB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">FMDB</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-13T12:55:01+08:00">
+                2016-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/OC/" itemprop="url" rel="index">
+                    <span itemprop="name">OC</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="FMDB"><a href="#FMDB" class="headerlink" title="FMDB"></a>FMDB</h2><ul>
+<li><p>实现客户端数据库操作的第三方框架.</p>
+</li>
+<li><p>操作数据库的类 : <code>FMDatabase.h</code></p>
+</li>
+<li><p>队列调度数据库执行的类 : <code>FMDatabaseQueue.h</code></p>
+</li>
+<li><p>查询数据的类 : <code>FMResultSet.h</code></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>FMDB</strong>的<strong>FMDatabaseQueue</strong>底层是用<strong>GCD</strong>的<strong>串行队列</strong>调度数据库在<strong>同步函数</strong>里面操作数据的.</p>
+</blockquote>
+<h2 id="FMDatabaseQueueManager"><a href="#FMDatabaseQueueManager" class="headerlink" title="FMDatabaseQueueManager"></a>FMDatabaseQueueManager</h2><h3 id="设计单例模式"><a href="#设计单例模式" class="headerlink" title="设计单例模式"></a>设计单例模式</h3><ul>
+<li><p>把<code>FMDatabaseQueue</code>设计成单例</p>
+</li>
+<li><p>目的 : 全局只有一个串行队列,这样操作数据库更加安全</p>
+</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FMDatabaseQueueManager</span> : <span class="title">FMDatabaseQueue</span></span></div><div class="line"></div><div class="line"><span class="comment">/// 单例队列的全局访问点</span></div><div class="line">+ (<span class="keyword">instancetype</span>)sharedManager;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<ul>
+<li>实例化单例的时候,创建数据库和表<ul>
+<li>只需要创建一次</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">+(<span class="keyword">instancetype</span>)sharedManager</div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span> FMDatabaseQueueManager *instance;</div><div class="line"></div><div class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</div><div class="line">    <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</div><div class="line"></div><div class="line">        <span class="comment">// 1.获取数据库路径</span></div><div class="line">        <span class="built_in">NSString</span> *SQLPath = [[<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) lastObject] stringByAppendingPathComponent:<span class="string">@"my.db"</span>];</div><div class="line">        <span class="comment">// 2. 创建queue,管理数据库对象</span></div><div class="line">        instance = [FMDatabaseQueueManager databaseQueueWithPath:SQLPath];</div><div class="line"></div><div class="line">        <span class="comment">// 3.创建数据库表</span></div><div class="line">        [instance inDatabase:^(FMDatabase *db) &#123;</div><div class="line">            <span class="built_in">BOOL</span> isCreate = [db executeUpdate:<span class="string">@"create table if not exists t_person(id integer primary key,name text not null,age integer)"</span>];</div><div class="line">            <span class="keyword">if</span> (isCreate) &#123;</div><div class="line">                <span class="built_in">NSLog</span>(<span class="string">@"建表成功"</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;];</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="keyword">return</span> instance;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="FMDB增删改查"><a href="#FMDB增删改查" class="headerlink" title="FMDB增删改查"></a>FMDB增删改查</h2><ul>
+<li><p>导入头文件 <code>#import &quot;FMDB.h&quot;</code></p>
+</li>
+<li><p>操作的类 <code>FMDatabase</code> 单线程时使用</p>
+</li>
+<li><p>全局的静态数据库对象</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> FMDatabase *_db;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="创建数据库和表"><a href="#创建数据库和表" class="headerlink" title="创建数据库和表"></a>创建数据库和表</h2><ul>
+<li>数据库的创建和建表只需要执行一次.</li>
+<li><strong><code>initialize</code></strong> : 这个类在第一次使用时就被调用一次,后面就不会再调用;而且是先于实例化方法调用的.</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">+ (<span class="keyword">void</span>)initialize</div><div class="line">&#123;</div><div class="line"><span class="comment">//    NSLog(@"这个类在第一次使用时就被调用一次");</span></div><div class="line"></div><div class="line">    <span class="comment">// 1.获取数据库路径</span></div><div class="line">    <span class="built_in">NSString</span> *SQLPath = [[<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) lastObject] stringByAppendingPathComponent:<span class="string">@"heros.db"</span>];</div><div class="line"></div><div class="line">    <span class="comment">// 2.创建数据库和建表,只会执行一次</span></div><div class="line">    _db = [FMDatabase databaseWithPath:SQLPath];</div><div class="line"></div><div class="line">    <span class="comment">// 3.打开数据库</span></div><div class="line">    <span class="built_in">BOOL</span> isOpen = [_db open];</div><div class="line">    <span class="keyword">if</span> (isOpen) &#123;</div><div class="line">        <span class="comment">// 4.建表</span></div><div class="line">        <span class="built_in">BOOL</span> isCreate = [_db executeUpdate:<span class="string">@"create table if not exists t_heros(id integer primary key,name text not null,age integer)"</span>];</div><div class="line">        <span class="keyword">if</span> (isCreate) &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"建表成功"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="新增"><a href="#新增" class="headerlink" title="新增"></a>新增</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[_db executeUpdateWithFormat:<span class="string">@"insert into t_heros(name,age) values('张三',18)"</span>];</div></pre></td></tr></table></figure>
+<h2 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[_db executeUpdateWithFormat:<span class="string">@"update t_heros set age = 19 where name = '张三'"</span>];</div></pre></td></tr></table></figure>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[_db executeUpdateWithFormat:<span class="string">@"delete from t_heros where name = '张三'"</span>];</div></pre></td></tr></table></figure>
+<h2 id="查询-–-模糊查询"><a href="#查询-–-模糊查询" class="headerlink" title="查询 – 模糊查询"></a>查询 – 模糊查询</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 执行查询语句.获取到结果集</span></div><div class="line">FMResultSet *resultSet = [_db executeQuery:<span class="string">@"select * from t_heros"</span>];</div><div class="line"></div><div class="line"><span class="comment">// 遍历结果集,取数据</span></div><div class="line"><span class="keyword">while</span> ([resultSet next]) &#123;</div><div class="line"></div><div class="line">    <span class="comment">// 取出来的数据</span></div><div class="line">    <span class="built_in">NSString</span> *name = [resultSet stringForColumn:<span class="string">@"name"</span>];</div><div class="line">    <span class="keyword">int</span> age = [resultSet intForColumn:<span class="string">@"age"</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="如果数据库里面的记录有很多条"><a href="#如果数据库里面的记录有很多条" class="headerlink" title="如果数据库里面的记录有很多条"></a>如果数据库里面的记录有很多条</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">+ (<span class="built_in">NSArray</span> *)selectHeros</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 定义临时的模型数据</span></div><div class="line">    <span class="built_in">NSMutableArray</span> *tmpM = [<span class="built_in">NSMutableArray</span> array];</div><div class="line"></div><div class="line">    <span class="comment">// 执行查询语句.获取到结果集</span></div><div class="line">    FMResultSet *resultSet = [_db executeQuery:<span class="string">@"select * from t_heros"</span>];</div><div class="line"></div><div class="line">    <span class="comment">// 遍历结果集,取数据</span></div><div class="line">    <span class="keyword">while</span> ([resultSet next]) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 创建模型</span></div><div class="line">        Heros *hero = [[Heros alloc] init];</div><div class="line"></div><div class="line">        <span class="comment">// 取出来的数据</span></div><div class="line">        <span class="built_in">NSString</span> *name = [resultSet stringForColumn:<span class="string">@"name"</span>];</div><div class="line">        <span class="keyword">int</span> age = [resultSet intForColumn:<span class="string">@"age"</span>];</div><div class="line"></div><div class="line">        <span class="comment">// 给模型赋值</span></div><div class="line">        hero.name = name;</div><div class="line">        hero.age = @(age);</div><div class="line"></div><div class="line">        <span class="comment">// 将模型添加到模型数组</span></div><div class="line">        [tmpM addObject:hero];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> tmpM.copy;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="增删改查和事务"><a href="#增删改查和事务" class="headerlink" title="增删改查和事务"></a>增删改查和事务</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () </span>&#123;</div><div class="line"></div><div class="line">    FMDatabaseQueueManager *_manager;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)viewDidLoad &#123;</div><div class="line">    [<span class="keyword">super</span> viewDidLoad];</div><div class="line"></div><div class="line">    _manager = [FMDatabaseQueueManager sharedManager];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)touchesBegan:(<span class="built_in">NSSet</span>&lt;<span class="built_in">UITouch</span> *&gt; *)touches withEvent:(<span class="built_in">UIEvent</span> *)event</div><div class="line">&#123;</div><div class="line"><span class="comment">//    [self insert01];</span></div><div class="line"></div><div class="line"><span class="comment">//    [self insert02];</span></div><div class="line"></div><div class="line"><span class="comment">//    [self insert03];</span></div><div class="line"></div><div class="line"><span class="comment">//    [self update];</span></div><div class="line"></div><div class="line"><span class="comment">//    [self delete];</span></div><div class="line"></div><div class="line"><span class="comment">//    [self query];</span></div><div class="line"></div><div class="line">    [<span class="keyword">self</span> transaction];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)transaction</div><div class="line">&#123;</div><div class="line">    <span class="keyword">double</span> start = <span class="built_in">CACurrentMediaTime</span>();</div><div class="line"></div><div class="line">    <span class="comment">// 1.定义SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *insertSQL = <span class="string">@"insert into t_person(name,age) values(?,?);"</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 2.队列调度数据库,使用事务插入数据,性能比原生SQLite3要好</span></div><div class="line">    [_manager inTransaction:^(FMDatabase *db, <span class="built_in">BOOL</span> *rollback) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 3.循环新增大批量的数据</span></div><div class="line">        <span class="keyword">for</span> (<span class="built_in">NSInteger</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</div><div class="line"></div><div class="line">            <span class="comment">// 4.执行SQL</span></div><div class="line">            <span class="built_in">BOOL</span> isOK = [db executeUpdate:insertSQL,<span class="string">@"张三"</span>,@(<span class="number">100</span>)];</div><div class="line"></div><div class="line">            <span class="comment">// 出错就回滚</span></div><div class="line">            <span class="keyword">if</span> (!isOK) &#123;</div><div class="line">                <span class="comment">// 回滚快照</span></div><div class="line">                *rollback = <span class="literal">YES</span>;</div><div class="line">                <span class="comment">// 非常重要</span></div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line"></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%f"</span>,<span class="built_in">CACurrentMediaTime</span>()-start);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="查询语句"><a href="#查询语句" class="headerlink" title="查询语句"></a>查询语句</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)query</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 1.定义SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *updateSQL = <span class="string">@"select name,age from t_person;"</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 2.队列调度数据库</span></div><div class="line">    [_manager inDatabase:^(FMDatabase *db) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 3.执行SQL</span></div><div class="line">        FMResultSet *resultSet = [db executeQuery:updateSQL];</div><div class="line">        <span class="comment">// 4.逐条取记录</span></div><div class="line">        <span class="keyword">while</span> ([resultSet next]) &#123;</div><div class="line"></div><div class="line">            <span class="built_in">NSString</span> *name = [resultSet stringForColumn:<span class="string">@"name"</span>];</div><div class="line">            <span class="keyword">int</span> age = [resultSet intForColumn:<span class="string">@"age"</span>];</div><div class="line"></div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%@ -- %d"</span>,name,age);</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="删除语句"><a href="#删除语句" class="headerlink" title="删除语句"></a>删除语句</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)delete</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 1.定义SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *updateSQL = <span class="string">@"delete from t_person where id = ?;"</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 2.队列调度数据库</span></div><div class="line">    [_manager inDatabase:^(FMDatabase *db) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 3.执行SQL</span></div><div class="line">        <span class="built_in">BOOL</span> isOK = [db executeUpdate:updateSQL,@(<span class="number">6</span>)];</div><div class="line">        <span class="keyword">if</span> (isOK) &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"删除数据成功"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"删除数据失败"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="修改语句"><a href="#修改语句" class="headerlink" title="修改语句"></a>修改语句</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)update</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 1.定义SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *updateSQL = <span class="string">@"update t_person set name = ?,age = ? where id = ?;"</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 2.队列调度数据库</span></div><div class="line">    [_manager inDatabase:^(FMDatabase *db) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 3.执行SQL</span></div><div class="line">        <span class="built_in">BOOL</span> isOK = [db executeUpdate:updateSQL,<span class="string">@"王五"</span>,@(<span class="number">19</span>),@(<span class="number">3</span>)];</div><div class="line">        <span class="keyword">if</span> (isOK) &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"更新数据成功"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"更新数据失败"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"影响行数 %d"</span>, db.changes);</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="新增语句-预编译-正确的方式"><a href="#新增语句-预编译-正确的方式" class="headerlink" title="新增语句 (预编译 : 正确的方式)"></a>新增语句 (预编译 : 正确的方式)</h3><ul>
+<li>使用<code>预编译</code>指令来插入数据</li>
+<li>所谓预编译，提前对 SQL 语句检查并且缓存住</li>
+<li>使用 ? 占位</li>
+<li>字符串不需要 单引号</li>
+<li>在执行的时候,使用<code>executeUpdate</code>的参数替换 ?</li>
+<li>提示 : 今后工作中,所有的 SQL 执行,都一定用预编译指令！</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)insert03</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSString</span> *name = <span class="string">@"李四',0);"</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 1.定义SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *insertSQL = <span class="string">@"insert into t_person(name,age) values(?,?);"</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 2.队列调度数据库</span></div><div class="line">    [_manager inDatabase:^(FMDatabase *db) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 3.执行SQL</span></div><div class="line">        <span class="built_in">BOOL</span> isOK = [db executeUpdate:insertSQL,name,@(<span class="number">18</span>)];</div><div class="line">        <span class="keyword">if</span> (isOK) &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"新增数据成功"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"新增数据失败"</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"自增长 ID: %zd"</span>, db.lastInsertRowId);</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="新增语句-SQL注入-会出错"><a href="#新增语句-SQL注入-会出错" class="headerlink" title="新增语句 (SQL注入 : 会出错)"></a>新增语句 (SQL注入 : 会出错)</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)insert02</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSString</span> *name = <span class="string">@"李四',0);"</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 1.定义SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *insertSQL = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"insert into t_person(name,age) values('%@',18);"</span>,name];</div><div class="line"></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,insertSQL);</div><div class="line"></div><div class="line">    <span class="comment">// 2.队列调度数据库</span></div><div class="line">    [_manager inDatabase:^(FMDatabase *db) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 3.执行SQL</span></div><div class="line">        <span class="built_in">BOOL</span> isOK = [db executeUpdate:insertSQL];</div><div class="line">        <span class="keyword">if</span> (isOK) &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"新增数据成功"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"新增数据失败"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="新增数据-不靠谱"><a href="#新增数据-不靠谱" class="headerlink" title="新增数据 (不靠谱)"></a>新增数据 (不靠谱)</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)insert01</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSString</span> *name = <span class="string">@"李四"</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 1.定义SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *insertSQL = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"insert into t_person(name,age) values('%@',18);"</span>,name];</div><div class="line">    <span class="comment">// 2.队列调度数据库</span></div><div class="line">    [_manager inDatabase:^(FMDatabase *db) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 3.执行SQL</span></div><div class="line">        <span class="built_in">BOOL</span> isOK = [db executeUpdate:insertSQL];</div><div class="line">        <span class="keyword">if</span> (isOK) &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"新增数据成功"</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"新增数据失败"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/13/SQLite/" rel="next" title="SQLite">
+                <i class="fa fa-chevron-left"></i> SQLite
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/事件的传递和响应者链条/" rel="prev" title="事件的传递和响应者链条">
+                事件的传递和响应者链条 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FMDB"><span class="nav-number">1.</span> <span class="nav-text">FMDB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FMDatabaseQueueManager"><span class="nav-number">2.</span> <span class="nav-text">FMDatabaseQueueManager</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设计单例模式"><span class="nav-number">2.1.</span> <span class="nav-text">设计单例模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FMDB增删改查"><span class="nav-number">3.</span> <span class="nav-text">FMDB增删改查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建数据库和表"><span class="nav-number">4.</span> <span class="nav-text">创建数据库和表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新增"><span class="nav-number">5.</span> <span class="nav-text">新增</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改"><span class="nav-number">6.</span> <span class="nav-text">修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除"><span class="nav-number">7.</span> <span class="nav-text">删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询-–-模糊查询"><span class="nav-number">8.</span> <span class="nav-text">查询 – 模糊查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如果数据库里面的记录有很多条"><span class="nav-number">8.1.</span> <span class="nav-text">如果数据库里面的记录有很多条</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增删改查和事务"><span class="nav-number">9.</span> <span class="nav-text">增删改查和事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事务"><span class="nav-number">9.1.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询语句"><span class="nav-number">9.2.</span> <span class="nav-text">查询语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除语句"><span class="nav-number">9.3.</span> <span class="nav-text">删除语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改语句"><span class="nav-number">9.4.</span> <span class="nav-text">修改语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增语句-预编译-正确的方式"><span class="nav-number">9.5.</span> <span class="nav-text">新增语句 (预编译 : 正确的方式)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增语句-SQL注入-会出错"><span class="nav-number">9.6.</span> <span class="nav-text">新增语句 (SQL注入 : 会出错)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新增数据-不靠谱"><span class="nav-number">9.7.</span> <span class="nav-text">新增数据 (不靠谱)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

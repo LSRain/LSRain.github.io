@@ -1,0 +1,698 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="cell布局分析首页共三种样式的cell  技巧  按照最全的开发即：原创微博,其他cell就可以根据需求删减是否需要多余的控件 请求首页数据&amp;amp;模型转换获取微博用户的最新微博接口只需要一个access_token，在模型中已经保存有，可以直接请求数据123456789101112131415161718192021extension LSHomeViewController&amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LSSina项目(六)">
+<meta property="og:url" content="http://yoursite.com/2016/12/06/LSSina项目(六)/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="cell布局分析首页共三种样式的cell  技巧  按照最全的开发即：原创微博,其他cell就可以根据需求删减是否需要多余的控件 请求首页数据&amp;amp;模型转换获取微博用户的最新微博接口只需要一个access_token，在模型中已经保存有，可以直接请求数据123456789101112131415161718192021extension LSHomeViewController&amp;#123;">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-a9437b1e4a43eaeb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-cd42a73af8da6656.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-e40b7ac8c4632c3c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-12-07T18:45:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LSSina项目(六)">
+<meta name="twitter:description" content="cell布局分析首页共三种样式的cell  技巧  按照最全的开发即：原创微博,其他cell就可以根据需求删减是否需要多余的控件 请求首页数据&amp;amp;模型转换获取微博用户的最新微博接口只需要一个access_token，在模型中已经保存有，可以直接请求数据123456789101112131415161718192021extension LSHomeViewController&amp;#123;">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-a9437b1e4a43eaeb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/06/LSSina项目(六)/"/>
+
+
+
+
+
+  <title>LSSina项目(六) | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/06/LSSina项目(六)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LSSina项目(六)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-06T22:11:29+08:00">
+                2016-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="cell布局分析"><a href="#cell布局分析" class="headerlink" title="cell布局分析"></a>cell布局分析</h2><p>首页共三种样式的<code>cell</code><br><img src="http://upload-images.jianshu.io/upload_images/2329629-a9437b1e4a43eaeb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="结构"></p>
+<blockquote>
+<p>技巧</p>
+</blockquote>
+<p>按照最全的开发即：<code>原创微博</code>,其他cell就可以根据需求删减是否需要多余的控件</p>
+<h2 id="请求首页数据-amp-模型转换"><a href="#请求首页数据-amp-模型转换" class="headerlink" title="请求首页数据&amp;模型转换"></a>请求首页数据&amp;模型转换</h2><p><a href="http://open.weibo.com/wiki/2/statuses/friends_timeline" target="_blank" rel="external">获取微博用户的最新微博接口</a>只需要一个<code>access_token</code>，在模型中已经保存有，可以直接请求数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">extension LSHomeViewController&#123;</div><div class="line">    /// 请求首页数据 - 获取当前登录用户及其所关注（授权）用户的最新微博</div><div class="line">    fileprivate func getStatusesData(callBack:@escaping ([LSStatusesModel])-&gt;()) -&gt; Void &#123;</div><div class="line">        let parames = [&quot;access_token&quot;: LSUserAccountViewModel.sharedAccount.userAccount?.access_token]</div><div class="line">        LSNetworkTools.sharedTools.request(method: .get, URLString: &quot;https://api.weibo.com/2/statuses/friends_timeline.json&quot;, parameters: parames, success: &#123; (responseObject) in</div><div class="line">            /// 判断是否能够转成字典</div><div class="line">            guard let resDic = responseObject as? [String: Any] else&#123;</div><div class="line">                return</div><div class="line">            &#125;</div><div class="line">            /// 判断是否能够转成数组</div><div class="line">            guard let resArr = resDic[&quot;statuses&quot;] as? [[String: Any]] else&#123;</div><div class="line">                return</div><div class="line">            &#125;</div><div class="line">            let statusesArray = NSArray.yy_modelArray(with: LSStatusesModel.self, json: resArr) as! [LSStatusesModel]</div><div class="line">            /// 回调闭包</div><div class="line">            callBack(statusesArray)</div><div class="line">        &#125;) &#123; (error) in</div><div class="line">            print(error)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里使用YYModel做字典转模型的操作，需要提前判断两次数据并取得<code>statuses</code>数组才可以转换，要记得的是，在swift中使用<code>YYModel</code>做字典转模型前需要先判断是否能够转成对应的字典才可以，所以上面使用了两次<code>guard</code>取值并判断<br>同时，使用添加了一个<code>闭包</code>作为方法参数，用来检测数据请求完成且模型转换成功后的回调和做数据刷新等操作。要注意的是，网络请求是异步操作，所以在闭包回调后，需要赋值给全局模型数组<code>dataArraystatuses</code>,因为是<code>异步</code>请求，所以方法setupUI()中请求完成前外部的主线程打印模型数组是空的，只有完成后才有值<br>执行闭包<code>尾随闭包</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">func setupUI() -&gt; Void &#123;</div><div class="line">        /// 未登录</div><div class="line">        if !isLogin &#123;</div><div class="line">            /// `首页`传入nil显示特定的访客视图</div><div class="line">            visitorView?.setupVisitroViewInfo(imageName: nil, title: nil)</div><div class="line">            return</div><div class="line">        &#125;</div><div class="line">        navigationItem.leftBarButtonItem = UIBarButtonItem(imageName: &quot;navigationbar_pop&quot;, target: self, action: #selector(leftBarButtonClick))</div><div class="line">        navigationItem.rightBarButtonItem = UIBarButtonItem(imageName: &quot;navigationbar_friendsearch&quot;, target: self, action: #selector(rightBarButtonClick))</div><div class="line">        </div><div class="line">        /// 请求数据</div><div class="line">        getStatusesData &#123; (resultArray) in</div><div class="line">            self.dataArray = resultArray</div><div class="line">            print(&quot;\(self.dataArray)&quot;)</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>也可以像OAuth网络请求一样，在<code>LSNetworkTools</code>中封装一个单独的extension，用来专门处理最新微博的网络请求 - 后期再弄</p>
+<h2 id="首页UI搭建"><a href="#首页UI搭建" class="headerlink" title="首页UI搭建"></a>首页UI搭建</h2><p>经过分析，4个模块均是<code>tableView</code><br>在基类中创建tabView控件并将根视图设置为<code>tableView</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lazy var tableView: UITableView = UITableView()</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>问题</p>
+</blockquote>
+<p>但是这样写会有一个问题：<br>子类<code>tableView</code>的frame是没有大小的<code>(0.0, 0.0, 0.0, 0.0)</code>可是暂时不影响，如果需要，可以后期设定<br>数据请求得到之后需要<code>刷新UI</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/// 请求数据</div><div class="line">getStatusesData &#123; (resultArray) in</div><div class="line">  self.dataArray = resultArray</div><div class="line">  /// 数据请求成功后刷新`tab`数据源</div><div class="line">  self.tableView.reloadData()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="首页自定义cell"><a href="#首页自定义cell" class="headerlink" title="首页自定义cell"></a>首页自定义cell</h2><p>结合需求新建一个自定义cell<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LSHomeTableViewCell: UITableViewCell</div></pre></td></tr></table></figure></p>
+<p>先给他设置一个背景<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">private func setupUI()&#123;</div><div class="line">        backgroundColor = LSRandomColor()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意这里是给cell设置一个背景颜色，区别于OC，如果这里给cell的<code>contentView</code>设置一个背景会出现展示不全的问题，原因是没有frame，会出现这样<code>尴尬</code>的界面<br><img src="http://upload-images.jianshu.io/upload_images/2329629-cd42a73af8da6656.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="show"><br>所以直接给cell设置背景即可<br>在控制器中将cell替换成自定义的，使用<code>as! LSHomeTableViewCell</code>和修改注册cell的cell就行</p>
+<h2 id="自定义原创微博"><a href="#自定义原创微博" class="headerlink" title="自定义原创微博"></a>自定义原创微博</h2><p>自定义原创微博视图，单独管理其中的控件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">/// `原创微博`视图</div><div class="line">class LSStatusOriginalView: UIView &#123;</div><div class="line"></div><div class="line">    override init(frame: CGRect) &#123;</div><div class="line">        super.init(frame: frame)</div><div class="line">        setupUI()</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    required init?(coder aDecoder: NSCoder) &#123;</div><div class="line">        fatalError(&quot;init(coder:) has not been implemented&quot;)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    private func setupUI()&#123;</div><div class="line">        backgroundColor = LSRandomColor()</div><div class="line">        addSubview(iconImageView)</div><div class="line">        addSubview(nameLable)</div><div class="line">        addSubview(membershipImageView)</div><div class="line">        addSubview(timeLable)</div><div class="line">        addSubview(sourceLable)</div><div class="line">        addSubview(avatarImageView)</div><div class="line">        </div><div class="line">        iconImageView.snp_makeConstraints &#123; (make) in</div><div class="line">            make.size.equalTo(CGSize(width: 35, height: 35))</div><div class="line">            make.left.top.equalTo(10)</div><div class="line">        &#125;</div><div class="line">        nameLable.snp_makeConstraints &#123; (make) in</div><div class="line">            make.top.equalTo(iconImageView)</div><div class="line">            make.left.equalTo(iconImageView.snp_right).offset(10)</div><div class="line">        &#125;</div><div class="line">        membershipImageView.snp_makeConstraints &#123; (make) in</div><div class="line">            make.left.equalTo(nameLable.snp_right).offset(10)</div><div class="line">            make.centerY.equalTo(nameLable)</div><div class="line">        &#125;</div><div class="line">        timeLable.snp_makeConstraints &#123; (make) in</div><div class="line">            make.left.equalTo(nameLable.snp_left)</div><div class="line">            make.bottom.equalTo(iconImageView)</div><div class="line">        &#125;</div><div class="line">        sourceLable.snp_makeConstraints &#123; (make) in</div><div class="line">            make.centerY.equalTo(timeLable)</div><div class="line">            make.left.equalTo(timeLable.snp_right).offset(10)</div><div class="line">        &#125;</div><div class="line">        avatarImageView.snp_makeConstraints &#123; (make) in</div><div class="line">            make.centerX.equalTo(iconImageView.snp_right)</div><div class="line">            make.centerY.equalTo(iconImageView.snp_bottom)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    private lazy var iconImageView: UIImageView = UIImageView(imageName: &quot;avatar_default&quot;)</div><div class="line">    /// 昵称</div><div class="line">    private lazy var nameLable: UILabel = UILabel(text: &quot;LS.R&quot;, fontSize: LSFontNormalSize, textColor: UIColor.blue)</div><div class="line">    /// 等级</div><div class="line">    private lazy var membershipImageView: UIImageView = UIImageView(imageName: &quot;common_icon_membership&quot;)</div><div class="line">    private lazy var timeLable: UILabel = UILabel(text: &quot;时间&quot;, fontSize: LSFontSmallSize, textColor: LSThemeColor)</div><div class="line">    private lazy var sourceLable: UILabel = UILabel(text: &quot;LSSina&quot;, fontSize: LSFontSmallSize, textColor: LSThemeColor)</div><div class="line">    /// 认证</div><div class="line">    private lazy var avatarImageView: UIImageView = UIImageView(imageName: &quot;avatar_vgirl&quot;)</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>约束技巧</p>
+</blockquote>
+<p>在布局认证<code>imageView</code>的时候，设置它的<code>centerX</code>和<code>iconView</code>的右边对齐。<code>centerY</code>和<code>iconView</code>的底部对齐，这样，就可以得到在<code>iconView</code>右下角的效果<br><img src="http://upload-images.jianshu.io/upload_images/2329629-e40b7ac8c4632c3c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="constraction"><br>之后再在<code>cell</code>中将原创微博视图以懒加载的方式加入<code>contentView</code>即可</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/05/LSSina项目(五)/" rel="next" title="LSSina项目(五)">
+                <i class="fa fa-chevron-left"></i> LSSina项目(五)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/07/核心绘图_Quartz2D/" rel="prev" title="核心绘图-Quartz2D">
+                核心绘图-Quartz2D <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#cell布局分析"><span class="nav-number">1.</span> <span class="nav-text">cell布局分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求首页数据-amp-模型转换"><span class="nav-number">2.</span> <span class="nav-text">请求首页数据&模型转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#首页UI搭建"><span class="nav-number">3.</span> <span class="nav-text">首页UI搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#首页自定义cell"><span class="nav-number">4.</span> <span class="nav-text">首页自定义cell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义原创微博"><span class="nav-number">5.</span> <span class="nav-text">自定义原创微博</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,719 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="处理会员等级逻辑在界面的开发过程中，cell的复用带来的好处是显而易见的，但是它带来的问题也是比较麻烦的，常常需要进行很多处理来防止cell的复用对界面展示带来的影响。其中有一种做法就是对模型的强依赖，也就是cell显示时实时的通过给模型赋值而避免界面显示复用的问题，但是在下面的两个处理逻辑中，却不适合使用cell的复用，甚至还要避免cell的复用而带来的重新计算模型数据的问题，因为为了节省流量，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LSSina项目(八)">
+<meta property="og:url" content="http://yoursite.com/2016/12/08/LSSina项目(八)/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="处理会员等级逻辑在界面的开发过程中，cell的复用带来的好处是显而易见的，但是它带来的问题也是比较麻烦的，常常需要进行很多处理来防止cell的复用对界面展示带来的影响。其中有一种做法就是对模型的强依赖，也就是cell显示时实时的通过给模型赋值而避免界面显示复用的问题，但是在下面的两个处理逻辑中，却不适合使用cell的复用，甚至还要避免cell的复用而带来的重新计算模型数据的问题，因为为了节省流量，">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-9cf7c7ab1f488e01.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-27628a4045ab3f83.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-219e6405618f1be4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-256550455dba494b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-d663cc68d89ffc6e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-7eb3f151f2c82cd3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-12-12T08:58:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LSSina项目(八)">
+<meta name="twitter:description" content="处理会员等级逻辑在界面的开发过程中，cell的复用带来的好处是显而易见的，但是它带来的问题也是比较麻烦的，常常需要进行很多处理来防止cell的复用对界面展示带来的影响。其中有一种做法就是对模型的强依赖，也就是cell显示时实时的通过给模型赋值而避免界面显示复用的问题，但是在下面的两个处理逻辑中，却不适合使用cell的复用，甚至还要避免cell的复用而带来的重新计算模型数据的问题，因为为了节省流量，">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-9cf7c7ab1f488e01.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/08/LSSina项目(八)/"/>
+
+
+
+
+
+  <title>LSSina项目(八) | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/08/LSSina项目(八)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LSSina项目(八)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-08T23:33:18+08:00">
+                2016-12-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="处理会员等级逻辑"><a href="#处理会员等级逻辑" class="headerlink" title="处理会员等级逻辑"></a>处理会员等级逻辑</h2><p>在界面的开发过程中，cell的复用带来的好处是显而易见的，但是它带来的问题也是比较麻烦的，常常需要进行很多处理来防止cell的复用对界面展示带来的影响。<br>其中有一种做法就是对<code>模型的强依赖</code>，也就是cell显示时实时的通过给模型赋值而避免界面显示<code>复用</code>的问题，但是在下面的两个处理逻辑中，却不适合使用cell的复用，甚至还要避免cell的复用而带来的重新计算模型数据的问题，因为为了节省流量，而这也是要根据实际的开发需求而定的。<br>通过分析接口，会员等级返回的是一个<code>Int</code>类型的数据<br>在实际中，同一版本的应用一般不会实时改变等级图标，所以没有必要每次滚动cell的都是都去下载<code>等级图标</code>这样也是节省流量的一个方法<br>视图的viewModel中添加一个等级图片属性，并用<code>didSet</code>实时监测赋值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var statusModel: LSStatusesModel?&#123;</div><div class="line">       didSet&#123;</div><div class="line">           mbRankImage = dealMbrankImage(mbrank: statusModel?.user?.mbrank ?? 0)</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line">   var mbRankImage: UIImage?</div></pre></td></tr></table></figure></p>
+<p>开始的时候使用在<code>原创微博</code>视图中做等级的判断逻辑<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">func dealMbrankImage(mbrank: Int) -&gt; UIImage?&#123;</div><div class="line">       /// 等级在1-6之间</div><div class="line">       if mbrank &gt; 0 &amp;&amp; mbrank &lt; 7 &#123;</div><div class="line">           return UIImage(named: &quot;common_icon_membership_level\(mbrank)&quot;)</div><div class="line">       &#125;</div><div class="line">       return UIImage(named: &quot;common_icon_membership&quot;)</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>可是这样存在一个问题：<br>每次对视图中的viewModel赋值的时候都会进这个方法，即：在tableView中滚动cell超出屏幕后，由于cell的<code>复用机制</code>，每次都会用缓存池中的cell在这里重新计算一次<code>等级</code>，<code>mbrank</code>就相当于是一个<code>计算型属性</code>每次赋值都会进行计算</p>
+<blockquote>
+<p>解决方法</p>
+</blockquote>
+<p>将mbrank设置成<code>存储型属性</code>，如上面代码中的写法，在viewModel中添加一个extension专门负责处理等级逻辑，并在vieModel中设置一个存储型属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">/// `view级别`的viweModel - 管理模型</div><div class="line">class LSStatusViewModel: NSObject &#123;</div><div class="line">    </div><div class="line">    var statusModel: LSStatusesModel?&#123;</div><div class="line">        didSet&#123;</div><div class="line">            mbRankImage = dealMbrankImage(mbrank: statusModel?.user?.mbrank ?? 0)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    var mbRankImage: UIImage?</div><div class="line">&#125;</div><div class="line"></div><div class="line">/// 处理等级视图 extension</div><div class="line">extension LSStatusViewModel&#123;</div><div class="line">    func dealMbrankImage(mbrank: Int) -&gt; UIImage?&#123;</div><div class="line">        </div><div class="line">        /// 等级在1-6之间</div><div class="line">        if mbrank &gt; 0 &amp;&amp; mbrank &lt; 7 &#123;</div><div class="line">            return UIImage(named: &quot;common_icon_membership_level\(mbrank)&quot;)</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        return UIImage(named: &quot;common_icon_membership&quot;)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>给view直接赋值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">membershipImageView.image = statusViewModel?.mbRankImage</div></pre></td></tr></table></figure></p>
+<p>这样，每次会根据服务器传来的数据先全部做完等级计算(默认20条)，再在滚动cell时就不会每次都计算下载了<br><img src="http://upload-images.jianshu.io/upload_images/2329629-9cf7c7ab1f488e01.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="print"><br>这里是判断了19次，有一条是没有等级，再滚动cell都不会再计算了<br><code>MVVM</code>在这里还起到了一个帮助<code>view</code>提供图片的作用</p>
+<h2 id="处理微博认证逻辑"><a href="#处理微博认证逻辑" class="headerlink" title="处理微博认证逻辑"></a>处理微博认证逻辑</h2><p>和上面的处理等级问题一样，这里需要使用<code>存储型属性</code>而不是<code>计算型属性，所以同样要处理由</code>cell的复用`带来的每次要计算模型数据的问题<br>cell的复用，在屏幕消失后，就会放到缓存池中，再显示会从缓存池中拿，会重新赋值，一赋值，就会走cell的didSet，会重新计算微博等级，性能不好(出于这里数据只需要计算一次)</p>
+<blockquote>
+<p>解决：在网络请求数据成功，创建viewModel的时候，就计算赋值</p>
+</blockquote>
+<p>同样在viewModel中对认证图标逻辑进行处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">/// 会员认证处理</div><div class="line">    ///</div><div class="line">    /// - Parameter verified: 认证类型 -1：没有认证，1：认证用户，2,3,5: 企业认证，220: 达人</div><div class="line">    /// - Returns: 判断后的认证图标</div><div class="line">    func dealVerified(verified: Int) -&gt; UIImage? &#123;</div><div class="line">        switch verified &#123;</div><div class="line">        case 1:</div><div class="line">            return UIImage(named: &quot;avatar_vip&quot;)</div><div class="line">        case 2, 3, 5:</div><div class="line">            return UIImage(named: &quot;avatar_enterprise_vip&quot;)</div><div class="line">        case 220:</div><div class="line">            return UIImage(named: &quot;avatar_grassroot&quot;)</div><div class="line">        default:</div><div class="line">            return UIImage(named: &quot;avatar_vgirl&quot;)</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>之后再在视图中赋值设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">avatarImageView.image = statusViewModel?.verifiedImage</div></pre></td></tr></table></figure></p>
+<h2 id="原创微博正文显示"><a href="#原创微博正文显示" class="headerlink" title="原创微博正文显示"></a>原创微博正文显示</h2><p>显示微博内容 - 原创视图中添加控件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">private lazy var contentText: UILabel = UILabel(text: &quot;Hi, i&apos;m Ls.R; Hi, i&apos;m Ls.R; Hi, i&apos;m Ls.R; Hi, i&apos;m Ls.R; Hi, i&apos;m Ls.R; Hi, i&apos;m Ls.R; Hi, i&apos;m Ls.R; Hi, i&apos;m Ls.R; &quot;, fontSize: LSFontNormalSize, textColor: UIColor.black, maxWidth: LSWidth - 20)</div></pre></td></tr></table></figure></p>
+<p>约束<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">contentText.snp_makeConstraints &#123; (make) in</div><div class="line">           make.top.equalTo(iconImageView.snp_bottom).offset(10)</div><div class="line">           make.left.equalTo(iconImageView)</div><div class="line">       &#125;</div><div class="line">       /// 为了增强可读性 - `原创微博视图`的底部约束在这里使用self约束 也可以用`内容`约束</div><div class="line">       self.snp_makeConstraints &#123; (make) in</div><div class="line">           make.bottom.equalTo(contentText).offset(10)</div><div class="line">       &#125;</div></pre></td></tr></table></figure></p>
+<p>注意这里的视图底部约束之所以使用<code>self</code>是为了增加可读性，也可以使用微博内容进行约束<br>同时，修改一下之前的UILable的extension，添加一个label最大宽度<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">extension UILabel&#123;</div><div class="line">    </div><div class="line">    /// 快速构建Lable</div><div class="line">    ///</div><div class="line">    /// - Parameters:</div><div class="line">    ///   - text: Labeltext</div><div class="line">    ///   - fontSize: fontSize</div><div class="line">    ///   - textColor: textColor</div><div class="line">    ///   - maxWidth: label的最大宽度 不指定则无效</div><div class="line">    convenience init(text: String, fontSize: CGFloat, textColor: UIColor, maxWidth: CGFloat = 0) &#123;</div><div class="line">        self.init()</div><div class="line">        self.text = text</div><div class="line">        self.textAlignment = .center</div><div class="line">        self.font = UIFont.systemFont(ofSize: fontSize)</div><div class="line">        self.textColor = textColor</div><div class="line">        if maxWidth &gt; 0 &#123;</div><div class="line">            self.preferredMaxLayoutWidth = maxWidth</div><div class="line">            self.numberOfLines = 0</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>preferredMaxLayoutWidth</code>可以设置lable的最大宽度，使用约束也可以</p>
+<h2 id="自定义底部视图"><a href="#自定义底部视图" class="headerlink" title="自定义底部视图"></a>自定义底部视图</h2><p>创建底部视图之后在cell中以懒加载的方式加载约束<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line">override init(frame: CGRect) &#123;</div><div class="line">        super.init(frame: frame)</div><div class="line">        setupUI()</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    required init?(coder aDecoder: NSCoder) &#123;</div><div class="line">        fatalError(&quot;init(coder:) has not been implemented&quot;)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    func setupUI() -&gt; Void &#123;</div><div class="line">        backgroundColor = LSRandomColor()</div><div class="line">        let retweetButton = addChildView(imageName: &quot;timeline_icon_retweet&quot;, backgroundImageName: &quot;timeline_retweet_background&quot;, title: &quot;转发&quot;)</div><div class="line">        let commentButton = addChildView(imageName: &quot;timeline_icon_comment&quot;, backgroundImageName: &quot;timeline_retweet_background&quot;, title: &quot;评论&quot;)</div><div class="line">        let unlikButton = addChildView(imageName: &quot;timeline_icon_unlike&quot;,  backgroundImageName: &quot;timeline_retweet_background&quot;, title: &quot;赞&quot;)</div><div class="line">        /// 分割竖线</div><div class="line">        let lineViewOne = addLineView()</div><div class="line">        let lineViewTwo = addLineView()</div><div class="line">        </div><div class="line">        retweetButton.snp_makeConstraints &#123; (make) in</div><div class="line">            make.left.bottom.top.equalTo(self)</div><div class="line">            make.width.equalTo(commentButton)</div><div class="line">        &#125;</div><div class="line">        commentButton.snp_makeConstraints &#123; (make) in</div><div class="line">            make.left.equalTo(retweetButton.snp_right)</div><div class="line">            make.top.bottom.equalTo(self)</div><div class="line">            make.width.equalTo(unlikButton)</div><div class="line">        &#125;</div><div class="line">        unlikButton.snp_makeConstraints &#123; (make) in</div><div class="line">            make.left.equalTo(commentButton.snp_right)</div><div class="line">            make.top.bottom.right.equalTo(self)</div><div class="line">        &#125;</div><div class="line">        lineViewOne.snp_makeConstraints &#123; (make) in</div><div class="line">            make.centerY.equalTo(self)</div><div class="line">            make.centerX.equalTo(retweetButton.snp_right)</div><div class="line">        &#125;</div><div class="line">        lineViewTwo.snp_makeConstraints &#123; (make) in</div><div class="line">            make.centerY.equalTo(self)</div><div class="line">            make.centerX.equalTo(commentButton.snp_right)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /// 添加子控件</div><div class="line">    ///</div><div class="line">    /// - Parameters:</div><div class="line">    ///   - imageName: 按钮图片名称</div><div class="line">    ///   - backgroundImageName: 按钮背景图片名称</div><div class="line">    ///   - title: 按钮标题</div><div class="line">    /// - Returns: 设置好的按钮</div><div class="line">    func addChildView(imageName: String, backgroundImageName: String, title: String) -&gt; UIButton &#123;</div><div class="line">        let button = UIButton(imageName: imageName, backgroundImageName: backgroundImageName, title: title, target: self, action: #selector(buttonClick))</div><div class="line">        addSubview(button)</div><div class="line">        return button</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /// 添加分割竖线</div><div class="line">    ///</div><div class="line">    /// - Returns: 设置好的竖线view</div><div class="line">    func addLineView() -&gt; UIImageView &#123;</div><div class="line">        let lineView = UIImageView(imageName: &quot;timeline_card_bottom_line&quot;)</div><div class="line">        addSubview(lineView)</div><div class="line">        return lineView</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    @objc private func buttonClick()&#123;</div><div class="line">        print(&quot;buttonClick..&quot;)</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这里关于按钮在view中的布局约束是一个技巧，之前使用<code>Masonry</code>的时候，可以使用添加进数组的方法，然后会自动布局，而这里使用的是<code>上一个控件的宽等于下一个控件的宽</code>的方式，让系统来计算控件的宽，这是一种很好的方法</p>
+<blockquote>
+<p>关于添加的竖线视图</p>
+</blockquote>
+<p>中间的视图添加了一个分割线，但是不好发现，需要放大才能看见<br><img src="http://upload-images.jianshu.io/upload_images/2329629-27628a4045ab3f83.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="line"></p>
+<h2 id="首页cell使用预估行高自动计算"><a href="#首页cell使用预估行高自动计算" class="headerlink" title="首页cell使用预估行高自动计算"></a>首页cell使用预估行高自动计算</h2><p>使用预估行高可以自动计算出cell的高度  - 越接近真实高度越好<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/// cell使用预估行高</div><div class="line">tableView.rowHeight = UITableViewAutomaticDimension</div><div class="line">tableView.estimatedRowHeight = 300</div></pre></td></tr></table></figure></p>
+<p>之后在cell中只要把contentView<code>撑起来</code>就能计算出cell的高度了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">statusBottomView.snp_makeConstraints &#123; (make) in</div><div class="line">            make.top.equalTo(originalView.snp_bottom)</div><div class="line">            make.left.bottom.right.equalTo(contentView)</div><div class="line">            make.height.equalTo(35)</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>主要在于<code>make.bottom</code><br>在swift3.0之前，使用下面这样的方式来结合预估行高设置contentVIew的底部<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">contentView.snp_makeConstraints &#123; (make) in</div><div class="line">            make.left.top.right.equalTo(self)</div><div class="line">            make.bottom.equalTo(statusBottomView)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>但是现在不行了，用这种方式会导致布局错误<br><img src="http://upload-images.jianshu.io/upload_images/2329629-219e6405618f1be4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="error"></p>
+<h2 id="判断是否有转发微博-amp-更新约束"><a href="#判断是否有转发微博-amp-更新约束" class="headerlink" title="判断是否有转发微博&amp;更新约束"></a>判断是否有转发微博&amp;更新约束</h2><p>关于判断是否有<code>转发微博</code>，通过接口，知道有一个<code>retweeted_status</code>字段，可以通过判断该值是否为<code>nil</code>来觉得是否要添加转发微博视图<br><img src="http://upload-images.jianshu.io/upload_images/2329629-256550455dba494b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="isNil"><br>但是该字段中的元素和<code>statuses</code>是一样的，没有必要再新建一个模型，可以直接使用原来的<code>LSStatusesModel</code>模型，只需要给他再加一个字段即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/// 转发微博 - 和tatuses平级</div><div class="line">var retweeted_status: LSStatusesModel?</div></pre></td></tr></table></figure></p>
+<p>注意此处是生成了一个新的<code>LSStatusesModel</code>类型对象，和其本身的不是同一个对象<br>之后只需要判断该字段是否为<code>nil</code>即可知道是否有转发微博<br>但是这样判断会有问题：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">var statusViewModel: LSStatusViewModel?&#123;</div><div class="line">        didSet&#123;</div><div class="line">            originalView.statusViewModel = statusViewModel</div><div class="line">            if statusViewModel?.statusModel?.retweeted_status == nil &#123;</div><div class="line">                statusBottomView.snp_updateConstraints(closure: &#123; (make) in</div><div class="line"></div><div class="line"> make.top.equalTo(originalView.snp_bottom).constraint</div><div class="line">  &#125;)</div><div class="line">&#125;else &#123;</div><div class="line">                statusBottomView.snp_updateConstraints(closure: &#123; (make) in</div><div class="line"> </div><div class="line">make.top.equalTo(statusRetweetView.snp_bottom).constraint</div><div class="line">                &#125;)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>这样会导致cell复用后会把约束也复用了，在<code>Xcode8.1</code>之前好像还会报约束冲突（如果没有卸载约束），目前我用的<code>Xcode8.1</code>没有报约束冲突，效果是这样<br><img src="http://upload-images.jianshu.io/upload_images/2329629-d663cc68d89ffc6e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="src"><br>滚动cell再返回后，原来有的<code>转发微博</code>占位就没有了<br><img src="http://upload-images.jianshu.io/upload_images/2329629-7eb3f151f2c82cd3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="after"></p>
+<blockquote>
+<p>解决办法</p>
+</blockquote>
+<p><code>记录约束</code>，并在更改约束前<code>卸载</code>约束重新更新约束<br>定义约束<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var bottomViewConstraint: Constraint?</div></pre></td></tr></table></figure></p>
+<p>记忆约束<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">statusBottomView.snp_makeConstraints &#123; (make) in</div><div class="line">            self.bottomViewConstraint = make.top.equalTo(statusRetweetView.snp_bottom).constraint</div><div class="line">            make.left.bottom.right.equalTo(contentView)</div><div class="line">            make.height.equalTo(35)</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>卸载约束并更新<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">var statusViewModel: LSStatusViewModel?&#123;</div><div class="line">        didSet&#123;</div><div class="line">            originalView.statusViewModel = statusViewModel</div><div class="line">            self.bottomViewConstraint?.uninstall()</div><div class="line">            if statusViewModel?.statusModel?.retweeted_status == nil &#123;</div><div class="line">                statusBottomView.snp_updateConstraints(closure: &#123; (make) in</div><div class="line">                    self.bottomViewConstraint = make.top.equalTo(originalView.snp_bottom).constraint</div><div class="line">                &#125;)</div><div class="line">                statusRetweetView.isHidden = true</div><div class="line">            &#125;else &#123;</div><div class="line">                statusBottomView.snp_updateConstraints(closure: &#123; (make) in</div><div class="line">                    self.bottomViewConstraint = make.top.equalTo(statusRetweetView.snp_bottom).constraint</div><div class="line">                &#125;)</div><div class="line">                statusRetweetView.isHidden = false</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>还添加了转发微博显示与否判断，如果不加影藏判断的话，可能会在下一个cell上方显示上一个转发微博的<code>影子</code></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/08/LSSina项目(七)/" rel="next" title="LSSina项目(七)">
+                <i class="fa fa-chevron-left"></i> LSSina项目(七)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/12/LSSina项目(九)/" rel="prev" title="LSSina项目(九)">
+                LSSina项目(九) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#处理会员等级逻辑"><span class="nav-number">1.</span> <span class="nav-text">处理会员等级逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理微博认证逻辑"><span class="nav-number">2.</span> <span class="nav-text">处理微博认证逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原创微博正文显示"><span class="nav-number">3.</span> <span class="nav-text">原创微博正文显示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义底部视图"><span class="nav-number">4.</span> <span class="nav-text">自定义底部视图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#首页cell使用预估行高自动计算"><span class="nav-number">5.</span> <span class="nav-text">首页cell使用预估行高自动计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判断是否有转发微博-amp-更新约束"><span class="nav-number">6.</span> <span class="nav-text">判断是否有转发微博&更新约束</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

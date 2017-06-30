@@ -1,0 +1,692 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="OC网络封装请求工具类单例打开ATS123456&amp;lt;dict&amp;gt;    &amp;lt;key&amp;gt;NSAppTransportSecurity&amp;lt;/key&amp;gt;    &amp;lt;dict&amp;gt;        &amp;lt;key&amp;gt;NSAllowsArbitraryLoads&amp;lt;/key&amp;gt;        &amp;lt;true/&amp;gt;    &amp;lt;/dict&amp;gt; 对外接口123">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络请求">
+<meta property="og:url" content="http://yoursite.com/2016/12/04/网络请求/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="OC网络封装请求工具类单例打开ATS123456&amp;lt;dict&amp;gt;    &amp;lt;key&amp;gt;NSAppTransportSecurity&amp;lt;/key&amp;gt;    &amp;lt;dict&amp;gt;        &amp;lt;key&amp;gt;NSAllowsArbitraryLoads&amp;lt;/key&amp;gt;        &amp;lt;true/&amp;gt;    &amp;lt;/dict&amp;gt; 对外接口123">
+<meta property="og:updated_time" content="2016-12-04T10:23:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网络请求">
+<meta name="twitter:description" content="OC网络封装请求工具类单例打开ATS123456&amp;lt;dict&amp;gt;    &amp;lt;key&amp;gt;NSAppTransportSecurity&amp;lt;/key&amp;gt;    &amp;lt;dict&amp;gt;        &amp;lt;key&amp;gt;NSAllowsArbitraryLoads&amp;lt;/key&amp;gt;        &amp;lt;true/&amp;gt;    &amp;lt;/dict&amp;gt; 对外接口123">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/04/网络请求/"/>
+
+
+
+
+
+  <title>网络请求 | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/04/网络请求/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">网络请求</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-04T16:47:20+08:00">
+                2016-12-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="OC网络封装"><a href="#OC网络封装" class="headerlink" title="OC网络封装"></a>OC网络封装</h2><h3 id="请求工具类单例"><a href="#请求工具类单例" class="headerlink" title="请求工具类单例"></a>请求工具类<code>单例</code></h3><p>打开<code>ATS</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;dict&gt;</div><div class="line">    &lt;key&gt;NSAppTransportSecurity&lt;/key&gt;</div><div class="line">    &lt;dict&gt;</div><div class="line">        &lt;key&gt;NSAllowsArbitraryLoads&lt;/key&gt;</div><div class="line">        &lt;true/&gt;</div><div class="line">    &lt;/dict&gt;</div></pre></td></tr></table></figure></p>
+<p>对外接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">typedef NS_ENUM(NSUInteger, LSMethod) &#123;</div><div class="line">    GET = 0,</div><div class="line">    POST = 1</div><div class="line">&#125;;</div><div class="line"></div><div class="line">@interface LSNetworkTools : AFHTTPSessionManager</div><div class="line"></div><div class="line">/// shared Interface</div><div class="line">+ (instancetype)sharedTools;</div><div class="line"></div><div class="line">/**</div><div class="line"> 网络请求</div><div class="line"> </div><div class="line"> @param method 请求方式 - `GET`/`POST`</div><div class="line"> @param urlString URL</div><div class="line"> @param parameters 参数</div><div class="line"> @param success 成功回调</div><div class="line"> @param failed 失败回调</div><div class="line"> */</div><div class="line">- (void)request:(LSMethod)method urlString:(NSString *)urlString parameters:(id)parameters success:(void(^)(id responseObject))success failed:(void(^)(NSError *error))failed;</div><div class="line"></div><div class="line">/**</div><div class="line"> 单独用以请求天气的接口</div><div class="line"></div><div class="line"> @param cityName 城市名 - 目前支持`北京`</div><div class="line"> @param success 成功回调</div><div class="line"> @param failed 失败回调</div><div class="line"> */</div><div class="line">- (void)loadWeather:(NSString *)cityName success:(void(^)(id responseObject))success failed:(void(^)(NSError *error))failed;</div></pre></td></tr></table></figure></p>
+<p>这里之所以要单独封装一个请求天气的接口是由于考虑到如果后期需要请求不同地区的数据，如<code>天气</code>则最好是定义一个单独的接口，将url封装在单例中，这样当后期接口变动时只需要改动一处就行了</p>
+<blockquote>
+<p>在请求HTML的网页时，还需添加支持格式，默认<code>AFN</code>只支持<code>JSON</code>不支持<code>html</code>的解析</p>
+</blockquote>
+<p>添加反序列化格式支持<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">        instance = [self new];</div><div class="line">        instance.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@&quot;text/html&quot;, nil];</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
+<p>得到JSON结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">weatherinfo =     &#123;</div><div class="line">  Radar = &quot;JC_RADAR_AZ9010_JB&quot;;</div><div class="line">  SD = &quot;17%&quot;;</div><div class="line">  WD = &quot;\U4e1c\U5357\U98ce&quot;;</div><div class="line">  WS = &quot;1\U7ea7&quot;;</div><div class="line">  WSE = 1;</div><div class="line">  city = &quot;\U5317\U4eac&quot;;</div><div class="line">  cityid = 101010100;</div><div class="line">  isRadar = 1;</div><div class="line">  njd = &quot;\U6682\U65e0\U5b9e\U51b5&quot;;</div><div class="line">  qy = 1011;</div><div class="line">  rain = 0;</div><div class="line">  temp = 18;</div><div class="line">  time = &quot;17:05&quot;;</div><div class="line">  &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>GitHub地址：<br><a href="https://github.com/iithinker/LSNetwork_OC" target="_blank" rel="external">LSNetwork_OC</a></p>
+<h2 id="Swift网络封装"><a href="#Swift网络封装" class="headerlink" title="Swift网络封装"></a>Swift网络封装</h2><p>pod<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">use_frameworks!</div><div class="line">pod &apos;AFNetworking&apos;</div></pre></td></tr></table></figure></p>
+<p>反序列号格式支持<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tool.responseSerializer.acceptableContentTypes?.insert(&quot;text/html&quot;)</div></pre></td></tr></table></figure></p>
+<p>使用<code>insert</code>,如果需要多个格式，那么就写多个<code>insert</code><br>请求枚举<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/// 请求方式ENUM</div><div class="line">///</div><div class="line">/// - get: GET请求</div><div class="line">/// - post: POST请求</div><div class="line">enum LSNetworkToolsMethod: String&#123;</div><div class="line">    case get = &quot;GET&quot;</div><div class="line">    case post = &quot;POST&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用小写，是为了和swift的语法命名保持一致，在swift中，枚举使用小写，如：<code>.center</code><br>在封装的请求方法中，需要给闭包添加<code>逃逸</code>-&gt;<code>@escaping</code>，因为其需要访问外部变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">/// 网络请求主入口</div><div class="line">///</div><div class="line">/// - Parameters:</div><div class="line">///   - method: 请求方式 - `.get`/`.post`</div><div class="line">///   - URLString: URL</div><div class="line">///   - parameters: 请求参数</div><div class="line">///   - success: 成功回调</div><div class="line">///   - failure: 失败回调</div><div class="line">func request(method: LSNetworkToolsMethod, URLString: String, parameters: Any?, success:@escaping (Any?)-&gt;(), failure:@escaping (Error)-&gt;()) -&gt; Void &#123;</div><div class="line">  if method == .get &#123;</div><div class="line">    self.get(URLString, parameters: parameters, progress: nil, success: &#123; (_, responseObject) in</div><div class="line">      success(responseObject)</div><div class="line">      &#125;, failure: &#123; (_, error) in</div><div class="line">       failure(error)</div><div class="line">      &#125;)</div><div class="line">      return</div><div class="line">  &#125;</div><div class="line">  /// POST</div><div class="line">  self.post(URLString, parameters: parameters, progress: nil, success: &#123; (_, responseObject) in</div><div class="line">    success(responseObject)</div><div class="line">    &#125;, failure: &#123; (_, error) in</div><div class="line">      failure(error)</div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>开发技巧</p>
+</blockquote>
+<p>在工具类的extension中单独定义其他的外部接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">/// 其他接口extension</div><div class="line">extension LSNetworkTools&#123;</div><div class="line"></div><div class="line">  /// 天气请求接口</div><div class="line">  ///</div><div class="line">  /// - Parameters:</div><div class="line">  ///   - cityName: 城市名称</div><div class="line">  ///   - success: 请求成功回调</div><div class="line">  ///   - failure: 失败回调</div><div class="line">  func loadWeather(cityName: String, success:@escaping (Any?)-&gt;(), failure:@escaping (Error)-&gt;()) -&gt; Void &#123;</div><div class="line"></div><div class="line">    /// 假设 需传递的参数为城市名称</div><div class="line">    let dic = [&quot;CityName&quot;: cityName]</div><div class="line">    request(method: .get, URLString: &quot;http://www.weather.com.cn/data/sk/101010100.html&quot;, parameters: dic, success: &#123; (resposeObject) in</div><div class="line">        success(resposeObject)</div><div class="line">      &#125;) &#123; (error) in</div><div class="line">        failure(error)</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">LSNetworkTools.sharedTools.loadWeather(cityName: &quot;北京&quot;, success: &#123; (responseObject) in</div><div class="line">  print(&quot;\(responseObject)&quot;)</div><div class="line">  &#125;) &#123; (error) in</div><div class="line">   print(&quot;\(error)&quot;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>GitHub地址：<a href="https://github.com/iithinker/LSNetwork_Swift" target="_blank" rel="external">LSNetwork_Swift</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/04/swift与OC混编/" rel="next" title="swift与OC混编">
+                <i class="fa fa-chevron-left"></i> swift与OC混编
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/04/LSSina项目(四)/" rel="prev" title="LSSina项目(四)">
+                LSSina项目(四) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OC网络封装"><span class="nav-number">1.</span> <span class="nav-text">OC网络封装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#请求工具类单例"><span class="nav-number">1.1.</span> <span class="nav-text">请求工具类单例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Swift网络封装"><span class="nav-number">2.</span> <span class="nav-text">Swift网络封装</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,903 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="数据库简介数据库的作用 离线缓存数据  数据缓存策略 plist , 归档 , 偏好设置 , 沙盒文件 , SQLite数据库  系统提供的数据存储方式的弊端 不方便操作大量的数据 如果要添加新的数据,必须先把旧数据全部加载到内存中. 系统提供的数据存储方式都是覆盖存储的,新的数据会覆盖旧的数据.     不方便查找大量的数据 当数据量非常庞大时,要查询其中某些数据,就非常困难.     比如把数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQLite">
+<meta property="og:url" content="http://yoursite.com/2016/11/13/SQLite/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="数据库简介数据库的作用 离线缓存数据  数据缓存策略 plist , 归档 , 偏好设置 , 沙盒文件 , SQLite数据库  系统提供的数据存储方式的弊端 不方便操作大量的数据 如果要添加新的数据,必须先把旧数据全部加载到内存中. 系统提供的数据存储方式都是覆盖存储的,新的数据会覆盖旧的数据.     不方便查找大量的数据 当数据量非常庞大时,要查询其中某些数据,就非常困难.     比如把数">
+<meta property="og:updated_time" content="2016-11-13T04:46:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SQLite">
+<meta name="twitter:description" content="数据库简介数据库的作用 离线缓存数据  数据缓存策略 plist , 归档 , 偏好设置 , 沙盒文件 , SQLite数据库  系统提供的数据存储方式的弊端 不方便操作大量的数据 如果要添加新的数据,必须先把旧数据全部加载到内存中. 系统提供的数据存储方式都是覆盖存储的,新的数据会覆盖旧的数据.     不方便查找大量的数据 当数据量非常庞大时,要查询其中某些数据,就非常困难.     比如把数">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/13/SQLite/"/>
+
+
+
+
+
+  <title>SQLite | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/13/SQLite/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SQLite</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-13T12:46:53+08:00">
+                2016-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="数据库简介"><a href="#数据库简介" class="headerlink" title="数据库简介"></a>数据库简介</h2><h3 id="数据库的作用"><a href="#数据库的作用" class="headerlink" title="数据库的作用"></a>数据库的作用</h3><blockquote>
+<p>离线缓存数据</p>
+</blockquote>
+<h3 id="数据缓存策略"><a href="#数据缓存策略" class="headerlink" title="数据缓存策略"></a>数据缓存策略</h3><ul>
+<li><code>plist</code> , <code>归档</code> , <code>偏好设置</code> , <code>沙盒文件</code> , <strong><code>SQLite数据库</code></strong></li>
+</ul>
+<h3 id="系统提供的数据存储方式的弊端"><a href="#系统提供的数据存储方式的弊端" class="headerlink" title="系统提供的数据存储方式的弊端"></a>系统提供的数据存储方式的弊端</h3><ul>
+<li>不方便操作大量的数据<ul>
+<li>如果要添加新的数据,必须先把旧数据全部加载到内存中.</li>
+<li>系统提供的数据存储方式都是<strong><code>覆盖存储</code></strong>的,新的数据会覆盖旧的数据.</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>不方便查找大量的数据<ul>
+<li>当数据量非常庞大时,要查询其中某些数据,就非常困难.</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>比如把数组数据存储到plist文件中,当数据量比较大时,无论存储还是查找数据都相当不方便.<ul>
+<li>当plist文件中的数据量非常庞大时,一次性加载到内存,会造成内存暴涨</li>
+<li>当plist文件中的数据量非常庞大时,要查询其中的某一条数据时非常困难</li>
+</ul>
+</li>
+</ul>
+<h2 id="SQLite-简介"><a href="#SQLite-简介" class="headerlink" title="SQLite 简介"></a>SQLite 简介</h2><ul>
+<li><p>SQLite是一款轻量级数据库</p>
+<ul>
+<li>设计目标是嵌入式的(可以放在手机沙盒里面的)</li>
+<li>体积小,占用资源少</li>
+<li>处理速度快</li>
+<li>跨平台</li>
+</ul>
+</li>
+<li><p>官方网站：<a href="http://www.sqlite.org/" target="_blank" rel="external">http://www.sqlite.org/</a></p>
+</li>
+<li><p>客户端的数据库 : <strong><code>SQLite</code></strong></p>
+</li>
+<li><p>服务器端的数据库 : <strong><code>MySQL</code></strong> , <strong><code>SQLServer</code></strong> , <strong><code>Oracle</code></strong></p>
+</li>
+</ul>
+<h3 id="SQLite数据库学习方法"><a href="#SQLite数据库学习方法" class="headerlink" title="SQLite数据库学习方法"></a>SQLite数据库学习方法</h3><ul>
+<li><p>先用<code>Navicat</code>客户端演示<code>SQLite</code>的使用,并检查效果.</p>
+<ul>
+<li>目的 : 熟悉SQL语句</li>
+</ul>
+</li>
+<li><p>再用代码演示<code>SQLite</code>的使用.</p>
+</li>
+</ul>
+<blockquote>
+<ul>
+<li>学习SQLite数据库重点是学习FMDB的使用.</li>
+</ul>
+</blockquote>
+<h3 id="Excel存储数据"><a href="#Excel存储数据" class="headerlink" title="Excel存储数据"></a>Excel存储数据</h3><blockquote>
+<p>提示 : SQLite数据库存储数据的结构和Excel很像.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Excel</th>
+<th>SQLite数据库</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>创建Excel文件</td>
+<td>创建数据库文件</td>
+</tr>
+<tr>
+<td>创建工作薄</td>
+<td>创建表</td>
+</tr>
+<tr>
+<td>设计内容标题</td>
+<td>设计数据库的字段名,并指定数据类型</td>
+</tr>
+<tr>
+<td>对Excel表进行数据操作</td>
+<td>对数据库表进行增删改查</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>提示 : 一个数据库中,可以有多张表,每个表中可以存储不同的数据.</p>
+</blockquote>
+<h2 id="Xcode原生SQLite"><a href="#Xcode原生SQLite" class="headerlink" title="Xcode原生SQLite"></a>Xcode原生SQLite</h2><h3 id="创建数据库和表"><a href="#创建数据库和表" class="headerlink" title="创建数据库和表"></a>创建数据库和表</h3><h4 id="使用准备"><a href="#使用准备" class="headerlink" title="使用准备"></a>使用准备</h4><ul>
+<li>导入头文件 <code>&quot;#import &lt;sqlite3.h&gt;&quot;</code></li>
+<li>新增类库 <code>libsqlite3.0.tbd</code></li>
+</ul>
+<h4 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1.准备数据库存储的路径</div><div class="line">2.创建数据库文件并打开</div><div class="line">3.如果创建数据库文件成功,就创建数据库表</div><div class="line">4.创建数据库表成功就可以操作数据库 (增删改查)</div></pre></td></tr></table></figure>
+<h3 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h3><ul>
+<li><p><code>sqlite3</code>中的函数都是以<code>sqlite3</code>开头的</p>
+</li>
+<li><p>创建并打开数据库函数 : <code>sqlite3_open</code></p>
+</li>
+<li><p>建表和数据操作函数(查询函数除外) : <code>sqlite3_exec</code></p>
+</li>
+<li><p>查询函数 : <code>sqlite3_prepare_v2</code></p>
+</li>
+<li><p>查询数据时会得到结果集,要查询的数据都在结果集中,while循环遍历结果集一条一条记录取出来</p>
+</li>
+</ul>
+<h3 id="函数说明"><a href="#函数说明" class="headerlink" title="函数说明"></a>函数说明</h3><ul>
+<li>创建数据库文件的函数</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">参数1 : 数据库的存储路径</div><div class="line">参数2 : 数据库实例</div><div class="line">返回值 : int</div><div class="line">*/</div><div class="line">sqlite3_open(&lt;<span class="meta">#const char *filename#&gt;, <span class="meta-string">&lt;#sqlite3 **ppDb#&gt;</span>);</span></div></pre></td></tr></table></figure>
+<ul>
+<li>创建数据库表的函数</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">参数1 : 数据库实例</div><div class="line">参数2 : 要执行的SQL语句(建表)</div><div class="line">参数3 : 建表成功的回调,传入NULL</div><div class="line">参数4 : 回调的参数,传入NULL</div><div class="line">参数5 : 错误信息</div><div class="line">*/</div><div class="line">sqlite3_exec(&lt;<span class="meta">#sqlite3 *#&gt;, <span class="meta-string">&lt;#const char *sql#&gt;</span>, <span class="meta-string">&lt;#int (*callback)(void *, int, char **, char **)#&gt;</span>, <span class="meta-string">&lt;#void *#&gt;</span>, <span class="meta-string">&lt;#char **errmsg#&gt;</span>);</span></div></pre></td></tr></table></figure>
+<h3 id="代码演练"><a href="#代码演练" class="headerlink" title="代码演练"></a>代码演练</h3><h4 id="创建数据库和表-1"><a href="#创建数据库和表-1" class="headerlink" title="创建数据库和表"></a>创建数据库和表</h4><ul>
+<li>全局的数据库实例</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    sqlite3 *_db;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>创建数据库的函数<code>sqlite3_open</code><ul>
+<li>这个函数会自动监测数据库是否已经存在,只有在数据库不存的时候才会去新建数据库并打开数据库</li>
+<li>创建和打开数据库成功之后,就可以创建数据库表</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/// 创建数据库</span></div><div class="line">- (<span class="keyword">void</span>)createDB</div><div class="line">&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     创建并打开数据库</div><div class="line">     这个函数会自动监测数据库是否已经存在,只有在数据库不存的时候才会去新建数据库并打开数据库</div><div class="line"></div><div class="line">     参数1 : 数据库的路径</div><div class="line">     参数2 : 数据库实例</div><div class="line"></div><div class="line">     返回值 int</div><div class="line">    */</div><div class="line"></div><div class="line">    <span class="comment">// 1.数据库路径</span></div><div class="line">    <span class="built_in">NSString</span> *SQLPath = [[<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) lastObject] stringByAppendingPathComponent:<span class="string">@"SQL.db"</span>];</div><div class="line">    <span class="comment">// 2.创建并打开数据库的函数</span></div><div class="line">    <span class="keyword">int</span> result = sqlite3_open(SQLPath.UTF8String, &amp;_db);</div><div class="line">    <span class="comment">// 判断数据库是否创建打开成功</span></div><div class="line">    <span class="keyword">if</span> (result == SQLITE_OK) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"数据库创建打开成功"</span>);</div><div class="line"></div><div class="line">        <span class="comment">/*</span></div><div class="line">         建表</div><div class="line"></div><div class="line">         参数1 : 数据库实例</div><div class="line">         参数2 : 建表的SQL语句</div><div class="line">         参数3 : 函数执行成功的回调,不需要就写NULL</div><div class="line">         参数4 : 回调的参数,没有就写NULL</div><div class="line">         参数5 : 保存错误信息</div><div class="line"></div><div class="line">         返回值 int</div><div class="line">         */</div><div class="line"></div><div class="line">        <span class="comment">// 3.建表SQL语句</span></div><div class="line">        <span class="built_in">NSString</span> *createSQL = <span class="string">@"create table if not exists t_person(id integer primary key,name text not null,age integer);"</span>;</div><div class="line">        <span class="comment">// 保存错误信息</span></div><div class="line">        <span class="keyword">char</span> *errmsg = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">        sqlite3_exec(_db, createSQL.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;errmsg);</div><div class="line">        <span class="keyword">if</span> (errmsg == <span class="literal">nil</span>) &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"建表成功"</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 4.操作表</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="增删改"><a href="#增删改" class="headerlink" title="增删改"></a>增删改</h3><h4 id="新增记录"><a href="#新增记录" class="headerlink" title="新增记录"></a>新增记录</h4><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)insert</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 新增SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *insertSQL = <span class="string">@"insert into t_person(name,age) values('老王',21);"</span>;</div><div class="line">    <span class="comment">// 保存错误信息</span></div><div class="line">    <span class="keyword">char</span> *errmsg = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    sqlite3_exec(_db, insertSQL.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;errmsg);</div><div class="line">    <span class="keyword">if</span> (errmsg == <span class="literal">nil</span>) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 获取影响的行数</span></div><div class="line">        <span class="keyword">int</span> changes = sqlite3_changes(_db);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"insert影响的行数 %d"</span>,changes);</div><div class="line"></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"新增成功"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="删除记录"><a href="#删除记录" class="headerlink" title="删除记录"></a>删除记录</h4><ul>
+<li>删除记录时，如果数据不存在，不会返回错误</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)delete</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 删除SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *deleteSQL = <span class="string">@"delete from t_person where id = 4;"</span>;</div><div class="line">    <span class="comment">// 保存错误信息</span></div><div class="line">    <span class="keyword">char</span> *errmsg = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    sqlite3_exec(_db, deleteSQL.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;errmsg);</div><div class="line">    <span class="keyword">if</span> (errmsg == <span class="literal">nil</span>) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 获取影响的行数</span></div><div class="line">        <span class="keyword">int</span> changes = sqlite3_changes(_db);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"delete影响的行数 %d"</span>,changes);</div><div class="line"></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"删除成功"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="修改记录"><a href="#修改记录" class="headerlink" title="修改记录"></a>修改记录</h4><ul>
+<li>更新记录时，如果指定的 id 不存在，不会返回错误</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)update</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 修改SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *updateSQL = <span class="string">@"update t_person set name = '李雷' where id = 2;"</span>;</div><div class="line">    <span class="comment">// 保存错误信息</span></div><div class="line">    <span class="keyword">char</span> *errmsg = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    sqlite3_exec(_db, updateSQL.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;errmsg);</div><div class="line">    <span class="keyword">if</span> (errmsg == <span class="literal">nil</span>) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 获取影响的行数</span></div><div class="line">        <span class="keyword">int</span> changes = sqlite3_changes(_db);</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"update影响的行数 %d"</span>,changes);</div><div class="line"></div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"修改成功"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li><p>新增 ／ 修改 ／ 删除本质上都是执行一个 SQL</p>
+</li>
+<li><p>新增记录可以使用 <code>sqlite3_last_insert_rowid</code> 获取最后插入的主键数值</p>
+</li>
+<li><p>更新 / 删除记录可以使用 <code>sqlite3_changes</code> 获取影响数据行数</p>
+</li>
+<li><p>在开发数据库功能时，最容易出错的位置是 <code>SQL</code> 语句的错误，而不是代码错误，一定要利用 <code>navicat</code> 协助检查语法</p>
+</li>
+</ul>
+<h2 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h2><h3 id="预编译-检查SQL语法的有效性"><a href="#预编译-检查SQL语法的有效性" class="headerlink" title="预编译 : 检查SQL语法的有效性"></a>预编译 : 检查SQL语法的有效性</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)query</div><div class="line">&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     执行查询语句</div><div class="line"></div><div class="line">     参数1 : 数据库实例</div><div class="line">     参数2 : 查询语句</div><div class="line">     参数3 : 查询语句的长度,传入-1,让函数自己算</div><div class="line">     参数4 : 结果集,遍历结果集,取数据</div><div class="line">     参数5 : 一般传入NULL</div><div class="line"></div><div class="line">     返回值 int</div><div class="line">     */</div><div class="line"></div><div class="line">    <span class="comment">// 查询SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *querySQL = <span class="string">@"select name,age from t_person;"</span>;</div><div class="line">    <span class="comment">// 结果集</span></div><div class="line">    sqlite3_stmt *ppStmt = <span class="literal">NULL</span>;</div><div class="line">    <span class="comment">// 执行查询语句</span></div><div class="line">    <span class="keyword">int</span> result = sqlite3_prepare_v2(_db, querySQL.UTF8String, <span class="number">-1</span>, &amp;ppStmt, <span class="literal">NULL</span>);</div><div class="line">    <span class="comment">// 预编译 : 检查语法的有效性</span></div><div class="line">    <span class="keyword">if</span> (result == SQLITE_OK) &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"查询数据失败"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"查询数据失败"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 释放结果集 : 不然会内存泄露</span></div><div class="line">    sqlite3_finalize(ppStmt);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意 : 释放结果集 : 不然会内存泄露</strong></p>
+<ul>
+<li><strong>sqlite3_finalize(ppStmt);</strong></li>
+</ul>
+</blockquote>
+<h3 id="执行查询操作"><a href="#执行查询操作" class="headerlink" title="执行查询操作"></a>执行查询操作</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)query</div><div class="line">&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     执行查询语句</div><div class="line"></div><div class="line">     参数1 : 数据库实例</div><div class="line">     参数2 : 查询语句</div><div class="line">     参数3 : 查询语句的长度,传入-1,让函数自己算</div><div class="line">     参数4 : 结果集,遍历结果集,取数据</div><div class="line">     参数5 : 一般传入NULL</div><div class="line"></div><div class="line">     返回值 int</div><div class="line">     */</div><div class="line"></div><div class="line">    <span class="comment">// 查询SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *querySQL = <span class="string">@"select name,age from t_person;"</span>;</div><div class="line">    <span class="comment">// 结果集</span></div><div class="line">    sqlite3_stmt *ppStmt = <span class="literal">NULL</span>;</div><div class="line">    <span class="comment">// 执行查询语句</span></div><div class="line">    <span class="keyword">int</span> result = sqlite3_prepare_v2(_db, querySQL.UTF8String, <span class="number">-1</span>, &amp;ppStmt, <span class="literal">NULL</span>);</div><div class="line">    <span class="comment">// 预编译 : 检查语法的有效性</span></div><div class="line">    <span class="keyword">if</span> (result == SQLITE_OK) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 遍历结果集,逐条取数据,直到往下找,找不到数据为止</span></div><div class="line">        <span class="keyword">while</span> (sqlite3_step(ppStmt) == SQLITE_ROW) &#123;</div><div class="line"></div><div class="line">            <span class="comment">/*</span></div><div class="line">             参数1 : 结果集</div><div class="line">             参数2 : 字段的索引,从主键后面开始计数</div><div class="line">             */</div><div class="line"></div><div class="line">            <span class="comment">// 取name</span></div><div class="line">            <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> *cName = sqlite3_column_text(ppStmt, <span class="number">0</span>);</div><div class="line">            <span class="built_in">NSString</span> *ocName = [[<span class="built_in">NSString</span> alloc] initWithCString:(<span class="keyword">const</span> <span class="keyword">char</span> *)cName encoding:<span class="built_in">NSUTF8StringEncoding</span>];</div><div class="line">            <span class="comment">// 取age</span></div><div class="line">            <span class="keyword">int</span> age = sqlite3_column_int(ppStmt, <span class="number">1</span>);</div><div class="line"></div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%@ -- %d"</span>,ocName,age);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="built_in">NSLog</span>(<span class="string">@"查询数据失败"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 释放结果集 : 不然会内存泄露</span></div><div class="line">    sqlite3_finalize(ppStmt);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>代码小结</p>
+<ul>
+<li><p><strong>sqlite3_prepare_v2</strong> 对 SQL 语句进行预编译，并且检查是否存在语法问题</p>
+</li>
+<li><p>编译成功后通过 <strong>sqlite3_step</strong> 执行 SQL，每执行一次，获取一条记录</p>
+</li>
+<li><p>通过 <strong>while</strong> 循环直至执行完毕</p>
+</li>
+<li><p>注意，指令执行完毕后需要释放 <strong>sqlite3_finalize(ppStmt)</strong></p>
+</li>
+</ul>
+</blockquote>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><ul>
+<li><p>事务在开发使用的并不多.但是,是资深程序猿必须知道的.</p>
+</li>
+<li><p><strong>使用场景 : 大规模数据操作时使用.</strong></p>
+</li>
+<li><p>使用步骤 :</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>使用步骤</th>
+<th>步骤说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>在准备做大规模数据操作前，首先开启一个事务，保存操作前的数据库的状态[快照]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>开始数据操作</td>
+</tr>
+<tr>
+<td>3</td>
+<td>如果数据操作成功，提交事务，让数据库更新到数据操作后的状态</td>
+</tr>
+<tr>
+<td>4</td>
+<td>如果数据操作失败，回滚事务，让数据库还原到操作前的状态</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>如果<strong>没有显式的开启事务</strong>，<strong>SQLite</strong> 会 :</p>
+<ul>
+<li>在每一次数据库操作前开启事务(非常影响数据库的性能)</li>
+<li>操作完成后，自动提交事务;</li>
+<li>性能差!!!</li>
+</ul>
+<p>使用事务可以 :</p>
+<ul>
+<li>数据库操作之前,建立<strong>快照</strong></li>
+<li>数据库操作完成之后,提交<strong>快照</strong></li>
+<li>提高数据库操作性能</li>
+<li>保证数据完整性</li>
+</ul>
+<p>事务 <strong>SQL</strong></p>
+<ul>
+<li>开启事务 BEGIN TRANSACTION;</li>
+<li>提交事务 COMMIT TRANSACTION;</li>
+<li>回滚事务 ROLLBACK TRANSACTION;</li>
+</ul>
+</blockquote>
+<h3 id="准备要批量执行的插入语句"><a href="#准备要批量执行的插入语句" class="headerlink" title="准备要批量执行的插入语句"></a>准备要批量执行的插入语句</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)insert</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 新增SQL语句</span></div><div class="line">    <span class="built_in">NSString</span> *insertSQL = <span class="string">@"insert into t_person(name,age) values('老王',21);"</span>;</div><div class="line">    <span class="comment">// 保存错误信息</span></div><div class="line">    <span class="keyword">char</span> *errmsg = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    sqlite3_exec(_db, insertSQL.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, &amp;errmsg);</div><div class="line">    <span class="keyword">if</span> (errmsg == <span class="literal">nil</span>) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 获取影响的行数</span></div><div class="line">        <span class="keyword">int</span> changes = sqlite3_changes(_db);</div><div class="line">        <span class="comment">// NSLog(@"insert影响的行数 %d",changes);</span></div><div class="line"></div><div class="line">        <span class="comment">// NSLog(@"新增成功");</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="不开启事务"><a href="#不开启事务" class="headerlink" title="不开启事务"></a>不开启事务</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)manyInsert01</div><div class="line">&#123;</div><div class="line">    <span class="keyword">double</span> start = <span class="built_in">CACurrentMediaTime</span>();</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="built_in">NSInteger</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line"></div><div class="line">        [<span class="keyword">self</span> insert];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 0.088818s</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%f"</span>,<span class="built_in">CACurrentMediaTime</span>() - start);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="开启事务"><a href="#开启事务" class="headerlink" title="开启事务"></a>开启事务</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)manyInsert02</div><div class="line">&#123;</div><div class="line">    <span class="keyword">double</span> start = <span class="built_in">CACurrentMediaTime</span>();</div><div class="line"></div><div class="line">    <span class="comment">// 开启事务</span></div><div class="line"></div><div class="line">    <span class="built_in">NSString</span> *sql_BEGIN = <span class="string">@"BEGIN TRANSACTION"</span>;</div><div class="line">    sqlite3_exec(_db, sql_BEGIN.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="built_in">NSInteger</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line"></div><div class="line">        [<span class="keyword">self</span> insert];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 提交事务</span></div><div class="line">    <span class="built_in">NSString</span> *sql_COMMIT = <span class="string">@"COMMIT TRANSACTION"</span>;</div><div class="line">    sqlite3_exec(_db, sql_COMMIT.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">    <span class="comment">// 0.001445s</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%f"</span>,<span class="built_in">CACurrentMediaTime</span>() - start);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>开启事务之后,数据库的操作性能大大的提升了!!!</p>
+</blockquote>
+<h2 id="回滚事务代码演练"><a href="#回滚事务代码演练" class="headerlink" title="回滚事务代码演练"></a>回滚事务代码演练</h2><ul>
+<li>当在新增数据失败时,立即回滚事务,还原到建立快照之前的版本</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)manyInsert03</div><div class="line">&#123;</div><div class="line">    <span class="keyword">double</span> start = <span class="built_in">CACurrentMediaTime</span>();</div><div class="line"></div><div class="line">    <span class="comment">// 开启事务</span></div><div class="line"></div><div class="line">    <span class="built_in">NSString</span> *sql_BEGIN = <span class="string">@"BEGIN TRANSACTION"</span>;</div><div class="line">    sqlite3_exec(_db, sql_BEGIN.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="built_in">NSInteger</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 新增SQL语句</span></div><div class="line">        <span class="built_in">NSString</span> *insertSQL = <span class="string">@"insert into t_person(name,age) values('老王',21);"</span>;</div><div class="line"></div><div class="line">        <span class="comment">// 执行新增语句</span></div><div class="line">        sqlite3_exec(_db, insertSQL.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">        <span class="comment">// 模拟新增数据失败</span></div><div class="line">        <span class="keyword">if</span> (i == <span class="number">10</span>) &#123;</div><div class="line">            <span class="built_in">NSString</span> *sql_COMMIT = <span class="string">@"ROLLBACK TRANSACTION"</span>;</div><div class="line">            sqlite3_exec(_db, sql_COMMIT.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">            <span class="comment">// 非常非常重要</span></div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 提交事务</span></div><div class="line">    <span class="built_in">NSString</span> *sql_COMMIT = <span class="string">@"COMMIT TRANSACTION"</span>;</div><div class="line">    sqlite3_exec(_db, sql_COMMIT.UTF8String, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%f"</span>,<span class="built_in">CACurrentMediaTime</span>() - start);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/13/数据解析_xml/" rel="next" title="数据解析_xml">
+                <i class="fa fa-chevron-left"></i> 数据解析_xml
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/FMDB/" rel="prev" title="FMDB">
+                FMDB <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库简介"><span class="nav-number">1.</span> <span class="nav-text">数据库简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库的作用"><span class="nav-number">1.1.</span> <span class="nav-text">数据库的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据缓存策略"><span class="nav-number">1.2.</span> <span class="nav-text">数据缓存策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统提供的数据存储方式的弊端"><span class="nav-number">1.3.</span> <span class="nav-text">系统提供的数据存储方式的弊端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQLite-简介"><span class="nav-number">2.</span> <span class="nav-text">SQLite 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SQLite数据库学习方法"><span class="nav-number">2.1.</span> <span class="nav-text">SQLite数据库学习方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Excel存储数据"><span class="nav-number">2.2.</span> <span class="nav-text">Excel存储数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xcode原生SQLite"><span class="nav-number">3.</span> <span class="nav-text">Xcode原生SQLite</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建数据库和表"><span class="nav-number">3.1.</span> <span class="nav-text">创建数据库和表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用准备"><span class="nav-number">3.1.1.</span> <span class="nav-text">使用准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用步骤"><span class="nav-number">3.1.2.</span> <span class="nav-text">使用步骤</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提示"><span class="nav-number">3.2.</span> <span class="nav-text">提示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数说明"><span class="nav-number">3.3.</span> <span class="nav-text">函数说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码演练"><span class="nav-number">3.4.</span> <span class="nav-text">代码演练</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建数据库和表-1"><span class="nav-number">3.4.1.</span> <span class="nav-text">创建数据库和表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增删改"><span class="nav-number">3.5.</span> <span class="nav-text">增删改</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新增记录"><span class="nav-number">3.5.1.</span> <span class="nav-text">新增记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除记录"><span class="nav-number">3.5.2.</span> <span class="nav-text">删除记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改记录"><span class="nav-number">3.5.3.</span> <span class="nav-text">修改记录</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">3.6.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询"><span class="nav-number">4.</span> <span class="nav-text">查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#预编译-检查SQL语法的有效性"><span class="nav-number">4.1.</span> <span class="nav-text">预编译 : 检查SQL语法的有效性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行查询操作"><span class="nav-number">4.2.</span> <span class="nav-text">执行查询操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">5.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备要批量执行的插入语句"><span class="nav-number">5.1.</span> <span class="nav-text">准备要批量执行的插入语句</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不开启事务"><span class="nav-number">5.2.</span> <span class="nav-text">不开启事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启事务"><span class="nav-number">5.3.</span> <span class="nav-text">开启事务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#回滚事务代码演练"><span class="nav-number">6.</span> <span class="nav-text">回滚事务代码演练</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

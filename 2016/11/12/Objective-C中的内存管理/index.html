@@ -1,0 +1,873 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Objective-C 中的内存分配在 Objective-C 中，对象通常是使用 alloc 方法在堆上创建的。 [NSObject alloc] 方法会在对堆上分配一块内存，按照NSObject的内部结构填充这块儿内存区域。 一旦对象创建完成，就不可能再移动它了。因为很可能有很多指针都指向这个对象，这些指针并没有被追踪。因此没有办法在移动对象的位置之后更新全部的这些指针。MRC 与 ARC M">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OC中的内存管理">
+<meta property="og:url" content="http://yoursite.com/2016/11/12/Objective-C中的内存管理/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="Objective-C 中的内存分配在 Objective-C 中，对象通常是使用 alloc 方法在堆上创建的。 [NSObject alloc] 方法会在对堆上分配一块内存，按照NSObject的内部结构填充这块儿内存区域。 一旦对象创建完成，就不可能再移动它了。因为很可能有很多指针都指向这个对象，这些指针并没有被追踪。因此没有办法在移动对象的位置之后更新全部的这些指针。MRC 与 ARC M">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-16bc93c1e3148cda.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-12T16:36:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OC中的内存管理">
+<meta name="twitter:description" content="Objective-C 中的内存分配在 Objective-C 中，对象通常是使用 alloc 方法在堆上创建的。 [NSObject alloc] 方法会在对堆上分配一块内存，按照NSObject的内部结构填充这块儿内存区域。 一旦对象创建完成，就不可能再移动它了。因为很可能有很多指针都指向这个对象，这些指针并没有被追踪。因此没有办法在移动对象的位置之后更新全部的这些指针。MRC 与 ARC M">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-16bc93c1e3148cda.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/12/Objective-C中的内存管理/"/>
+
+
+
+
+
+  <title>OC中的内存管理 | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/12/Objective-C中的内存管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OC中的内存管理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-12T14:00:29+08:00">
+                2016-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Objective-C-中的内存分配"><a href="#Objective-C-中的内存分配" class="headerlink" title="Objective-C 中的内存分配"></a>Objective-C 中的内存分配</h2><p>在 Objective-C 中，对象通常是使用 alloc 方法在堆上创建的。 [NSObject alloc] 方法会在对堆上分配一块内存，按照NSObject的内部结构填充这块儿内存区域。</p>
+<p>一旦对象创建完成，就不可能再移动它了。因为很可能有很多指针都指向这个对象，这些指针并没有被追踪。因此没有办法在移动对象的位置之后更新全部的这些指针。<br>MRC 与 ARC</p>
+<h2 id="MRC-与-ARC"><a href="#MRC-与-ARC" class="headerlink" title="MRC 与 ARC"></a>MRC 与 ARC</h2><p>Objective-C中提供了两种内存管理机制：MRC（MannulReference Counting）和 ARC(Automatic Reference Counting)，分别提供对内存的手动和自动管理，来满足不同的需求。现在苹果推荐使用 ARC 来进行内存管理。</p>
+<h3 id="MRC"><a href="#MRC" class="headerlink" title="MRC"></a>MRC</h3><p>对象操作的四个类别</p>
+<table>
+<thead>
+<tr>
+<th>对象操作</th>
+<th>OC中对应的方法</th>
+<th>对应的 retainCount 变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>生成并持有对象</td>
+<td>alloc/new/copy/mutableCopy等</td>
+<td>+1</td>
+</tr>
+<tr>
+<td>持有对象</td>
+<td>retain</td>
+<td>+1</td>
+</tr>
+<tr>
+<td>释放对象</td>
+<td>release</td>
+<td>-1</td>
+</tr>
+<tr>
+<td>废弃对象</td>
+<td>dealloc</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p>注意：<br>    <del>这些对象操作的方法其实并不包括在OC中，而是包含在Cocoa框架下的Foundation框架中。</del>从 iOS 7 开始，这些方法被移动到了 Runtime 当中，可以在 objc4-680 NSObject.h 找到。<br>    对象的 reatinCount 属性并没有实际上的参考价值，参考苹果官方文档《Practical Memory Management》.</p>
+<p>四个法则</p>
+<ul>
+<li>自己生成的对象，自己持有。</li>
+<li>非自己生成的对象，自己也能持有。</li>
+<li>不在需要自己持有对象的时候，释放。</li>
+<li>非自己持有的对象无需释放。</li>
+</ul>
+<p>如下是<strong>四个黄金法</strong>则对应的代码示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> * 自己生成并持有该对象</div><div class="line"> */</div><div class="line"> id obj0 = [[NSObeject alloc] init];</div><div class="line"> id obj1 = [NSObeject new];</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> * 持有非自己生成的对象</div><div class="line"> */</div><div class="line">id obj = [NSArray array]; // 非自己生成的对象，且该对象存在，但自己不持有</div><div class="line">[obj retain]; // 自己持有对象</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> * 不在需要自己持有的对象的时候，释放</div><div class="line"> */</div><div class="line">id obj = [[NSObeject alloc] init]; // 此时持有对象</div><div class="line">[obj release]; // 释放对象</div><div class="line">/*</div><div class="line"> * 指向对象的指针仍就被保留在obj这个变量中</div><div class="line"> * 但对象已经释放，不可访问</div><div class="line"> */</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> * 非自己持有的对象无法释放</div><div class="line"> */</div><div class="line">id obj = [NSArray array]; // 非自己生成的对象，且该对象存在，但自己不持有</div><div class="line">[obj release]; // ~~~此时将运行时crash 或编译器报error~~~ 非 ARC 下，调用该方法会导致编译器报 issues。此操作的行为是未定义的，可能会导致运行时 crash 或者其它未知行为</div></pre></td></tr></table></figure>
+<p>其中<code>非自己生成的对象</code>，<code>且该对象存在</code>，但<code>自己不持有</code>这个特性是使用<code>autorelease</code>来实现的，示例代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (id) getAObjNotRetain &#123;</div><div class="line">    id obj = [[NSObject alloc] init]; // 自己持有对象</div><div class="line">    [obj autorelease]; // 取得的对象存在，但自己不持有该对象</div><div class="line">    return obj;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>autorelease</code>使得对象在超出生命周期后能正确的被释放(通过调用release方法)。在调用 <code>release</code> 后，对象会被立即释放，而调用 <code>autorelease</code>后，对象不会被立即释放，而是注册到 <code>autoreleasepool</code>中，经过一段时间后 pool结束，此时调用release方法，对象被释放。</p>
+<p>在MRC的内存管理模式下，与对变量的管理相关的方法有：retain, release 和 autorelease。retain 和 release 方法操作的是引用记数，当引用记数为零时，便自动释放内存。并且可以用 NSAutoreleasePool 对象，对加入自动释放池（autorelease 调用）的变量进行管理，当 drain 时回收内存。</p>
+<h3 id="ARC"><a href="#ARC" class="headerlink" title="ARC"></a>ARC</h3><p>ARC 是苹果引入的一种自动内存管理机制，会根据引用计数自动监视对象的生存周期，实现方式是在编译时期自动在已有代码中插入合适的内存管理代码以及在 Runtime 做一些优化。<br>变量标识符</p>
+<p>在ARC中与内存管理有关的变量标识符，有下面几种：</p>
+<ul>
+<li>__strong</li>
+<li>__weak</li>
+<li>__unsafe_unretained</li>
+<li>__autoreleasing</li>
+</ul>
+<p><code>__strong</code>是默认使用的标识符。只有还有一个强指针指向某个对象，这个对象就会一直存活。<br><code>__weak</code>声明这个引用不会保持被引用对象的存活，如果对象没有强引用了，弱引用会被置为 nil<br><code>__unsafe_unretained</code>声明这个引用不会保持被引用对象的存活，如果对象没有强引用了，它不会被置为 nil。如果它引用的对象被回收掉了，该指针就变成了野指针。<br><code>__autoreleasing</code>用于标示使用引用传值的参数（id *），在函数返回时会被自动释放掉。</p>
+<p>变量标识符的用法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Number* __strong num = [[Number alloc] init];</div></pre></td></tr></table></figure></p>
+<p>注意 <code>__strong</code> 的位置应该放到 <code>*</code>和变量名中间，放到其他的位置严格意义上说是不正确的，只不过编译器不会报错。</p>
+<h3 id="属性标识符"><a href="#属性标识符" class="headerlink" title="属性标识符"></a>属性标识符</h3><p>类中的属性也可以加上标志符：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (assign/retain/strong/weak/unsafe_unretained/copy) Number* num</div></pre></td></tr></table></figure></p>
+<p><code>assign</code>表明 setter 仅仅是一个简单的赋值操作，通常用于基本的数值类型，例如CGFloat和NSInteger。<br><code>strong</code> 表明属性定义一个拥有者关系。当给属性设定一个新值的时候，首先这个值进行 retain ，旧值进行 release ，然后进行赋值操作。<br><code>weak</code> 表明属性定义了一个非拥有者关系。当给属性设定一个新值的时候，这个值不会进行 retain，旧值也不会进行 release， 而是进行类似 assign 的操作。不过当属性指向的对象被销毁时，该属性会被置为nil。<br><code>unsafe_unretained</code> 的语义和 assign 类似，不过是用于对象类型的，表示一个非拥有(unretained)的，同时也不会在对象被销毁时置为nil的(unsafe)关系。<br><code>copy</code> 类似于 <code>strong</code>，不过在赋值时进行 copy 操作而不是 retain 操作。通常在需要保留某个不可变对象（NSString最常见），并且防止它被意外改变时使用。</p>
+<h3 id="错误使用属性标识符的后果"><a href="#错误使用属性标识符的后果" class="headerlink" title="错误使用属性标识符的后果"></a>错误使用属性标识符的后果</h3><p>如果我们给一个原始类型设置 <code>strong\weak\copy</code> ，编译器会直接报错：</p>
+<blockquote>
+<p>Property with ‘retain (or strong)’ attribute must be of object type</p>
+</blockquote>
+<p>设置为 <code>unsafe_unretained</code> 倒是可以通过编译，只是用起来跟 assign 也没有什么区别。<br>反过来，我们给一个 NSObject 属性设置为 <code>assign</code>，编译器会报警：</p>
+<blockquote>
+<p>Assigning retained object to unsafe property; object will be released after assignment</p>
+</blockquote>
+<p>正如警告所说的，对象在赋值之后被立即释放，对应的属性也就成了野指针，运行时跑到属性有关操作会直接崩溃掉。和设置成 <code>unsafe_unretained</code>是一样的效果（设置成 weak 不会崩溃）。</p>
+<p><strong>unsafe_unretained 的用处</strong><br>unsafe_unretained 差不多是实际使用最少的一个标识符了，在使用中它的用处主要有下面几点：</p>
+<ol>
+<li>兼容性考虑。iOS4 以及之前还没有引入 weak，这种情况想表达弱引用的语义只能使用 unsafe_unretained。这种情况现在已经很少见了。</li>
+<li>性能考虑。使用 weak 对性能有一些影响，因此对性能要求高的地方可以考虑使用 unsafe_unretained 替换 weak。一个例子是 YYModel 的实现，为了追求更高的性能，其中大量使用 unsafe_unretained 作为变量标识符。</li>
+</ol>
+<h2 id="引用循环"><a href="#引用循环" class="headerlink" title="引用循环"></a>引用循环</h2><p>当两个对象互相持有对方的强引用，并且这两个对象的引用计数都不是0的时候，便造成了引用循环。</p>
+<p>要想破除引用循环，可以从以下几点入手：</p>
+<ul>
+<li>注意变量作用域，使用 autorelease 让编译器来处理引用</li>
+<li>使用弱引用(weak)</li>
+<li>当实例变量完成工作后，将其置为nil</li>
+</ul>
+<h3 id="Autorelease-Pool"><a href="#Autorelease-Pool" class="headerlink" title="Autorelease Pool"></a>Autorelease Pool</h3><p>Autorelase Pool 提供了一种可以允许你向一个对象延迟发送<code>release</code>消息的机制。当你想放弃一个对象的所有权，同时又不希望这个对象立即被释放掉（例如在一个方法中返回一个对象时），Autorelease Pool 的作用就显现出来了。</p>
+<p>所谓的延迟发送<code>release</code>消息指的是，当我们把一个对象标记为autorelease时:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">NSString* str = [[[NSString alloc] initWithString:@&quot;hello&quot;] autorelease];</div></pre></td></tr></table></figure></p>
+<p>这个对象的 retainCount 会+1，但是并不会发生 release。当这段语句所处的 autoreleasepool 进行 drain 操作时，所有标记了 autorelease 的对象的 retainCount 会被 -1。即 release 消息的发送被延迟到 pool 释放的时候了。</p>
+<p>在 ARC 环境下，苹果引入了 @autoreleasepool 语法，不再需要手动调用 autorelease 和 drain 等方法。</p>
+<h3 id="Autorelease-Pool-的用处"><a href="#Autorelease-Pool-的用处" class="headerlink" title="Autorelease Pool 的用处"></a>Autorelease Pool 的用处</h3><p>在 ARC 下，我们并不需要手动调用 autorelease 有关的方法，甚至可以完全不知道 autorelease 的存在，就可以正确管理好内存。因为 Cocoa Touch 的 Runloop 中，每个 runloop circle 中系统都自动加入了 Autorelease Pool 的创建和释放。</p>
+<p>当我们需要创建和销毁大量的对象时，使用手动创建的 autoreleasepool 可以有效的避免内存峰值的出现。因为如果不手动创建的话，外层系统创建的 pool 会在整个 runloop circle 结束之后才进行 drain，手动创建的话，会在 block 结束之后就进行 drain 操作。详情请参考苹果官方文档。一个普遍被使用的例子如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">for (int i = 0; i &lt; 100000000; i++)</div><div class="line">&#123;</div><div class="line">    @autoreleasepool</div><div class="line">    &#123;</div><div class="line">        NSString* string = @&quot;ab c&quot;;</div><div class="line">        NSArray* array = [string componentsSeparatedByString:string];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>如果不使用 <code>autoreleasepool</code> ，需要在循环结束之后释放 100000000 个字符串，如果 使用的话，则会在每次循环结束的时候都进行 release 操作。</p>
+<h3 id="Autorelease-Pool-进行-Drain-的时机"><a href="#Autorelease-Pool-进行-Drain-的时机" class="headerlink" title="Autorelease Pool 进行 Drain 的时机"></a>Autorelease Pool 进行 Drain 的时机</h3><p>如上面所说，系统在 runloop 中创建的 autoreleaspool 会在 runloop 一个 event 结束时进行释放操作。我们手动创建的 autoreleasepool 会在 block 执行完成之后进行 drain 操作。需要注意的是：</p>
+<ul>
+<li>当 block 以异常（exception）结束时，pool 不会被 drain</li>
+<li>Pool 的 drain 操作会把所有标记为 autorelease 的对象的引用计数减一，但是并不意味着这个对象一定会被释放掉，我们可以在 autorelease pool 中手动 retain 对象，以延长它的生命周期（在 MRC 中）。</li>
+</ul>
+<h3 id="main-m-中-Autorelease-Pool-的解释"><a href="#main-m-中-Autorelease-Pool-的解释" class="headerlink" title="main.m 中 Autorelease Pool 的解释"></a>main.m 中 Autorelease Pool 的解释</h3><p>大家都知道在 iOS 程序的 main.m 文件中有类似这样的语句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int main(int argc, char * argv[]) &#123;</div><div class="line">    @autoreleasepool &#123;</div><div class="line">        return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里的 pool 有什么作用，能不能去掉？在这里我们分析一下。</p>
+<p>根据苹果官方文档， UIApplicationMain 函数是整个 app 的入口，用来创建 application 对象（单例）和 application delegate。尽管这个函数有返回值，但是实际上却永远不会返回，当按下 Home 键时，app 只是被切换到了后台状态。</p>
+<p>同时参考苹果关于 Lifecycle 的官方文档，UIApplication 自己会创建一个 main run loop，大致可以得到下面的结论：</p>
+<ol>
+<li>main.m 中的 UIApplicationMain 永远不会返回，只有在系统 kill 掉整个 app 时，系统会把应用占用的内存全部释放出来。</li>
+<li>因为(1)， UIApplicationMain 永远不会返回，这里的 autorelease pool 也就永远不会进入到释放那个阶段</li>
+<li>在 (2) 的基础上，假设有些变量真的进入了 main.m 里面这个 pool（没有被更内层的 pool 捕获），那么这些变量实际上就是被泄露的。这个 autorelease pool 等于是把这种泄露情况给隐藏起来了。</li>
+<li>UIApplication 自己会创建 main run loop，在 Cocoa 的 runloop 中实际上也是自动包含 autorelease pool 的，因此 main.m 当中的 pool 可以认为是没有必要的。</li>
+</ol>
+<p>在基于 AppKit 框架的 Mac OS 开发中， main.m 当中就是不存在 autorelease pool 的，也进一步验证了我们得到的结论。不过因为我们看不到更底层的代码，加上苹果的文档中不建议修改 main.m ，所以我们也没有理由就直接把它删掉（亲测，删掉之后不影响 App 运行，用 Instruments 也看不到泄露）。</p>
+<h3 id="Autorelease-Pool-与函数返回值"><a href="#Autorelease-Pool-与函数返回值" class="headerlink" title="Autorelease Pool 与函数返回值"></a>Autorelease Pool 与函数返回值</h3><p>如果一个函数的返回值是指向一个对象的指针，那么这个对象肯定不能在函数返回之前进行 release，这样调用者在调用这个函数时得到的就是野指针了，在函数返回之后也不能立刻就 release，因为我们不知道调用者是不是 retain 了这个对象，如果我们直接 release 了，可能导致后面在使用这个对象时它已经成为 nil 了。</p>
+<p>为了解决这个纠结的问题， Objective-C 中对对象指针的返回值进行了区分，一种叫做 retained return value，另一种叫做 unretained return value。前者表示调用者拥有这个返回值，后者表示调用者不拥有这个返回值，按照“谁拥有谁释放”的原则，对于前者调用者是要负责释放的，对于后者就不需要了。</p>
+<p>按照苹果的命名 convention，以 alloc, copy, init, mutableCopy 和 new 这些方法打头的方法，返回的都是 retained return value，例如 [[NSString alloc] initWithFormat:]，而其他的则是 unretained return value，例如 [NSString stringWithFormat:]。我们在编写代码时也应该遵守这个 convention。</p>
+<p>分别在 MRC 和 ARC 情况下，分析一下两种返回值类型的区别。</p>
+<h3 id="MRC-1"><a href="#MRC-1" class="headerlink" title="MRC"></a>MRC</h3><p>在 MRC 中我们需要关注这两种函数返回类型的区别，否则可能会导致内存泄露。<br><code>对于 retained return value，需要负责释放</code><br>假设有一个 property 定义如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (nonatomic, retain) NSObject *property;</div></pre></td></tr></table></figure></p>
+<p>在对其赋值的时候，我们应该使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.property = [[[NSObject alloc] init] autorelease];</div></pre></td></tr></table></figure></p>
+<p>然后在 dealloc 方法中加入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[_property release];</div><div class="line">_property = nil;</div></pre></td></tr></table></figure></p>
+<p>这样内存的情况大体是这样的：</p>
+<ol>
+<li>init 把 retain count 增加到 1</li>
+<li>赋值给 self.property ，把 retain count 增加到 2</li>
+<li>当 runloop circle 结束时，autorelease pool 执行 drain，把 retain count 减为 1</li>
+<li>当整个对象执行 dealloc 时， release 把 retain count 减为 0，对象被释放</li>
+</ol>
+<p>可以看到没有内存泄露发生。</p>
+<p>如果只是使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.property = [[NSObject alloc] init];</div></pre></td></tr></table></figure></p>
+<p>这一条语句会导致 retain count 增加到 2，而我们少执行了一次 release，就会导致 retain count 不能被减为 0 。<br>另外，也可以使用临时变量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSObject * a = [[NSObject alloc] init];</div><div class="line">self.property = a;</div><div class="line">[a release];</div></pre></td></tr></table></figure></p>
+<p>这种情况，因为对 a 执行了一次 release，所有不会出现上面那种 retain count 不能减为 0 的情况。</p>
+<p>注意：现在基本都是 ARC 写的比较多，会忽略这一点，但是根据上面的内容，我们看到在 MRC 中直接对 self.proprety 赋值和先赋给临时变量，再赋值给 self.property，确实是有区别的！我在面试中就被问到这一点了。</p>
+<p>我们在编写自己的代码时，也应该遵守上面的原则，同样是使用 autorelease：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// 注意函数名的区别</div><div class="line">+ (MyCustomClass *) myCustomClass</div><div class="line">&#123;</div><div class="line">    return [[[MyCustomClass alloc] init] autorelease]; // 需要 autorelease</div><div class="line">&#125;</div><div class="line">- (MyCustomClass *) initWithName:(NSString *) name</div><div class="line">&#123;</div><div class="line">    return [[MyCustomClass alloc] init]; // 不需要 autorelease</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>对于 unretained return value，不需要负责释放</code></p>
+<p>当我们调用非 alloc，init 系的方法来初始化对象时（通常是工厂方法），我们不需要负责变量的释放，可以当成普通的临时变量来使用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSString *name = [NSString stringWithFormat:@&quot;%@ %@&quot;, firstName, lastName];</div><div class="line">self.name = name</div><div class="line">// 不需要执行 [name release]</div></pre></td></tr></table></figure></p>
+<h3 id="ARC-1"><a href="#ARC-1" class="headerlink" title="ARC"></a>ARC</h3><p>在 ARC 中我们完全不需要考虑这两种返回值类型的区别，ARC 会自动加入必要的代码，因此我们可以放心大胆地写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">self.property = [[NSObject alloc] init];</div><div class="line">self.name = [NSString stringWithFormat:@&quot;%@ %@&quot;, firstName, lastName];</div></pre></td></tr></table></figure></p>
+<p>以及在自己写的函数中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">+ (MyCustomClass *) myCustomClass</div><div class="line">&#123;</div><div class="line">    return [[MyCustomClass alloc] init]; // 不用 autorelease</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这些写法都是 OK 的，也不会出现内存问题。</p>
+<p>为了进一步理解 ARC 是如何做到这一点的，我们可以参考 Clang 的文档。</p>
+<p>对于 retained return value， Clang 是这样做的：</p>
+<blockquote>
+<p>When returning from such a function or method, ARC retains the value at the point of evaluation of the return statement, before leaving all local scopes.</p>
+<p>When receiving a return result from such a function or method, ARC releases the value at the end of the full-expression it is contained within, subject to the usual optimizations for local values.</p>
+</blockquote>
+<p>可以看到基本上 ARC 就是帮我们在代码块结束的时候进行了 release：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSObject * a = [[NSObject alloc] init];</div><div class="line">self.property = a;</div><div class="line">//[a release]; 我们不需要写这一句，因为 ARC 会帮我们把这一句加上</div></pre></td></tr></table></figure></p>
+<p>对于 unretained return value：</p>
+<blockquote>
+<p>When returning from such a function or method, ARC retains the value at the point of evaluation of the return statement, then leaves all local scopes, and then balances out the retain while ensuring that the value lives across the call boundary. In the worst case, this may involve an autorelease, but callers must not assume that the value is actually in the autorelease pool.</p>
+<p>ARC performs no extra mandatory work on the caller side, although it may elect to do something to shorten the lifetime of the returned value.</p>
+</blockquote>
+<p>这个和之前在 MRC 中做的不是完全一样。ARC 会把对象的生命周期延长，确保调用者能拿到并且使用这个返回值，但是并不一定会使用 autorelease，文档写的是在 worst case 的情况下才可能会使用，因此调用者不能假设返回值真的就在 autorelease pool 中。从性能的角度，这种做法也是可以理解的。如果我们能够知道一个对象的生命周期最长应该有多长，也就没有必要使用 autorelease 了，直接使用 release 就可以。如果很多对象都使用 autorelease 的话，也会导致整个 pool 在 drain 的时候性能下降。</p>
+<h3 id="weak-与-autorelease"><a href="#weak-与-autorelease" class="headerlink" title="weak 与 autorelease"></a>weak 与 autorelease</h3><p>众所周知，weak 不会持有对象，当给一个 weak 赋以一个自己生成的对象（即上面提到的 retained return value）后，对象会立马被释放。<br>一个很常见的 warning 就是 Assigning retained object to weak variable, object will be released after assignment.<br>但是我们前面也提到了，可以持有非自己生成的对象，这通过 autorelease 实现。<br>那么如果一个 weak 被赋以一个非自己生成的对象（即上面提到的 unretained return value）呢？代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSNumber __weak *number = [NSNumber numberWithInt:100];</div><div class="line">NSLog(@&quot;number = %@&quot;, number);</div></pre></td></tr></table></figure></p>
+<p>这种情况下是可以正确打印值的。</p>
+<p>clang的文档 是这么说的：这种情况下，weak 并不会立即释放，而是会通过 objc_loadWeak 这个方法注册到 AutoreleasePool 中，以延长生命周期。</p>
+<h3 id="ARC-下是否还有必要在-dealloc-中把属性置为-nil"><a href="#ARC-下是否还有必要在-dealloc-中把属性置为-nil" class="headerlink" title="ARC 下是否还有必要在 dealloc 中把属性置为 nil?"></a>ARC 下是否还有必要在 dealloc 中把属性置为 nil?</h3><p>为了解决这个问题，首先让我们理清楚属性是个什么存在。属性(property) 实际上就是一种语法糖，每个属性背后都有实例变量(Ivar)做支持，编译器会帮我们自动生成有关的 setter 和 getter，对于下面的 property：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">@interface Counter : NSObject</div><div class="line">@property (nonatomic, retain) NSNumber *count;</div><div class="line">@end;</div></pre></td></tr></table></figure></p>
+<p>生成的 getter 和 setter 类似下面这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (NSNumber *)count &#123;</div><div class="line">    return _count;</div><div class="line">&#125;</div><div class="line">- (void)setCount:(NSNumber *)newCount &#123;</div><div class="line">    [newCount retain];</div><div class="line">    [_count release];</div><div class="line">    // Make the new assignment.</div><div class="line">    _count = newCount;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Property 这部分对于 MRC 和 ARC 都是适用的。</p>
+<p>有了这部分基础，我们再来理解一下把属性置为 nil 这个步骤。首先要明确一点，在 MRC 下，我们并不是真的把属性置为 nil，而是把 Ivar 置为 nil。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[_property release];</div><div class="line">_property = nil;</div></pre></td></tr></table></figure></p>
+<p>如果用 self.property 的话还会调用 setter，里面可能存在某些不应该在 dealloc 时运行的代码。</p>
+<p>对于 ARC 来说，系统会自动在 dealloc 的时候把所有的 Ivar 都执行 release，因此我们也就没有必要在 dealloc 中写有关 release 的代码了。</p>
+<h3 id="在-ARC-下把变量置为-nil-有什么效果？什么情况下需要把变量置为-nil"><a href="#在-ARC-下把变量置为-nil-有什么效果？什么情况下需要把变量置为-nil" class="headerlink" title="在 ARC 下把变量置为 nil 有什么效果？什么情况下需要把变量置为 nil"></a>在 ARC 下把变量置为 nil 有什么效果？什么情况下需要把变量置为 nil</h3><p>在上面有关 property 的内容基础上，我们知道用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.property = nil</div></pre></td></tr></table></figure></p>
+<p>实际上就是手动执行了一次 release。而对于临时变量来说：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSObject *object = [[NSObject alloc] init];</div><div class="line">object = nil;</div></pre></td></tr></table></figure></p>
+<p>置为 nil 这一句其实没什么用（除了让 object 在下面的代码里不能再使用之外），因为上面我们讨论过 ，ARC 下的临时变量是受到 Autorelease Pool 的管理的，会自动释放。<br>因为 ARC 下我们不能再使用 release 函数，把变量置为 nil 就成为了一种释放变量的方法。真正需要我们把变量置为 nil 的，通常就是在使用 block 时，用于破除循环引用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">MyViewController * __block myController = [[MyViewController alloc] init…];</div><div class="line">// ...</div><div class="line">myController.completionHandler =  ^(NSInteger result) &#123;</div><div class="line">    [myController dismissViewControllerAnimated:YES completion:nil];</div><div class="line">    myController = nil;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>在 YTKNetwork 这个项目中，也可以看到类似的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- (void)clearCompletionBlock &#123;</div><div class="line">    // nil out to break the retain cycle.</div><div class="line">    self.successCompletionBlock = nil;</div><div class="line">    self.failureCompletionBlock = nil;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="ARC-在运行时期的优化"><a href="#ARC-在运行时期的优化" class="headerlink" title="ARC 在运行时期的优化"></a>ARC 在运行时期的优化</h3><p>  上面提到对于 unretained return value， ARC “并不一定会使用 autorelease”，下面具体解释一下。</p>
+<p>ARC 所做的事情并不仅仅局限于在编译期找到合适的位置帮你插入合适的 release 等等这样的内存管理方法，其在运行时期也做了一些优化，如下是两个优化的例子：</p>
+<ol>
+<li>合并对称的引用计数操作。比如将 +1/-1/+1/-1 直接置为 0.</li>
+<li>巧妙地跳过某些情况下 autorelease 机制的调用。</li>
+</ol>
+<p>其中第二个优化，是 ARC 针对 autorelease 返回值提供的一套优化策略，大体的流程如下：<br>当方法全部基于 ARC 实现时，在方法 return 的时候，ARC 会调用 objc_autoreleaseReturnValue() 以替代 MRC 下的 autorelease。在 MRC 下需要 retain 的位置，ARC 会调用 objc_retainAutoreleasedReturnValue()。因此下面的 ARC 代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)createSark &#123;</div><div class="line">    return [self new];</div><div class="line">&#125;</div><div class="line">// caller</div><div class="line">Sark *sark = [Sark createSark];</div></pre></td></tr></table></figure></p>
+<p>实际上会被改写成类似这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">+ (instancetype)createSark &#123;</div><div class="line">    id tmp = [self new];</div><div class="line">    return objc_autoreleaseReturnValue(tmp); // 代替我们调用autorelease</div><div class="line">&#125;</div><div class="line">// caller</div><div class="line">id tmp = objc_retainAutoreleasedReturnValue([Sark createSark]) // 代替我们调用retain</div><div class="line">Sark *sark = tmp;</div><div class="line">objc_storeStrong(&amp;sark, nil); // 相当于代替我们调用了release</div></pre></td></tr></table></figure></p>
+<p>有了这个基础，ARC 可以使用一些优化技术。在调用 objc_autoreleaseReturnValue() 时，会在栈上查询 return address 以确定 return value 是否会被直接传给 objc_retainAutoreleasedReturnValue()。 如果没传，说明返回值不能直接从提供方发送给接收方，这时就会调用 autorelease。反之，如果返回值能顺利的从提供方传送给接收方，那么就会直接跳过 autorelease 过程，并且修改 return address 以跳过 objc_retainAutoreleasedReturnValue()过程，这样就跳过了整个 autorelease 和 retain的过程。</p>
+<blockquote>
+<p>核心思想：当返回值被返回之后，紧接着就需要被 retain 的时候，没有必要进行 autorelease + retain，直接什么都不要做就好了。</p>
+</blockquote>
+<p>另外，当函数的调用方是非 ARC 环境时，ARC 还会进行更多的判断.</p>
+<h2 id="检测循环引用的工具"><a href="#检测循环引用的工具" class="headerlink" title="检测循环引用的工具"></a>检测循环引用的工具</h2><p>Instrument 为我们提供了 Allocations/Leaks 这样好用的工具用来检测 memory leak 的工具。如下是内存泄露的两种类型：</p>
+<ul>
+<li>Leaked memory: Memory unreferenced by your application that cannot be used again or freed (also detectable by using the Leaks instrument).</li>
+<li>Abandoned memory: Memory still referenced by your application that has no useful purpose.</li>
+</ul>
+<p>其中 Leaks 工具主要用来检测 Leaked memory，在 MRC 时代 程序员会经常忘记写 release 方法导致内存泄露，在 ARC 时代这种已经不太常见。(ARC时代 主要的Leaked Memory 来自于底层 C 语言以及 一些由 C 写成的底层库，往往会因为忘记手工 free 而导致 leak )。</p>
+<p>Allocations 工具主要用来检测 Abandoned memory. 主要思路是在一个时间切片内检测对象的声明周期以观察内存是否会无限增长。通过 hook 掉 alloc，dealloc，retain，release 等方法，来记录对象的生命周期。</p>
+<h3 id="xcode自带的检测工具"><a href="#xcode自带的检测工具" class="headerlink" title="xcode自带的检测工具"></a>xcode自带的检测工具</h3><p>在Xcode8之后推出了自带的工具可以用来检测内存泄漏和和对象引用关系<br><img src="http://upload-images.jianshu.io/upload_images/2329629-16bc93c1e3148cda.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="debug"></p>
+<blockquote>
+<p>其中绿色的是程序员自己创建的对象</p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Objective-C的内存管理主要有三种方式：</p>
+<blockquote>
+<p>ARC(自动内存计数)、手动内存计数、内存池.</p>
+</blockquote>
+<p>(Garbage Collection)<strong>自动内存计数</strong>:这种方式和 java 类似，在程序执行过程中。始终有一个人在背后准确地帮你收拾垃圾，你不用考虑它什么时候开始工作，怎样工作.<br>你只需要明白，我申请了一段<code>内存空间</code>，当我不再使用从而这段内存成为垃圾的时候，我就彻底的把它忘记掉，反正那个人会帮我收拾垃圾。遗憾的是，那个人需要消耗一定的资源，在携带设备里面，资源是紧俏商品所以 iPhone 不支持这个功能.</p>
+<blockquote>
+<p>解决:<br>通过 alloc– initial 方式创建的, 创建后引用计数+1, 此后每 retain 一次引用计数+1, 那么在程序中做相应次数的 release 就好了. </p>
+</blockquote>
+<p>(Reference Counted)<strong>手动内存计数</strong>:就是说，从一段内存被申请之后，就存在一个变量用于保存这段内存被使用的次数，我们暂时把它称为<code>计数器</code>，当计数器变为 0 的时候，那么就是释放这段内存的时候.<br>比如说，当在程序 A 里面一段内存被成功申请完成之后，那么这个计数器就从0变成1(这个过程叫做alloc)，然后程序B也需要使用这个内存，那么计数器就从 1 变成了2(这个过程叫做 retain)。紧接着程序 A 不再需要这段内存了，那么程序 A 就把这个计数器减 1(这个过程叫做 release);程序 B 也不再需要这段内存的时候，那么也把计数器减 1(这个过程还是 release)。当系统(也就是 Foundation)发现这个计数器变成了 0，那么就会调用内存回收程序把这段内存回收(我们把这个过程叫做 dealloc).<br>顺便提一句，如果没有 Foundation，那么维护计数器，释放内存等等工作都需要程序员手动来完成.</p>
+<blockquote>
+<p>解决:<br>一般是由类的静态方法创建的, 函数名中不会出现 alloc 或 init 字样, 如[NSString string]和[NSArrayarrayWithObject:], 创建后引用计数+0, 在函数出栈后释放, 即相当于一个栈上的局部变量. 当然也可以通过 retain 延长对象的生存期. </p>
+</blockquote>
+<p>(NSAutoRealeasePool)<strong>内存池</strong>:可以通过创建和释放内存池控制内存申请和回收的时机. </p>
+<blockquote>
+<p>解决:<br>是由 autorelease 加入系统内存池, 内存池是可以嵌套的, 每个内存池都需要有一个创建释放对, 就像 main 函数中写的一样. 使用也很简单, 比如<code>[[[NSString alloc]initialWithFormat:@”Hey you!”] autorelease]</code>, 即,将一个NSString 对象加入到最内层的系统内存池, 当我们释放这个内存池时, 其中的对象都会被释放.</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/02/shell/" rel="next" title="贝壳屋">
+                <i class="fa fa-chevron-left"></i> 贝壳屋
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/KVC和KVO/" rel="prev" title="KVC和KVO">
+                KVC和KVO <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Objective-C-中的内存分配"><span class="nav-number">1.</span> <span class="nav-text">Objective-C 中的内存分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MRC-与-ARC"><span class="nav-number">2.</span> <span class="nav-text">MRC 与 ARC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MRC"><span class="nav-number">2.1.</span> <span class="nav-text">MRC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC"><span class="nav-number">2.2.</span> <span class="nav-text">ARC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性标识符"><span class="nav-number">2.3.</span> <span class="nav-text">属性标识符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#错误使用属性标识符的后果"><span class="nav-number">2.4.</span> <span class="nav-text">错误使用属性标识符的后果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用循环"><span class="nav-number">3.</span> <span class="nav-text">引用循环</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Autorelease-Pool"><span class="nav-number">3.1.</span> <span class="nav-text">Autorelease Pool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Autorelease-Pool-的用处"><span class="nav-number">3.2.</span> <span class="nav-text">Autorelease Pool 的用处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Autorelease-Pool-进行-Drain-的时机"><span class="nav-number">3.3.</span> <span class="nav-text">Autorelease Pool 进行 Drain 的时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#main-m-中-Autorelease-Pool-的解释"><span class="nav-number">3.4.</span> <span class="nav-text">main.m 中 Autorelease Pool 的解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Autorelease-Pool-与函数返回值"><span class="nav-number">3.5.</span> <span class="nav-text">Autorelease Pool 与函数返回值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MRC-1"><span class="nav-number">3.6.</span> <span class="nav-text">MRC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC-1"><span class="nav-number">3.7.</span> <span class="nav-text">ARC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#weak-与-autorelease"><span class="nav-number">3.8.</span> <span class="nav-text">weak 与 autorelease</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC-下是否还有必要在-dealloc-中把属性置为-nil"><span class="nav-number">3.9.</span> <span class="nav-text">ARC 下是否还有必要在 dealloc 中把属性置为 nil?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-ARC-下把变量置为-nil-有什么效果？什么情况下需要把变量置为-nil"><span class="nav-number">3.10.</span> <span class="nav-text">在 ARC 下把变量置为 nil 有什么效果？什么情况下需要把变量置为 nil</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC-在运行时期的优化"><span class="nav-number">3.11.</span> <span class="nav-text">ARC 在运行时期的优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检测循环引用的工具"><span class="nav-number">4.</span> <span class="nav-text">检测循环引用的工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#xcode自带的检测工具"><span class="nav-number">4.1.</span> <span class="nav-text">xcode自带的检测工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

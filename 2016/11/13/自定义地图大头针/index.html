@@ -1,0 +1,714 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="思路  查阅sdk文档 实现代理方法 定位用户位置 在第一次定位到的位置添加起点大头针 绘制大头针     思维导图： 实现1. 首先，需要让控制器遵守代理协议&amp;lt;MAMapViewDelegate&amp;gt;&amp;amp;设置代理123456789101112131415161718192021222324252627282930313233@interface WBMapViewControlle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义地图大头针">
+<meta property="og:url" content="http://yoursite.com/2016/11/13/自定义地图大头针/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="思路  查阅sdk文档 实现代理方法 定位用户位置 在第一次定位到的位置添加起点大头针 绘制大头针     思维导图： 实现1. 首先，需要让控制器遵守代理协议&amp;lt;MAMapViewDelegate&amp;gt;&amp;amp;设置代理123456789101112131415161718192021222324252627282930313233@interface WBMapViewControlle">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-1e36b101faa773b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-8e5da3dec46614bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-9de4850df38ea1c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-13T03:33:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义地图大头针">
+<meta name="twitter:description" content="思路  查阅sdk文档 实现代理方法 定位用户位置 在第一次定位到的位置添加起点大头针 绘制大头针     思维导图： 实现1. 首先，需要让控制器遵守代理协议&amp;lt;MAMapViewDelegate&amp;gt;&amp;amp;设置代理123456789101112131415161718192021222324252627282930313233@interface WBMapViewControlle">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-1e36b101faa773b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/13/自定义地图大头针/"/>
+
+
+
+
+
+  <title>自定义地图大头针 | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/13/自定义地图大头针/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">自定义地图大头针</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-13T11:33:09+08:00">
+                2016-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><blockquote>
+<ol>
+<li>查阅sdk文档</li>
+<li>实现代理方法</li>
+<li>定位用户位置<ul>
+<li>在第一次定位到的位置添加起点大头针</li>
+<li>绘制大头针</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<p>思维导图：<br><img src="http://upload-images.jianshu.io/upload_images/2329629-1e36b101faa773b6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="MApoint.png"></p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="1-首先，需要让控制器遵守代理协议-lt-MAMapViewDelegate-gt-amp-设置代理"><a href="#1-首先，需要让控制器遵守代理协议-lt-MAMapViewDelegate-gt-amp-设置代理" class="headerlink" title="1. 首先，需要让控制器遵守代理协议&lt;MAMapViewDelegate&gt;&amp;设置代理"></a>1. 首先，需要让控制器遵守代理协议<code>&lt;MAMapViewDelegate&gt;</code>&amp;设置代理</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">@interface WBMapViewController ()&lt;MAMapViewDelegate&gt;</div><div class="line"></div><div class="line">// 省略其他方法...</div><div class="line">#pragma mark - UISetup</div><div class="line"></div><div class="line">- (void)setupMapView&#123;</div><div class="line">    ///初始化地图</div><div class="line">    MAMapView *_mapView = [[MAMapView alloc] initWithFrame:self.view.bounds];</div><div class="line">    </div><div class="line">    ///把地图添加至view</div><div class="line">    [self.view addSubview:_mapView];</div><div class="line">    </div><div class="line">    //隐藏比例尺</div><div class="line">    _mapView.showsScale = NO;</div><div class="line">    </div><div class="line">    //关闭camera旋转，节省性能</div><div class="line">    _mapView.rotateCameraEnabled = NO;</div><div class="line">    </div><div class="line">    // 5. 显示用户的位置</div><div class="line">    _mapView.showsUserLocation = YES;</div><div class="line">    </div><div class="line">    // 6. 跟踪用户的位置 - 可以将用户定位在地图的中心，并且放大地图，有的时候，速度会有些慢！</div><div class="line">    _mapView.userTrackingMode = MAUserTrackingModeFollow;</div><div class="line"></div><div class="line">    // 7. 允许后台定位 - 保证 Background Modes 中的 Location updates 处于选中状态</div><div class="line">    _mapView.allowsBackgroundLocationUpdates = YES;</div><div class="line">    </div><div class="line">    // 8. 不允许系统暂停位置更新</div><div class="line">    _mapView.pausesLocationUpdatesAutomatically = NO;</div><div class="line">    </div><div class="line">    // 将控制器设置为地图代理</div><div class="line">    _mapView.delegate = self;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-实现两个代理方法"><a href="#2-实现两个代理方法" class="headerlink" title="2. 实现两个代理方法"></a>2. 实现两个代理方法</h3><ul>
+<li>didUpdateUserLocation</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">#pragma mark - delegate</div><div class="line"></div><div class="line">/**</div><div class="line"> * @brief 位置或者设备方向更新后，会调用此函数</div><div class="line"> * @param mapView 地图View</div><div class="line"> * @param userLocation 用户定位信息(包括位置与设备方向等数据) 是一个固定的对象</div><div class="line"> * @param updatingLocation 标示是否是location数据更新, YES:location数据更新 NO:heading数据更新</div><div class="line"> */</div><div class="line">- (void)mapView:(MAMapView *)mapView didUpdateUserLocation:(MAUserLocation *)userLocation updatingLocation:(BOOL)updatingLocation &#123;</div><div class="line">    </div><div class="line">    // 0. 判断 `位置数据` 是否变化 - 不一定是经纬度变化！</div><div class="line">    if (!updatingLocation) &#123;</div><div class="line">        return;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    // 大概 1s 更新一次！</div><div class="line">    NSLog(@&quot;%@ %p&quot;, userLocation.location, userLocation.location);</div><div class="line">    </div><div class="line">    // 判断起始位置是否存在</div><div class="line">    if (_startLocation == nil) &#123;</div><div class="line">        _startLocation = userLocation.location;</div><div class="line">        </div><div class="line">        // 1. 实例化大头针</div><div class="line">        MAPointAnnotation *annotaion = [MAPointAnnotation new];</div><div class="line">        </div><div class="line">        // 2. 指定坐标位置</div><div class="line">        annotaion.coordinate = userLocation.location.coordinate;</div><div class="line">        </div><div class="line">        // 3. 添加到地图视图</div><div class="line">        [mapView addAnnotation:annotaion];</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    // 绘制轨迹模型</div><div class="line">    [mapView addOverlay:[_sportTracking appendLocation:userLocation.location]];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意:<br>在GPS信号好的时候，是1s调用一次代理方法.<br>这里得到userLocation.location位置信息的地址是相同的，所以不能通过userLocation来判断用户的位置是否发生变化</p>
+</blockquote>
+<ul>
+<li>viewForAnnotation:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">- (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id&lt;MAAnnotation&gt;)annotation &#123;</div><div class="line">    </div><div class="line">    // 0. 判断大头针的类型</div><div class="line">    if (![annotation isKindOfClass:[MAPointAnnotation class]]) &#123;</div><div class="line">        return nil;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    // 1. 查询可重用大头针视图</div><div class="line">    static NSString *annotaionId = @&quot;annotaionId&quot;;</div><div class="line">    MAAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:annotaionId];</div><div class="line">    </div><div class="line">    // 2. 如果没有查到，新建视图</div><div class="line">    if (annotationView == nil) &#123;</div><div class="line">        annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotaionId];</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    // 3. 设置大头针视图 - 设置图像</div><div class="line">    // 根据运动类型来创建运动图像</div><div class="line">    UIImage *image = _sportTracking.SportImg;</div><div class="line">    annotationView.image = image;</div><div class="line">    annotationView.centerOffset = CGPointMake(0, -image.size.height * 0.5);</div><div class="line">    </div><div class="line">    // 4. 返回自定义大头针视图</div><div class="line">    return annotationView;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>提示：<br> MAUserlocation 是系统定位用户位置的默认大头针，显示在地图上是蓝色的圆点<br>MAPointAnnotaion 是自定义的大头针</p>
+</blockquote>
+<ul>
+<li><p>MAUserlocation<br><img src="http://upload-images.jianshu.io/upload_images/2329629-8e5da3dec46614bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="MAUserlocation.png"></p>
+</li>
+<li><p>MAPointAnnotaion<br><img src="http://upload-images.jianshu.io/upload_images/2329629-9de4850df38ea1c4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="MAPointAnnotaion]
+.png"></p>
+</li>
+</ul>
+<blockquote>
+<p>总结：<br> 添加自定义的一个起始大头针的过程不难。实现两个代理方法即可，先创建一个大头针<code>MAPointAnnotation</code>。在创建的过程中注意要给它设置一个坐标位置同时设置一个轨迹模型。得到<code>MAPointAnnotation</code>后通过<code>addAnnotaion:</code>添加给地图View<br><code>viewForAnnotation:</code>返回自定义的大头针view，在此过程中要注意设置图像的位置，需要让其偏移一些，否则就盖住了下面的圆点</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">annotationView.centerOffset = CGPointMake(0, -image.size.height * 0.5);</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/13/iOS集成高德地图SDK/" rel="next" title="iOS集成高德地图SDK">
+                <i class="fa fa-chevron-left"></i> iOS集成高德地图SDK
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/数据解析_json/" rel="prev" title="数据解析_json">
+                数据解析_json <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-首先，需要让控制器遵守代理协议-lt-MAMapViewDelegate-gt-amp-设置代理"><span class="nav-number">2.1.</span> <span class="nav-text">1. 首先，需要让控制器遵守代理协议<MAMapViewDelegate>&设置代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-实现两个代理方法"><span class="nav-number">2.2.</span> <span class="nav-text">2. 实现两个代理方法</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

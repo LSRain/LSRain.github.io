@@ -1,0 +1,776 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="性能优化 - 解决频繁操作沙盒的问题问题：模型中的数据在后期的使用中很频繁，这样会导致频繁的操作沙盒IO影响性能(如，多次需要取用户昵称，都需再次从沙盒读取)  解决办法  在viewModel中添加属性，单独负责存储模型，只在从沙盒中取一次数据，可以在init中赋值12345/// 防止频繁调用沙盒影响性能 - 重写`init`override init() &amp;#123;  super.init">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LSSina项目(五)">
+<meta property="og:url" content="http://yoursite.com/2016/12/05/LSSina项目(五)/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="性能优化 - 解决频繁操作沙盒的问题问题：模型中的数据在后期的使用中很频繁，这样会导致频繁的操作沙盒IO影响性能(如，多次需要取用户昵称，都需再次从沙盒读取)  解决办法  在viewModel中添加属性，单独负责存储模型，只在从沙盒中取一次数据，可以在init中赋值12345/// 防止频繁调用沙盒影响性能 - 重写`init`override init() &amp;#123;  super.init">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-4f05122aacdcebe3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-19859a0d930254c8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-ae05df150ff02db3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-d078f545cfde6845.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-12-06T13:50:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LSSina项目(五)">
+<meta name="twitter:description" content="性能优化 - 解决频繁操作沙盒的问题问题：模型中的数据在后期的使用中很频繁，这样会导致频繁的操作沙盒IO影响性能(如，多次需要取用户昵称，都需再次从沙盒读取)  解决办法  在viewModel中添加属性，单独负责存储模型，只在从沙盒中取一次数据，可以在init中赋值12345/// 防止频繁调用沙盒影响性能 - 重写`init`override init() &amp;#123;  super.init">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-4f05122aacdcebe3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/05/LSSina项目(五)/"/>
+
+
+
+
+
+  <title>LSSina项目(五) | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/05/LSSina项目(五)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LSSina项目(五)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-05T21:35:33+08:00">
+                2016-12-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="性能优化-解决频繁操作沙盒的问题"><a href="#性能优化-解决频繁操作沙盒的问题" class="headerlink" title="性能优化 - 解决频繁操作沙盒的问题"></a>性能优化 - 解决频繁操作<code>沙盒</code>的问题</h2><p>问题：模型中的数据在后期的使用中很频繁，这样会导致频繁的操作沙盒<code>IO</code>影响性能(如，多次需要取用户昵称，都需再次从<code>沙盒</code>读取)</p>
+<blockquote>
+<p>解决办法</p>
+</blockquote>
+<p>在viewModel中添加属性，单独负责存储模型，只在从沙盒中取一次数据，可以在init中赋值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/// 防止频繁调用沙盒影响性能 - 重写`init`</div><div class="line">override init() &#123;</div><div class="line">  super.init()</div><div class="line">  userAccount = getAccountModel()</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<p>这样，只会从沙盒中取一次，接下来，都会只在内存中取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">let model = LSUserAccountViewModel.sharedAccount.userAccount</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>但是这样同时出现了一个问题：</p>
+</blockquote>
+<p>用户第一次<code>安装</code>APP并运行的时候，沙盒中虽然会保存用户信息，但是内存中是没有用户信息的（内存中单例viewModel中第一次没有用户信息），会出现<code>nil</code><br><img src="http://upload-images.jianshu.io/upload_images/2329629-4f05122aacdcebe3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="nil"><br>解决方法是：在进行沙盒保存的时候给属性赋值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/// 保存对象</div><div class="line">func saveAccountModel(model: LSUserAccountModel) -&gt; Void &#123;</div><div class="line">  userAccount = model</div><div class="line">  NSKeyedArchiver.archiveRootObject(model, toFile: file)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="自定义类"><a href="#自定义类" class="headerlink" title="自定义类"></a>自定义类</h3><p>可以让当前类不继承自NSObject<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/// 自定义类 - 没有继承 `NSObject`</div><div class="line">class LSUserAccountViewModel&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>和继承自<code>NSObject</code>的子类用法一样，只是init不需再写<code>override</code>且不需再<code>init</code>中写<code>super.init()</code>，但是自定义类也需要实现init方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/// 防止频繁调用沙盒影响性能 - 重写`init`</div><div class="line">init() &#123;</div><div class="line">  userAccount = getAccountModel()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="抽取网络请求到LSNetworkTools"><a href="#抽取网络请求到LSNetworkTools" class="headerlink" title="抽取网络请求到LSNetworkTools"></a>抽取网络请求到<code>LSNetworkTools</code></h2><p>将在控制器中的<code>OAuth</code>网络请求抽取到网络请求工具类中，用来加强功能的独立性开发<br>让<code>LSNetworkTools</code>只负责网络请求，外界再调用时，就只需要处理其他逻辑不必再关系其请求参数和<code>URL</code><br>工具类中新增一个<code>OAuth</code>接口，专门用来处理<code>OAuth</code>相关请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">/// OAuth相关接口</div><div class="line">extension LSNetworkTools&#123;</div><div class="line">    </div><div class="line">    /// OAuth加载`token`接口</div><div class="line">    ///</div><div class="line">    /// - Parameters:</div><div class="line">    ///   - code: code</div><div class="line">    ///   - success: 成功的回调</div><div class="line">    ///   - failure: 失败的回调</div><div class="line">    func oauthLoadUserAccount(code: String, success:@escaping (Any?)-&gt;(), failure:@escaping (Error)-&gt;())&#123;</div><div class="line">        let parames = [</div><div class="line">            &quot;client_id&quot;: LSClient_id,</div><div class="line">            &quot;client_secret&quot;: LSClient_secret,</div><div class="line">            &quot;grant_type&quot;: &quot;authorization_code&quot;,</div><div class="line">            &quot;code&quot;: code,</div><div class="line">            &quot;redirect_uri&quot;: LSRedirect</div><div class="line">        ]</div><div class="line">        request(method: .post, URLString: LSTokenURL, parameters: parames, success: success, failure: failure)</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /// OAuth加载用户信息接口</div><div class="line">    ///</div><div class="line">    /// - Parameters:</div><div class="line">    ///   - userModel: 用户模型</div><div class="line">    ///   - success: 成功的回调</div><div class="line">    ///   - failure: 失败的回调</div><div class="line">    func oauthLoadUserInfo(userModel: LSUserAccountModel, success:@escaping (Any?)-&gt;(), failure:@escaping (Error)-&gt;())&#123;</div><div class="line">        let parames = [</div><div class="line">            &quot;access_token&quot;: userModel.access_token,</div><div class="line">            &quot;uid&quot;: userModel.uid</div><div class="line">        ]</div><div class="line">        request(method: .get, URLString: LSUserInfoURL, parameters: parames, success: success, failure: failure)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>控制器中在调用时就不必再关系具体的调用细节，这也是一种组件化编程的思想，起到<code>解耦</code>的作用<br>外界请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">/// extension - 网络请求相关接口</div><div class="line">extension LSOAuthViewController&#123;</div><div class="line">    </div><div class="line">    func getUserAccount(code: String) -&gt; Void &#123;</div><div class="line">        LSNetworkTools.sharedTools.oauthLoadUserAccount(code: code, success: &#123; (responseObject) in</div><div class="line">            guard let res = responseObject as?[String: Any] else&#123;</div><div class="line">                return</div><div class="line">            &#125;</div><div class="line">            let userAccountModel = LSUserAccountModel.yy_model(withJSON: res)</div><div class="line">            guard let model = userAccountModel else&#123;</div><div class="line">                return</div><div class="line">            &#125;</div><div class="line">            self.getUserInfo(userModel: model)</div><div class="line">        &#125;) &#123; (error) in</div><div class="line">            print(&quot;\(error)&quot;)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    func getUserInfo(userModel: LSUserAccountModel) -&gt; Void &#123;</div><div class="line">        LSNetworkTools.sharedTools.oauthLoadUserInfo(userModel: userModel, success: &#123; (responseObject) in</div><div class="line">            guard let res = responseObject as?[String: Any] else&#123;</div><div class="line">                return</div><div class="line">            &#125;</div><div class="line">            userModel.screen_name = res[&quot;screen_name&quot;] as? String</div><div class="line">            userModel.profile_image_url = res[&quot;profile_image_url&quot;] as? String</div><div class="line">            LSUserAccountViewModel.sharedAccount.saveAccountModel(model: userModel)</div><div class="line">        &#125;) &#123; (error) in</div><div class="line">            print(&quot;\(error)&quot;)</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="网络请求抽取到viewModel-MVVM"><a href="#网络请求抽取到viewModel-MVVM" class="headerlink" title="网络请求抽取到viewModel - MVVM"></a>网络请求抽取到viewModel - <code>MVVM</code></h2><p>当前网络请求逻辑在<code>MVC</code>中是没有问题的-控制器负责网络逻辑处理<br>但是在<code>MVVM</code>中，可以再将网络请求的逻辑委托给viewModel，即<code>viewModel</code>作为网络处理层<br>控制器将不必再关心请求数据，只关心是否请求成功，判断成功与否即可<br>抽取到viewModel中，设置一个extension专门负责控制器的网络梳理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">/// 帮助VC处理网络请求</div><div class="line">extension LSUserAccountViewModel&#123;</div><div class="line">    </div><div class="line">    /// 获取用户`token`</div><div class="line">    ///</div><div class="line">    /// - Parameters:</div><div class="line">    ///   - code: code</div><div class="line">    ///   - finish: 成功标记闭包</div><div class="line">    func getUserAccount(code: String, finish:@escaping (Bool)-&gt;()) -&gt; Void &#123;</div><div class="line">        LSNetworkTools.sharedTools.oauthLoadUserAccount(code: code, success: &#123; (responseObject) in</div><div class="line">            guard let res = responseObject as?[String: Any] else&#123;</div><div class="line">                finish(false)</div><div class="line">                return</div><div class="line">            &#125;</div><div class="line">            let userAccountModel = LSUserAccountModel.yy_model(withJSON: res)</div><div class="line">            guard let model = userAccountModel else&#123;</div><div class="line">                finish(false)</div><div class="line">                return</div><div class="line">            &#125;</div><div class="line">            self.getUserInfo(userModel: model, finish: finish)</div><div class="line">        &#125;) &#123; (error) in</div><div class="line">            print(&quot;\(error)&quot;)</div><div class="line">            finish(false)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /// 请求用户信息</div><div class="line">    ///</div><div class="line">    /// - Parameters:</div><div class="line">    ///   - userModel: 用户模型</div><div class="line">    ///   - finish: 成功标记闭包</div><div class="line">    func getUserInfo(userModel: LSUserAccountModel, finish:@escaping (Bool)-&gt;()) -&gt; Void &#123;</div><div class="line">        LSNetworkTools.sharedTools.oauthLoadUserInfo(userModel: userModel, success: &#123; (responseObject) in</div><div class="line">            guard let res = responseObject as?[String: Any] else&#123;</div><div class="line">                finish(false)</div><div class="line">                return</div><div class="line">            &#125;</div><div class="line">            userModel.screen_name = res[&quot;screen_name&quot;] as? String</div><div class="line">            userModel.profile_image_url = res[&quot;profile_image_url&quot;] as? String</div><div class="line">            self.saveAccountModel(model: userModel)</div><div class="line">            /// 用户信息获取到才标识成功</div><div class="line">            finish(true)</div><div class="line">        &#125;) &#123; (error) in</div><div class="line">            print(&quot;\(error)&quot;)</div><div class="line">            finish(false)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在其中，添加一个<code>finish(Bool)-&gt;()</code>的闭包，用来回调成功与否给控制器<br>之后控制器便只需要单独加载登录视图并判断<code>viewModel</code>网络请求是否成功即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">/// extension - webView代理</div><div class="line">extension LSOAuthViewController: UIWebViewDelegate&#123;</div><div class="line">    </div><div class="line">    /// webView代理方法 - 主要用来获取code</div><div class="line">    ///</div><div class="line">    /// - Parameters:</div><div class="line">    ///   - webView: webView</div><div class="line">    ///   - request: 请求</div><div class="line">    ///   - navigationType: navigationType</div><div class="line">    /// - Returns: 默认返回`true`</div><div class="line">    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -&gt; Bool &#123;</div><div class="line">        let URLString = request.url?.absoluteString</div><div class="line">        if let u = URLString, u.hasPrefix(LSRedirect) &#123;</div><div class="line">            let query = request.url?.query</div><div class="line">            let code = query?.substring(from: &quot;code=&quot;.endIndex) ?? &quot;&quot;</div><div class="line">            LSUserAccountViewModel.sharedAccount.getUserAccount(code: code, finish: &#123; (isSuccess) in</div><div class="line">                if !isSuccess&#123;</div><div class="line">                    print(&quot;数据请求失败！&quot;)</div><div class="line">                    return</div><div class="line">                &#125;</div><div class="line">                print(&quot;数据请求成功&quot;)</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line">        return true</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="判断accessToken是否过期"><a href="#判断accessToken是否过期" class="headerlink" title="判断accessToken是否过期"></a>判断<code>accessToken</code>是否过期</h2><p><code>accessToken</code>有过期时间（<code>开发者用户</code>时间为5年，<code>普通用户</code>是3天）所以用户在使用过程中并不知道是否过期，需要对其做判断</p>
+<blockquote>
+<p>需求： 后期如果做一些数据请求<code>loadDate</code>，需要先判断<code>accessToken</code>是否过期</p>
+</blockquote>
+<ul>
+<li>告知用户重新登陆授权<ul>
+<li>用户不知道是否过期</li>
+</ul>
+</li>
+<li>思路：需要赋值token = nil  -&gt;  重新登陆</li>
+<li>同时需分析<code>accessToken</code>作为<code>存储型属性</code>还是<code>计算型属性</code><ul>
+<li>作为<code>计算型属性</code>每次使用之前都需要进行判断<code>实时判断</code>，才能判断其是否过期</li>
+</ul>
+</li>
+</ul>
+<p>置为<code>nil</code>分为两种情况</p>
+<p>-没有登录</p>
+<ul>
+<li>过期</li>
+</ul>
+<p>viewModel中添加一个属性判断<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/// 单独定义的token 用以标记是否过期</div><div class="line">    var access_token: String?&#123;</div><div class="line">        if userAccount?.expires_Date?.compare(Date()) == ComparisonResult.orderedDescending &#123;</div><div class="line">            /// 降序 - 说明没有过期</div><div class="line">            return userAccount?.access_token</div><div class="line">        &#125; else&#123;</div><div class="line">            /// 过期/没有登录 - 置为`nil`</div><div class="line">            return nil</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="判断用户是否登录"><a href="#判断用户是否登录" class="headerlink" title="判断用户是否登录"></a>判断用户是否登录</h2><p>如何判断是否登录？<br>分两种情况：</p>
+<ul>
+<li>用户登录了（登录了，但是<code>token</code>没有过期）</li>
+<li>没有登录<ul>
+<li>真的没有登录</li>
+<li>登录过，但是<code>token</code>过期了</li>
+</ul>
+</li>
+</ul>
+<p>发现使用<code>token</code>判断是最优的，添加一个<code>计算型属性</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/// 用户登录标记</div><div class="line">    var isLogin: Bool?&#123;</div><div class="line">        return access_token != nil</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="欢迎界面搭建-amp-封装SDWebImage"><a href="#欢迎界面搭建-amp-封装SDWebImage" class="headerlink" title="欢迎界面搭建&amp;封装SDWebImage"></a>欢迎界面搭建&amp;封装<code>SDWebImage</code></h2><p><code>欢迎界面</code>的素材需要改一下:<br><img src="http://upload-images.jianshu.io/upload_images/2329629-19859a0d930254c8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="welleCome"><br> 勾选<code>ipone</code> 再将图片拖入正确的位置 - <code>2x/3x</code><br>使用懒加载的方式加载背景图等控件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">/// backgroundView</div><div class="line">private lazy var bgView: UIImageView = &#123;</div><div class="line">    let view = UIImageView(imageName: &quot;ad_background&quot;)</div><div class="line">    return view</div><div class="line">&#125;()</div><div class="line"></div><div class="line">/// icon</div><div class="line">private lazy var iconView: UIImageView = &#123;</div><div class="line">    let view = UIImageView()</div><div class="line">    /// layer setting</div><div class="line">    view.layer.borderColor = LSThemeColor.cgColor</div><div class="line">    view.layer.borderWidth = 1</div><div class="line">    view.layer.cornerRadius = 45</div><div class="line">    view.ls_setImage(withURLString: LSUserAccountViewModel.sharedAccount.userAccount?.profile_image_url, placeholderImageName: &quot;avatar_default&quot;)</div><div class="line">    /// 设置圆图</div><div class="line">    view.layer.masksToBounds = true</div><div class="line">    return view</div><div class="line">&#125;()</div><div class="line"></div><div class="line">/// message</div><div class="line">private lazy var messageLabel: UILabel = &#123;</div><div class="line">    let lab = UILabel(text: &quot;欢迎回来&quot;, fontSize: 18, textColor: LSThemeColor)</div><div class="line">    return lab</div><div class="line">&#125;()</div></pre></td></tr></table></figure></p>
+<p>其中，设置圆形图使用设置<code>layer</code>的方式<br>只需要设置好layer的<code>cornerRadius</code>，再设置<code>view.layer.masksToBounds = true</code>就行了</p>
+<h3 id="封装SDWebImage"><a href="#封装SDWebImage" class="headerlink" title="封装SDWebImage"></a>封装SDWebImage</h3><p>考虑到直接使用sdwebimage下载图片会多写一下代码，这里封装了<code>SDWebImage</code>下载图片<br>仿照其方法对应的在<code>UIImageView</code>里设置extension<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/// 封装了`SDWebImage` - ls_setImage</div><div class="line">///</div><div class="line">/// - Parameters:</div><div class="line">///   - withURLString: URL</div><div class="line">///   - placeholderImageName: placeholderImageName</div><div class="line">func ls_setImage(withURLString: String!, placeholderImageName: String!)&#123;</div><div class="line">    let url = URL(string: withURLString)</div><div class="line">    sd_setImage(with: url, placeholderImage: UIImage(named: placeholderImageName))</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="欢迎界面添加阻尼动画"><a href="#欢迎界面添加阻尼动画" class="headerlink" title="欢迎界面添加阻尼动画"></a>欢迎界面添加阻尼动画</h2><p>动画加在哪里？</p>
+<ul>
+<li>加在生命周期方法<code>视图控件加载完毕</code>是最优的</li>
+</ul>
+<p>更新约束<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">/// 控件加载完成 - 生命周期 设置阻尼动画</div><div class="line">  override func viewDidAppear(_ animated: Bool) &#123;</div><div class="line">      iconView.snp_updateConstraints &#123; (make) in</div><div class="line">          make.top.equalTo(view).offset(100)</div><div class="line">      &#125;</div><div class="line">      /// 阻尼动画</div><div class="line">      /// - withDuration: 动画时长</div><div class="line">      /// - delay: 延迟时间</div><div class="line">      /// - usingSpringWithDamping: 阻尼系数 - 系数越小 弹性越大</div><div class="line">      /// - initialSpringVelocity: 起始加速度</div><div class="line">      UIView.animate(withDuration: 1, delay: 1, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: [], animations: &#123;</div><div class="line">          self.view.layoutIfNeeded()</div><div class="line">      &#125;) &#123; (_) in</div><div class="line">          /// 头像动画完成 - 显示lab</div><div class="line">          UIView.animate(withDuration: 0.25, animations: &#123; </div><div class="line">              self.messageLabel.alpha = 1</div><div class="line">          &#125;)</div><div class="line">      &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意</p>
+</blockquote>
+<p>使用snpKit通过改变约束来设置动画，使用其<code>update</code>来更新约束有一个<code>重要的</code>前提<br>使用<code>update</code>要注意约束的<code>相对对象</code>是否改变，没有改变就可以用<code>update</code><br>如iconView起始的约束和后来的约束参照都是<code>self.view</code>就可以使用，但是如果<code>相对对象</code>改变了就不能用,如起始约束参照的是MessageLable，后来update参照的是view,就不能使用，会导致约束冲突</p>
+<blockquote>
+<p>即： 需要update前后make的参照对象一致</p>
+</blockquote>
+<p>同时，还有一个问题：动画完成后需要执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">self.view.layoutIfNeeded()</div></pre></td></tr></table></figure></p>
+<p>重新布局子控件，其约束更新才会生效，因为是通过约束来改变控件位置的，而不是<code>frame</code><br>即： 使用更新约束还需要更新后执行<code>layoutIfNeeded</code><br><code>欢迎</code>文字设置为刚开始<code>alpha</code> = 0,等到iconView的阻尼动画完成后显示</p>
+<h2 id="通知控制器切换逻辑"><a href="#通知控制器切换逻辑" class="headerlink" title="通知控制器切换逻辑"></a><code>通知</code>控制器切换<strong>逻辑</strong></h2><p>登录之后控制器的切换逻辑比较简单，但是具体的控制器的切换、判断等实现起来还是有点复杂的<br>欢迎界面完成跳到首页</p>
+<blockquote>
+<p>流程分析</p>
+</blockquote>
+<ul>
+<li>用户没有登录<ul>
+<li>显示<code>visitorVc</code>访客视图</li>
+<li>引导登录</li>
+<li>登录成功</li>
+<li>加载欢迎控制器<ul>
+<li>动画完成</li>
+</ul>
+</li>
+<li>首页（登录状态）</li>
+</ul>
+</li>
+<li>用户已登录<ul>
+<li>启动加载欢迎控制器</li>
+<li>首页（登录状态）</li>
+</ul>
+</li>
+</ul>
+<p>添加通知<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/// 通知相关</div><div class="line">/// 切换控制器通知</div><div class="line">let LSSWITCHROOTVCNOTI = &quot;LSSWITCHROOTVCNOTI&quot;</div></pre></td></tr></table></figure></p>
+<h3 id="授权完成后通知逻辑"><a href="#授权完成后通知逻辑" class="headerlink" title="授权完成后通知逻辑"></a>授权完成后通知逻辑</h3><p>OAuth请求成功后跳转到欢迎界面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">/// extension - webView代理</div><div class="line">extension LSOAuthViewController: UIWebViewDelegate&#123;</div><div class="line">    </div><div class="line">    /// webView代理方法 - 主要用来获取code</div><div class="line">    ///</div><div class="line">    /// - Parameters:</div><div class="line">    ///   - webView: webView</div><div class="line">    ///   - request: 请求</div><div class="line">    ///   - navigationType: navigationType</div><div class="line">    /// - Returns: 默认返回`true`</div><div class="line">    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -&gt; Bool &#123;</div><div class="line">        let URLString = request.url?.absoluteString</div><div class="line">        if let u = URLString, u.hasPrefix(LSRedirect) &#123;</div><div class="line">            let query = request.url?.query</div><div class="line">            let code = query?.substring(from: &quot;code=&quot;.endIndex) ?? &quot;&quot;</div><div class="line">            LSUserAccountViewModel.sharedAccount.getUserAccount(code: code, finish: &#123; (isSuccess) in</div><div class="line">                if !isSuccess&#123;</div><div class="line">                    print(&quot;数据请求失败！&quot;)</div><div class="line">                    return</div><div class="line">                &#125;</div><div class="line">                self.dismiss(animated: false, completion: &#123; </div><div class="line">                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: LSSWITCHROOTVCNOTI), object: nil)</div><div class="line">                &#125;)</div><div class="line">            &#125;)</div><div class="line">            /// 用户信息得到后 - 不再发送网络请求</div><div class="line">            return false</div><div class="line">        &#125;</div><div class="line">        return true</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意这里的两点<br>第一： 当前登录视图是通过模态的形式弹出来的，需要在切换控制器前将其<code>dismiss</code>，否则跳转到首页后，下层view上实际上还是有一个<code>webView</code>在常驻着，而且用户无法发现：<br><img src="http://upload-images.jianshu.io/upload_images/2329629-ae05df150ff02db3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="dismiss"><br>第二： 默认情况下，webView的这个代理方法返回的是<code>true</code>，应该在请求到用户信息后将其返回<code>false</code>让它不再发送网络请求，节省流量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/// 用户信息得到后 - 不再发送网络请求</div><div class="line">return false</div></pre></td></tr></table></figure></p>
+<h3 id="欢迎界面加载完成后通知发送"><a href="#欢迎界面加载完成后通知发送" class="headerlink" title="欢迎界面加载完成后通知发送"></a>欢迎界面加载完成后通知发送</h3><p>wellcome -&gt; mainVC<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">/// 阻尼动画</div><div class="line">        /// - withDuration: 动画时长</div><div class="line">        /// - delay: 延迟时间</div><div class="line">        /// - usingSpringWithDamping: 阻尼系数 - 系数越小 弹性越大</div><div class="line">        /// - initialSpringVelocity: 起始加速度</div><div class="line">        UIView.animate(withDuration: 1, delay: 1, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: [], animations: &#123;</div><div class="line">            self.view.layoutIfNeeded()</div><div class="line">        &#125;) &#123; (_) in</div><div class="line">            /// 头像动画完成 - 显示lab</div><div class="line">            UIView.animate(withDuration: 0.25, animations: &#123;</div><div class="line">                self.messageLabel.alpha = 1</div><div class="line">            &#125;, completion: &#123; (_) in</div><div class="line">              /// 动画展示完成后发送通知 - 切换到首页控制器 `已登录`</div><div class="line">                NotificationCenter.default.post(name: NSNotification.Name(rawValue: LSSWITCHROOTVCNOTI), object: &quot;welcome&quot;)</div><div class="line">            &#125;)</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>注意欢迎控制器发送的通知和OAuth控制器发出的是同名的通知名，都是发给<code>appDelegate</code>统一接收，通过携带不同的参数，可以区别不同通知</p>
+<h3 id="appDelegate中通知处理"><a href="#appDelegate中通知处理" class="headerlink" title="appDelegate中通知处理"></a>appDelegate中通知处理</h3><p>两个控制器发送的通知统一由<code>appDelegate</code>接收并负责分发处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -&gt; Bool &#123;</div><div class="line">        // Override point for customization after application launch.</div><div class="line">        </div><div class="line">        window = UIWindow(frame: UIScreen.main.bounds)</div><div class="line">        setupRootVC()</div><div class="line">        NotificationCenter.default.addObserver(self, selector: #selector(switchRootViewController(noti:)), name: NSNotification.Name(rawValue: LSSWITCHROOTVCNOTI), object: nil)</div><div class="line">        window?.makeKeyAndVisible()</div><div class="line">        return true</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /// 设置根控制器</div><div class="line">    /// - 用户已经授权过登录 则启动时rootVC为`LSWellcomeViewController`</div><div class="line">    func setupRootVC() -&gt; Void &#123;</div><div class="line">        if LSUserAccountViewModel.sharedAccount.isLogin &#123;</div><div class="line">            window?.rootViewController = LSWellcomeViewController()</div><div class="line">            return</div><div class="line">        &#125;</div><div class="line">        window?.rootViewController = LSMainViewController()</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /// 切换根控制器</div><div class="line">    ///</div><div class="line">    /// - Parameter noti: 通知参数 - `nil`: 授权后通知 - `welcom`: 欢迎页加载完成后通知</div><div class="line">    func switchRootViewController(noti: Notification)&#123;</div><div class="line">        if noti.object == nil &#123;</div><div class="line">            /// 说明是授权完成通知</div><div class="line">            window?.rootViewController = LSWellcomeViewController()</div><div class="line">        &#125;else&#123;</div><div class="line">            /// 首页加载完成通知 - 附带参数</div><div class="line">            window?.rootViewController = LSMainViewController()</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>appDelegate通过甄别不同的通知参数来负责处理控制器的切换操作<br>注意这里的两次<code>LSMainViewController</code>不是同一个控制器对象，即：首次进入APP的<code>LSMainViewController</code>和欢迎登录-&gt;授权-&gt;欢迎完成后创建的<code>LSMainViewController</code>是一个新的控制器了</p>
+<h3 id="销毁通知"><a href="#销毁通知" class="headerlink" title="销毁通知"></a>销毁通知</h3><p>swfit中通知的销毁在方法<code>deinit</code>,和OC中的<code>dealloc</code>方法是一样的，在这里，其实不销毁通知也是可以的，因为是appDlegate负责接收通知，而这里销毁函数只有在程序<code>死亡</code>后才有机会执行得到。所以可以不写，但是出于习惯，这里还是加上了通知的销毁操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/// 析构函数 - 销毁通知 `谁接收 谁销毁`</div><div class="line">    deinit &#123;</div><div class="line">        NotificationCenter.default.removeObserver(self)</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="OAuth控制器优化"><a href="#OAuth控制器优化" class="headerlink" title="OAuth控制器优化"></a>OAuth控制器优化</h2><p>添加加载动画<code>SVProgressHUD</code><br>在webView的代理方法中设置对应的动画即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/// 开始加载webView</div><div class="line">    func webViewDidStartLoad(_ webView: UIWebView) &#123;</div><div class="line">        SVProgressHUD.show()</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /// 加载结束</div><div class="line">    func webViewDidFinishLoad(_ webView: UIWebView) &#123;</div><div class="line">        SVProgressHUD.dismiss()</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    /// 加载错误</div><div class="line">    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) &#123;</div><div class="line">//        SVProgressHUD.showError(withStatus: &quot;加载失败&quot;)</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>但是这里存在两个问题：<br>第一：这里不能再webView的加载失败代理方法中添加加载失败动画，因为为了节省流量，目前的设计是webView在用户信息请求成功后便会返回false,即停止加载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/// 用户信息得到后 - 不再发送网络请求</div><div class="line">return false</div></pre></td></tr></table></figure></p>
+<p>所以每次请求都基本不会等到网页数据全部请求完成，会导致每次都会提示加载失败，所以，不加错误拦截提示<br>第二： 还需要在取消按钮点击时取消加载动画<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@objc private func cancelClick()&#123;</div><div class="line">        SVProgressHUD.dismiss()</div><div class="line">        dismiss(animated: true, completion: nil)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>因为如果在用户网络环境不是很好的情景下，OAuth控制器还没有加载出来时，如果用户点击了取消按钮，会回到主控制器，此时就会造成加载动画一直停留<br><img src="http://upload-images.jianshu.io/upload_images/2329629-d078f545cfde6845.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="state"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/04/LSSina项目(四)/" rel="next" title="LSSina项目(四)">
+                <i class="fa fa-chevron-left"></i> LSSina项目(四)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/06/LSSina项目(六)/" rel="prev" title="LSSina项目(六)">
+                LSSina项目(六) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能优化-解决频繁操作沙盒的问题"><span class="nav-number">1.</span> <span class="nav-text">性能优化 - 解决频繁操作沙盒的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义类"><span class="nav-number">1.1.</span> <span class="nav-text">自定义类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抽取网络请求到LSNetworkTools"><span class="nav-number">2.</span> <span class="nav-text">抽取网络请求到LSNetworkTools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络请求抽取到viewModel-MVVM"><span class="nav-number">3.</span> <span class="nav-text">网络请求抽取到viewModel - MVVM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判断accessToken是否过期"><span class="nav-number">4.</span> <span class="nav-text">判断accessToken是否过期</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#判断用户是否登录"><span class="nav-number">5.</span> <span class="nav-text">判断用户是否登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#欢迎界面搭建-amp-封装SDWebImage"><span class="nav-number">6.</span> <span class="nav-text">欢迎界面搭建&封装SDWebImage</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#封装SDWebImage"><span class="nav-number">6.1.</span> <span class="nav-text">封装SDWebImage</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#欢迎界面添加阻尼动画"><span class="nav-number">7.</span> <span class="nav-text">欢迎界面添加阻尼动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通知控制器切换逻辑"><span class="nav-number">8.</span> <span class="nav-text">通知控制器切换逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#授权完成后通知逻辑"><span class="nav-number">8.1.</span> <span class="nav-text">授权完成后通知逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#欢迎界面加载完成后通知发送"><span class="nav-number">8.2.</span> <span class="nav-text">欢迎界面加载完成后通知发送</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#appDelegate中通知处理"><span class="nav-number">8.3.</span> <span class="nav-text">appDelegate中通知处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#销毁通知"><span class="nav-number">8.4.</span> <span class="nav-text">销毁通知</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OAuth控制器优化"><span class="nav-number">9.</span> <span class="nav-text">OAuth控制器优化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

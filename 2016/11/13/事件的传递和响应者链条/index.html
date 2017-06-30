@@ -1,0 +1,696 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="触摸事件的传递触摸事件的传递是从父控件传递到子控件如果父控件不能接收触摸事件，那么子控件就不可能接收到触摸事件不能接受触摸事件的四种情况不接收用户交互交互关闭:userInteractionEnabled = NO隐藏，即:hidden = YES透明，即:alpha &amp;lt;= 0.01未启用，即:enabled = NO  提示:UIImageView 的 userInteractionEna">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事件的传递和响应者链条">
+<meta property="og:url" content="http://yoursite.com/2016/11/13/事件的传递和响应者链条/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="触摸事件的传递触摸事件的传递是从父控件传递到子控件如果父控件不能接收触摸事件，那么子控件就不可能接收到触摸事件不能接受触摸事件的四种情况不接收用户交互交互关闭:userInteractionEnabled = NO隐藏，即:hidden = YES透明，即:alpha &amp;lt;= 0.01未启用，即:enabled = NO  提示:UIImageView 的 userInteractionEna">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-50dc87c305add836.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-13T05:59:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="事件的传递和响应者链条">
+<meta name="twitter:description" content="触摸事件的传递触摸事件的传递是从父控件传递到子控件如果父控件不能接收触摸事件，那么子控件就不可能接收到触摸事件不能接受触摸事件的四种情况不接收用户交互交互关闭:userInteractionEnabled = NO隐藏，即:hidden = YES透明，即:alpha &amp;lt;= 0.01未启用，即:enabled = NO  提示:UIImageView 的 userInteractionEna">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-50dc87c305add836.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/13/事件的传递和响应者链条/"/>
+
+
+
+
+
+  <title>事件的传递和响应者链条 | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/13/事件的传递和响应者链条/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">事件的传递和响应者链条</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-13T13:59:42+08:00">
+                2016-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="触摸事件的传递"><a href="#触摸事件的传递" class="headerlink" title="触摸事件的传递"></a>触摸事件的传递</h2><p>触摸事件的传递是从父控件传递到子控件如果父控件不能接收触摸事件，那么子控件就不可能接收到触摸事件不能接受触摸事件的四种情况不接收用户交互<br>交互关闭:userInteractionEnabled = NO<br>隐藏，即:hidden = YES<br>透明，即:alpha &lt;= 0.01<br>未启用，即:enabled = NO</p>
+<blockquote>
+<p>提示:UIImageView 的 userInteractionEnabled 默认就是 NO，因此 UIImageView 以及它的子控件默认是不能接收触摸事件的</p>
+</blockquote>
+<p>怎样找到最合适处理事件的控件？<br>首先，判断自己能否接收触摸事件可以通过重写 hitTest:withEvent:方法验证其次，判断触摸点是否在自己身上</p>
+<blockquote>
+<p>对应方法 pointInside:withEvent:从后往前(先遍历最后添加的子控件)遍历子控件，重复前面的两个步骤如果没有符合条件的子控件，那么就自己处理</p>
+</blockquote>
+<h2 id="响应者链条"><a href="#响应者链条" class="headerlink" title="响应者链条"></a>响应者链条</h2><p>如果当前 view 是控制器的 view，那么就传递给控制器<br>如果控制器不存在，则将其传递给它的父控件<br>在视图层次结构的最顶层视图也不能处理接收到的事件或消息，则将事件或消息传递给 UIWindow 对象进行处理<br>如果 UIWindow 对象也不处理，则将事件或消息传递给 UIApplication 对象<br>如果 UIApplication 也不能处理该事件或消息，则将其丢弃补充:如何判断上一个响应者<br>如果当前这个 view 是控制器的 view，那么控制器就是上一个响应者如果当前这个 view 不是控制器的 view，那么父控件就是上一个响应者</p>
+<p><strong>响应者对象：</strong>能处理事件的对象，也就是继承自UIResponder的对象<strong>作用：</strong>能很清楚的看见每个响应者之间的联系，并且可以让一个事件多个对象处理。<br><strong>如何判断上一个响应者</strong><br>1&gt; 如果当前这个view是控制器的view,那么控制器就是上一个响应者<br>2&gt; 如果当前这个view不是控制器的view,那么父控件就是上一个响应者<br><img src="http://upload-images.jianshu.io/upload_images/2329629-50dc87c305add836.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="responder.png"></p>
+<h3 id="响应者链的事件传递过程"><a href="#响应者链的事件传递过程" class="headerlink" title="响应者链的事件传递过程:"></a>响应者链的事件传递过程:</h3><p>1&gt;如果当前view是控制器的view，那么控制器就是上一个响应者，事件就传递给控制器；如果当前view不是控制器的view，那么父视图就是当前view的上一个响应者，事件就传递给它的父视图<br>2&gt;在视图层次结构的最顶级视图，如果也不能处理收到的事件或消息，则其将事件或消息传递给window对象进行处理<br>3&gt;如果window对象也不处理，则其将事件或消息传递给UIApplication对象<br>4&gt;如果UIApplication也不能处理该事件或消息，则将其丢弃</p>
+<h3 id="事件处理的流程总结"><a href="#事件处理的流程总结" class="headerlink" title="事件处理的流程总结"></a>事件处理的流程总结</h3><ol>
+<li>触摸屏幕产生触摸事件后，触摸事件会被添加到由UIApplication管理的事件队列中（即，首先接收到事件的是UIApplication）。　　</li>
+<li>UIApplication会从事件队列中取出最前面的事件，把事件传递给应用程序的主窗口（keyWindow）。　　</li>
+<li>主窗口会在视图层次结构中找到一个最合适的视图来处理触摸事件。（至此，第一步已完成)　　</li>
+<li>最合适的view会调用自己的touches方法处理事件　　</li>
+<li>touches默认做法是把事件顺着响应者链条向上抛。</li>
+</ol>
+<p>touches的默认做法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#import &quot;WSView.h&quot;</div><div class="line">@implementation WSView </div><div class="line">//只要点击控件,就会调用touchBegin,如果没有重写这个方法,自己处理不了触摸事件</div><div class="line">// 上一个响应者可能是父控件</div><div class="line">- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event&#123;</div><div class="line"> // 默认会把事件传递给上一个响应者,上一个响应者是父控件,交给父控件处理</div><div class="line">[super touchesBegan:touches withEvent:event]; </div><div class="line">// 注意不是调用父控件的touches方法，而是调用父类的touches方法</div><div class="line">// super是父类 superview是父控件 </div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure></p>
+<h3 id="事件的传递与响应"><a href="#事件的传递与响应" class="headerlink" title="事件的传递与响应"></a>事件的传递与响应</h3><p>1、当一个事件发生后，事件会从父控件传给子控件，也就是说由UIApplication -&gt; UIWindow -&gt; UIView -&gt; initial view,以上就是事件的传递，也就是寻找最合适的view的过程。<br>2、接下来是事件的响应。首先看initial view能否处理这个事件，如果不能则会将事件传递给其上级视图（inital view的superView）；如果上级视图仍然无法处理则会继续往上传递；一直传递到视图控制器view controller，首先判断视图控制器的根视图view是否能处理此事件；如果不能则接着判断该视图控制器能否处理此事件，如果还是不能则继续向上传 递；（对于第二个图视图控制器本身还在另一个视图控制器中，则继续交给父视图控制器的根视图，如果根视图不能处理则交给父视图控制器处理）；一直到 window，如果window还是不能处理此事件则继续交给application处理，如果最后application还是不能处理此事件则将其丢弃<br>3、在事件的响应中，如果某个控件实现了touches…方法，则这个事件将由该控件来接受，如果调用了[supertouches….];就会将事件顺着响应者链条往上传递，传递给上一个响应者；接着就会调用上一个响应者的touches….方法<br><strong>如何做到一个事件多个对象处理：</strong>因为系统默认做法是把事件上抛给父控件，所以可以通过重写自己的touches方法和父控件的touches方法来达到一个事件多个对象处理的目的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event&#123; </div><div class="line">// 1.自己先处理事件...</div><div class="line">NSLog(@&quot;do somthing...&quot;);</div><div class="line">// 2.再调用系统的默认做法，再把事件交给上一个响应者处理</div><div class="line">[super touchesBegan:touches withEvent:event]; </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="事件的传递和响应的区别"><a href="#事件的传递和响应的区别" class="headerlink" title="事件的传递和响应的区别"></a>事件的传递和响应的区别</h3><p>事件的传递是从上到下（父控件到子控件），事件的响应是从下到上（顺着响应者链条向上传递：子控件到父控件。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/13/FMDB/" rel="next" title="FMDB">
+                <i class="fa fa-chevron-left"></i> FMDB
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/Quartz2D/" rel="prev" title="Quartz2D">
+                Quartz2D <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#触摸事件的传递"><span class="nav-number">1.</span> <span class="nav-text">触摸事件的传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#响应者链条"><span class="nav-number">2.</span> <span class="nav-text">响应者链条</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#响应者链的事件传递过程"><span class="nav-number">2.1.</span> <span class="nav-text">响应者链的事件传递过程:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件处理的流程总结"><span class="nav-number">2.2.</span> <span class="nav-text">事件处理的流程总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件的传递与响应"><span class="nav-number">2.3.</span> <span class="nav-text">事件的传递与响应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件的传递和响应的区别"><span class="nav-number">2.4.</span> <span class="nav-text">事件的传递和响应的区别</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

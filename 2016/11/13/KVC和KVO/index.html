@@ -1,0 +1,711 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="概念与应用概念部分旨在剖析KVO这一设计模式的实现原理；应用部分通过创建的项目，以说明KVO技术在iOS开发中所带来的作用； [概念部分]  KVO是什么？KVO 是 Objective-C 对观察者设计模式的一种实现。【另外一种是：通知机制（notification），KVO提供一种机制，指定一个被观察对象(例如A类)，当对象某个属性(例如A中的字符串name)发生更改时，对象会获得通知，并作出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KVC和KVO">
+<meta property="og:url" content="http://yoursite.com/2016/11/13/KVC和KVO/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="概念与应用概念部分旨在剖析KVO这一设计模式的实现原理；应用部分通过创建的项目，以说明KVO技术在iOS开发中所带来的作用； [概念部分]  KVO是什么？KVO 是 Objective-C 对观察者设计模式的一种实现。【另外一种是：通知机制（notification），KVO提供一种机制，指定一个被观察对象(例如A类)，当对象某个属性(例如A中的字符串name)发生更改时，对象会获得通知，并作出">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-25e19fcc02b9567b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-12T17:25:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="KVC和KVO">
+<meta name="twitter:description" content="概念与应用概念部分旨在剖析KVO这一设计模式的实现原理；应用部分通过创建的项目，以说明KVO技术在iOS开发中所带来的作用； [概念部分]  KVO是什么？KVO 是 Objective-C 对观察者设计模式的一种实现。【另外一种是：通知机制（notification），KVO提供一种机制，指定一个被观察对象(例如A类)，当对象某个属性(例如A中的字符串name)发生更改时，对象会获得通知，并作出">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-25e19fcc02b9567b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/13/KVC和KVO/"/>
+
+
+
+
+
+  <title>KVC和KVO | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/13/KVC和KVO/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">KVC和KVO</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-13T01:10:14+08:00">
+                2016-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>概念</strong>与<strong>应用</strong><br><strong>概念</strong>部分旨在剖析KVO这一设计模式的实现原理；<strong>应用</strong>部分通过创建的项目，以说明KVO技术在iOS开发中所带来的作用；</p>
+<p><strong>[概念部分]</strong> </p>
+<h2 id="KVO是什么？"><a href="#KVO是什么？" class="headerlink" title="KVO是什么？"></a>KVO是什么？</h2><p>KVO 是 Objective-C 对<strong><em>观察者设计模式</em></strong>的一种实现。【另外一种是：通知机制（notification），KVO提供一种机制，指定一个被观察对象(例如A类)，当对象某个属性(例如A中的字符串name)发生更改时，对象会获得通知，并作出相应处理；【且不需要给被观察的对象添加任何额外代码，就能使用KVO机制】<br>在MVC设计架构下的项目，KVO机制很适合实现mode模型和view视图之间的通讯。例如：代码中，在模型类A创建属性数据，在控制器中创建观察者，一旦属性数据发生改变就收到观察者收到通知，通过KVO再在控制器使用回调方法处理实现视图B的更新；(本文中的应用就是这样的例子.)</p>
+<p><strong>【实现原理？】</strong></p>
+<blockquote>
+<p>KVO在Apple中的API文档如下：<br>Automatic key-value observing is implemented using a technique called isa-swizzling… When an observer is registered for an attribute of an object the isa pointer of the observed object is modified, pointing to an intermediate class rather than at the true class …</p>
+</blockquote>
+<p>KVO 的实现依赖于 Objective-C 强大的 <strong>Runtime</strong>，从以上Apple 的文档可以看出苹果对于KVO机制的实现是一笔带过，而具体的细节没有过多的描述，但是我们可以通过Runtime的所提供的方法去探索，关于KVO机制的底层实现原理。</p>
+<h2 id="基本的原理："><a href="#基本的原理：" class="headerlink" title="基本的原理："></a>基本的原理：</h2><p>当观察某对象A时，KVO机制动态创建一个对象A当前类的子类，并为这个新的子类重写了被观察属性keyPath的setter 方法。setter 方法随后负责通知观察对象属性的改变状况。</p>
+<h3 id="深入剖析："><a href="#深入剖析：" class="headerlink" title="深入剖析："></a><strong>深入剖析</strong>：</h3><p>Apple 使用了 isa 混写（isa-swizzling）来实现 KVO 。当观察对象A时，KVO机制动态创建一个新的名为：<code>NSKVONotifying_A</code>的新类，该类继承自对象A的本类，且KVO为NSKVONotifying_A重写观察属性的setter 方法，setter 方法会负责在调用原 setter 方法之前和之后，通知所有观察对象属性值的更改情况。（备注： isa 混写（isa-swizzling）isa：is a kind of ； swizzling：混合，搅合；）</p>
+<p>NSKVONotifying_A类剖析：<br>在这个过程，被观察对象的 isa 指针从指向原来的A类，被KVO机制修改为指向系统新创建的子类 <code>NSKVONotifying_A</code>类，来<strong>实现当前类属性值改变的监听</strong>；所以当我们从应用层面上看来，完全没有意识到有新的类出现，这是系统“隐瞒”了对KVO的底层实现过程，让我们误以为还是原来的类。但是此时如果我们创建一个新的名为“NSKVONotifying_A”的类()，就会发现系统运行到注册KVO的那段代码时程序就崩溃，因为系统在注册监听的时候<strong>动态</strong>创建了名为NSKVONotifying_A的中间类，并指向这个中间类了。</p>
+<blockquote>
+<p>（<strong>isa</strong> 指针的作用：每个对象都有isa 指针，指向该对象的类，它告诉 Runtime 系统这个对象的类是什么。所以对象注册为观察者时，isa指针指向新子类，那么<strong>这个被观察的对象就神奇地变成新子类的对象（或实例）了。</strong>） 因而在该对象上对 setter 的调用就会调用已重写的 setter，从而激活键值通知机制。—&gt;我猜，这也是KVO回调机制，为什么都俗称KVO技术为黑魔法的原因之一吧：内部神秘、外观简洁。</p>
+</blockquote>
+<h3 id="子类setter方法剖析："><a href="#子类setter方法剖析：" class="headerlink" title="子类setter方法剖析："></a><strong>子类setter方法剖析：</strong></h3><p>KVO的键值观察通知依赖于 NSObject 的两个方法:<br>willChangeValueForKey:和 didChangevlueForKey:，在存取数值的前后分别调用2个方法：被观察属性发生<strong><em>改变之前</em></strong>，willChangeValueForKey:被调用，通知系统该 keyPath 的属性值即将变更；当<strong><em>改变发生后</em></strong>， didChangeValueForKey: 被调用，通知系统该 keyPath 的属性值已经变更；<strong><em>之后</em></strong>， observeValueForKey:ofObject:change:context: 也会被调用。且重写观察属性的setter 方法这种继承方式的注入是在<strong>运行时</strong>而不是<strong>编译时</strong>实现的。<br>KVO为子类的观察者属性重写调用存取方法的工作原理在代码中相当于：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//KVO在调用存取方法之前总调用 </div><div class="line">-(void)setName:(NSString *)newName&#123; [self willChangeValueForKey:@&quot;name&quot;]; </div><div class="line">//调用父类的存取方法 </div><div class="line">[super setValue:newName forKey:@&quot;name&quot;]; </div><div class="line">//KVO在调用存取方法之后总调用&#125;</div><div class="line">[self didChangeValueForKey:@&quot;name&quot;];</div></pre></td></tr></table></figure>
+<h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a><strong>特点：</strong></h3><p>观察者观察的是属性，只有遵循 KVO 变更属性值的方式才会执行KVO的回调方法，例如是否执行了setter方法、或者是否使用了KVC赋值。如果赋值没有通过setter方法或者KVC，而是直接修改属性对应的成员变量，例如：仅调用_name = @”newName”，这时是不会触发kvo机制，更加不会调用回调方法的。所以使用KVO机制的前提是遵循 KVO 的属性设置方式来变更属性值。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>1.注册观察者，实施监听；<br>2.在回调方法中处理属性发生的变化；<br>3.移除观察者</p>
+<p><strong>[应用部分]</strong> </p>
+<h2 id="实现方法（苹果API文档中的方法）："><a href="#实现方法（苹果API文档中的方法）：" class="headerlink" title="实现方法（苹果API文档中的方法）："></a>实现方法（苹果API文档中的方法）：</h2><p><strong>A.注册观察者：</strong><br>第一个参数observer：观察者 （这里观察self.myKVO对象的属性变化）//第二个参数keyPath： 被观察的属性名称(这里观察self.myKVO中num属性值的改变)//第三个参数options： 观察属性的新值、旧值等的一些配置（枚举值，可以根据需要设置，例如这里可以使用两项）//第四个参数context： 上下文，可以为kvo的回调方法传值（例如设定为一个放置数据的字典）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[self.myKVO addObserver:self forKeyPath:@&quot;num&quot; options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];</div></pre></td></tr></table></figure></p>
+<p><strong>B. 属性(keyPath)的值发生变化时，收到通知，调用以下方法:</strong><br>//keyPath:属性名称//object:被观察的对象//change:变化前后的值都存储在change字典中//context:注册观察者时，context传过来的值-(void)observeValueForKeyPath:(NSString <em>)keyPath ofObject:(id)object change:(NSDictionary&lt;NSString </em>,id&gt; <em>)change context:(void </em>)context{}</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>新建项目<br>UI界面设计如下：第一个是便签，用于显示num数值，关联ViewController并命名为：<strong><em>label</em></strong>；第二个是按钮，用于改变num的数值，关联ViewController并命名为：<strong><em>changeNum</em></strong>。<br><img src="http://upload-images.jianshu.io/upload_images/2329629-25e19fcc02b9567b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="changeNum"></p>
+<p>模型创建<br>【新建一个File，选择Cocoa Touch Class，命名为“myKVO”，记得选择Subclass of “NSObject”.】(myKVO.h)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@interface myKVO : NSObject@property (nonatomic,assign)int num; //属性设置为int类型的num@end</div></pre></td></tr></table></figure>
+<p>myKVO.m：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#import &quot;myKVO.h&quot;@implementation myKVO@synthesize num;@end</div></pre></td></tr></table></figure>
+<p>在ViewController中监听并响应属性改变。（ViewController.h）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#import &lt;UIKit/UIKit.h&gt;@interface ViewController : UIViewController@property (weak, nonatomic) IBOutlet UILabel *label;//便签label- (IBAction)changeNum:(UIButton *)sender; //按钮事件 @end</div></pre></td></tr></table></figure>
+<p>ViewController.m：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">#import &quot;ViewController.h&quot;</div><div class="line">#import &quot;myKVO.h&quot;</div><div class="line">@interface ViewController ()</div><div class="line">@property (nonatomic,strong)myKVO *myKVO;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation ViewController- (void)viewDidLoad &#123; [super viewDidLoad]; self.myKVO = [[myKVO alloc]init];</div><div class="line"> /*1.注册对象myKVO为被观察者: option中，NSKeyValueObservingOptionOld 以字典的形式提供 “初始对象数据”; NSKeyValueObservingOptionNew 以字典的形式提供 “更新后新的数据”; */ </div><div class="line">[self.myKVO addObserver:self forKeyPath:@&quot;num&quot; options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];&#125;</div><div class="line">/* 2.只要object的keyPath属性发生变化，就会调用此回调方法，进行相应的处理：UI更新：*/</div><div class="line">-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary&lt;NSString *,id&gt; *)change context:(void *)context&#123;</div><div class="line">// 判断是否为self.myKVO的属性“num”:</div><div class="line">if([keyPath isEqualToString:@&quot;num&quot;] &amp;&amp; object == self.myKVO) &#123; </div><div class="line">// 响应变化处理：UI更新（label文本改变） </div><div class="line">self.label.text = [NSString stringWithFormat:@&quot;当前的num值为：%@&quot;,[change valueForKey:@&quot;new&quot;]]; </div><div class="line">//change的使用：上文注册时，枚举为2个，因此可以提取change字典中的新、旧值的这两个方法 </div><div class="line">NSLog(@&quot;\\noldnum:%@ newnum:%@&quot;,[change valueForKey:@&quot;old&quot;],[change valueForKey:@&quot;new&quot;]); </div><div class="line">&#125;&#125;</div><div class="line">- (void)didReceiveMemoryWarning &#123; </div><div class="line">[super didReceiveMemoryWarning]; </div><div class="line">/* 3.移除KVO */ </div><div class="line">[self removeObserver:self forKeyPath:@&quot;num&quot; context:nil];</div><div class="line">&#125;</div><div class="line">//按钮事件</div><div class="line">- (IBAction)changeNum:(UIButton *)sender &#123; </div><div class="line">//按一次，使num的值+1 </div><div class="line">self.myKVO.num = self.myKVO.num + 1;</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure>
+<h3 id="调试："><a href="#调试：" class="headerlink" title="调试："></a><strong>调试</strong>：</h3><p>便签label初始化没有数值，当每次点击按钮后，label记录的num随之增加，表明按钮使属性num增加的同时，KVO机制发送通知，并调用observeValueForKeyPath:方法使UI更新。（本文Demo下载链接：<a href="https://github.com/Azuo520/KVO-Demo" target="_blank" rel="external">KVO演示Demo</a>）</p>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><p>KVC与KVO的不同？<br>KVC(键值编码)，即Key-Value Coding，一个非正式的Protocol，使用字符串(键)访问一个对象实例变量的机制。而不是通过调用Setter、Getter方法等显式的存取方式去访问。KVO(键值监听)，即Key-Value Observing，它提供一种机制,当指定的对象的属性被修改后,对象就会接受到通知，前提是执行了setter方法、或者使用了KVC赋值。</p>
+<p>和notification(通知)的区别？<br>notification比KVO多了发送通知的一步。两者都是一对多，但是对象之间直接的交互，notification明显得多，需要notificationCenter来做为中间交互。而KVO如我们介绍的，设置观察者-&gt;处理属性变化，至于中间通知这一环，则隐秘多了，只留一句“交由系统通知”，具体的可参照以上实现过程的剖析。<br>notification的优点是监听不局限于属性的变化，还可以对多种多样的状态变化进行监听，监听范围广，例如键盘、前后台等系统通知的使用也更显灵活方便。</p>
+<p>KVO与delegate的不同？<br>和delegate一样，KVO和NSNotification的作用都是类与类之间的通信。但是与delegate不同的是：这两个都是负责发送接收通知，剩下的事情由系统处理，所以不用返回值；而delegate 则需要通信的对象通过变量(代理)联系；delegate一般是一对一，而这两个可以一对多。</p>
+<h2 id="KVO内部实现"><a href="#KVO内部实现" class="headerlink" title="KVO内部实现"></a>KVO内部实现</h2><p>KVO是基于runtime机制中isa-swizzling 实现的<br>当某个类的对象第一次被观察时，系统就会在运行期动态地创建该类<br> 的一个派生类，在这个派生类中重写基类中任何被观察属性的<br>setter 方法。派生类在被重写的 setter 方法实现真正的通知机制(Person NSKVONotifying_Person)</p>
+<h3 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h3><p>基本的流程就是编译器自动为被观察对象创造一个派生类，并将被观察对象的isa 指向这个派生类。如果用户注册了对某此目标对象的某一个属性的观察，那么此派生类会重写这个方法，并在其中添加进行通知的代码。<br>Objective-C 在发送消息的时候，会通过 isa 指针找到当前对象所属的类对象。而类对象中保存着当前对象的实例方法，因此在向此对象发送消息时候，实际上是发送到了派生类对象的方法。由于编译器对派生类的方法进行了 override，并添加了通知代码，因此会向注册的对象发送通知。注意派生类只重写注册了观察者的属性方法。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/12/Objective-C中的内存管理/" rel="next" title="OC中的内存管理">
+                <i class="fa fa-chevron-left"></i> OC中的内存管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/iOS登录机制/" rel="prev" title="iOS登录机制">
+                iOS登录机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#KVO是什么？"><span class="nav-number">1.</span> <span class="nav-text">KVO是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本的原理："><span class="nav-number">2.</span> <span class="nav-text">基本的原理：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#深入剖析："><span class="nav-number">2.1.</span> <span class="nav-text">深入剖析：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#子类setter方法剖析："><span class="nav-number">2.2.</span> <span class="nav-text">子类setter方法剖析：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特点："><span class="nav-number">2.3.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤"><span class="nav-number">2.4.</span> <span class="nav-text">步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现方法（苹果API文档中的方法）："><span class="nav-number">3.</span> <span class="nav-text">实现方法（苹果API文档中的方法）：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">3.1.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试："><span class="nav-number">3.2.</span> <span class="nav-text">调试：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拓展"><span class="nav-number">3.3.</span> <span class="nav-text">拓展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KVO内部实现"><span class="nav-number">4.</span> <span class="nav-text">KVO内部实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本流程"><span class="nav-number">4.1.</span> <span class="nav-text">基本流程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,714 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="JS注入浏览器中查找出账号和密码标签找出用户名和密码对应的id标签通过JS注入，设置用户名和密码123456/// 自动填充 - 使用前 需要在公用文件中配置好正确的用户名和密码@objc private func autoFillClick()&amp;#123;  /// JS注入  let jsString = &amp;quot;document.getElementById(&amp;apos;userId&amp;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LSSina项目(四)">
+<meta property="og:url" content="http://yoursite.com/2016/12/04/LSSina项目(四)/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="JS注入浏览器中查找出账号和密码标签找出用户名和密码对应的id标签通过JS注入，设置用户名和密码123456/// 自动填充 - 使用前 需要在公用文件中配置好正确的用户名和密码@objc private func autoFillClick()&amp;#123;  /// JS注入  let jsString = &amp;quot;document.getElementById(&amp;apos;userId&amp;a">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-bcd21d57a09de636.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-3246a0d2f7ca750e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-468911ac34a0e74c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-12-05T13:35:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LSSina项目(四)">
+<meta name="twitter:description" content="JS注入浏览器中查找出账号和密码标签找出用户名和密码对应的id标签通过JS注入，设置用户名和密码123456/// 自动填充 - 使用前 需要在公用文件中配置好正确的用户名和密码@objc private func autoFillClick()&amp;#123;  /// JS注入  let jsString = &amp;quot;document.getElementById(&amp;apos;userId&amp;a">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-bcd21d57a09de636.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/04/LSSina项目(四)/"/>
+
+
+
+
+
+  <title>LSSina项目(四) | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/04/LSSina项目(四)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LSSina项目(四)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-04T22:37:06+08:00">
+                2016-12-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="JS注入"><a href="#JS注入" class="headerlink" title="JS注入"></a>JS注入</h2><p>浏览器中查找出<code>账号</code>和<code>密码</code>标签<br><img src="http://upload-images.jianshu.io/upload_images/2329629-bcd21d57a09de636.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="userAndpwd"><br>找出用户名和密码对应的id标签<br>通过JS注入，设置用户名和密码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/// 自动填充 - 使用前 需要在公用文件中配置好正确的用户名和密码</div><div class="line">@objc private func autoFillClick()&#123;</div><div class="line">  /// JS注入</div><div class="line">  let jsString = &quot;document.getElementById(&apos;userId&apos;).value=&apos;\(LSWBUserId)&apos;,document.getElementById(&apos;passwd&apos;).value=&apos;\(LSWBPasswd)&apos;&quot;</div><div class="line">  webView.stringByEvaluatingJavaScript(from: jsString)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>再点击<code>自动填充</code>即可将预设的用户名和密码设置到对应的html中<br><img src="http://upload-images.jianshu.io/upload_images/2329629-3246a0d2f7ca750e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="setFill"></p>
+<h2 id="获取授权码-code"><a href="#获取授权码-code" class="headerlink" title="获取授权码 - code"></a>获取授权码 - code</h2><p>用户授权后，url会被重定向，同时sina会给回调页加上一个code码，在webView中，会再走他的代理方法，所以可以在代理方法中截取出code<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">/// extension - webView代理</div><div class="line">extension LSOAuthViewController: UIWebViewDelegate&#123;</div><div class="line">    </div><div class="line">  /// webView代理方法 - 主要用来获取code</div><div class="line">  ///</div><div class="line">  /// - Parameters:</div><div class="line">  ///   - webView: webView</div><div class="line">  ///   - request: 请求</div><div class="line">  ///   - navigationType: navigationType</div><div class="line">  /// - Returns: 默认返回`true`</div><div class="line">  func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -&gt; Bool &#123;</div><div class="line">  let URLString = request.url?.absoluteString</div><div class="line">  if let u = URLString, u.hasPrefix(LSRedirect) &#123;</div><div class="line">    let query = request.url?.query</div><div class="line">    let code = query?.substring(from: &quot;code=&quot;.endIndex) ?? &quot;&quot;</div><div class="line">    print(&quot;code = \(code)&quot;)</div><div class="line">      &#125;</div><div class="line">  return true</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="获取授权token"><a href="#获取授权token" class="headerlink" title="获取授权token"></a>获取授权<code>token</code></h2><p>导入依赖框架<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 网络框架</div><div class="line">pod &apos;AFNetworking&apos;</div><div class="line"># 加载指示器</div><div class="line">pod &apos;SVProgressHUD&apos;</div><div class="line"># 网络图片加载</div><div class="line">pod &apos;SDWebImage&apos;</div><div class="line"># YYModel</div><div class="line">pod &apos;YYModel&apos;</div></pre></td></tr></table></figure></p>
+<p>添加<a href="https://github.com/iithinker/LSNetwork_Swift" target="_blank" rel="external">LSNetworkToos</a></p>
+<p>创建extension专门处理网络请求<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">/// extension - 网络请求相关接口</div><div class="line">extension LSOAuthViewController&#123;</div><div class="line">    </div><div class="line">  func getUserAccount(code: String) -&gt; Void &#123;</div><div class="line">    let parames = [</div><div class="line">      &quot;client_id&quot;: LSClient_id,</div><div class="line">      &quot;client_secret&quot;: LSClient_secret,</div><div class="line">      &quot;grant_type&quot;: &quot;authorization_code&quot;,</div><div class="line">      &quot;code&quot;: code,</div><div class="line">      &quot;redirect_uri&quot;: LSRedirect</div><div class="line">      ]</div><div class="line">    LSNetworkTools.sharedTools.request(method: .post, URLString: LSTokenURL, parameters: parames, success: &#123; (responseObject) in</div><div class="line">      guard let res = responseObject as?[String: Any] else&#123;</div><div class="line">        return</div><div class="line">         &#125;</div><div class="line">      let userAccountModel = LSUserAccountModel.yy_model(withJSON: res)</div><div class="line">        print(&quot;\(userAccountModel)&quot;)</div><div class="line">        &#125;) &#123; (error) in</div><div class="line">          print(&quot;\(error)&quot;)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>问题</p>
+</blockquote>
+<p>使用yy_model做字典转模型这里会得到nil<br>解决方案：需要先做一个判断，判断<code>responseObject</code>是否为nil，而且是否可以转成字典<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">guard let res = responseObject as?[String: Any] else&#123;</div><div class="line">  return</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="创建模型"><a href="#创建模型" class="headerlink" title="创建模型"></a>创建模型</h3><p>文件目录：</p>
+<ul>
+<li>model <ul>
+<li>Oauth<ul>
+<li>LSUserAccountModel<br>在设置模型的属性时，刚开始没有注意，设置成了<code>let</code>类型，不可变，所以会出现不能给对象赋值的情况，注意属性修饰要为<code>var</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="请求用户信息接口数据"><a href="#请求用户信息接口数据" class="headerlink" title="请求用户信息接口数据"></a>请求用户信息接口数据</h2><p>请求<code>screen_name</code>和<code>profile_image_url</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">func getUserInfo(userModel: LSUserAccountModel) -&gt; Void &#123;</div><div class="line">  let parames = [</div><div class="line">    &quot;access_token&quot;: userModel.access_token,</div><div class="line">    &quot;uid&quot;: userModel.uid</div><div class="line">    ]</div><div class="line">    LSNetworkTools.sharedTools.request(method: .get, URLString: LSUserInfoURL, parameters: parames, success: &#123; (responseObject) in</div><div class="line">    guard let res = responseObject as?[String: Any] else&#123;</div><div class="line">      return</div><div class="line">      &#125;</div><div class="line">      userModel.screen_name = res[&quot;screen_name&quot;] as? String</div><div class="line">      userModel.profile_image_url = res[&quot;profile_image_url&quot;] as? String</div><div class="line">      print(&quot;\(userModel)&quot;)</div><div class="line">      &#125;) &#123; (error) in</div><div class="line">      print(&quot;\(error)&quot;)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>得到的可选值需要判断是否为空而且是否可以转换成字典<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> guard let res = responseObject as?[String: Any] else&#123;</div><div class="line">      return</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在保存模型数据的时候，这里不能再使用<code>let</code>模型的方式来再建立一个模型了，因为这里需要将获取的两个用户信息<code>昵称</code>和<code>用户头像</code>和上面的模型放在一起，一起保存，所以，采用单独赋值的方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">userModel.screen_name = res[&quot;screen_name&quot;] as? String</div><div class="line">userModel.profile_image_url = res[&quot;profile_image_url&quot;] as? String</div></pre></td></tr></table></figure></p>
+<p>再在模型中添加两个属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/// UserInfo</div><div class="line">/// 用户昵称</div><div class="line">var screen_name: String?</div><div class="line">/// 用户头像地址（中图）50×50像素</div><div class="line">var profile_image_url: String?</div></pre></td></tr></table></figure></p>
+<h2 id="通过YYModel调用归档解档保存用户信息"><a href="#通过YYModel调用归档解档保存用户信息" class="headerlink" title="通过YYModel调用归档解档保存用户信息"></a>通过<code>YYModel</code>调用归档解档保存用户信息</h2><p>存在需求：后期用户信息需要频繁使用，所以需要保存起来<br>通过归档的形式保存</p>
+<ul>
+<li>首先，需要在模型中添加属性<code>expires_Date</code>，将<code>expires_in</code>过期时间转换成<code>Date</code><ul>
+<li>目前账户过期时间5年</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> /// 生命周期 单位是s</div><div class="line">var expires_in: TimeInterval = 0&#123;</div><div class="line">  didSet&#123;</div><div class="line">  /// 当前日期s + 过期秒数 = 将要过期的日期</div><div class="line">  expires_Date = Date().addingTimeInterval(expires_in)</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="使用YYModel提供的方法做归档解档操作"><a href="#使用YYModel提供的方法做归档解档操作" class="headerlink" title="使用YYModel提供的方法做归档解档操作"></a>使用YYModel提供的方法做<code>归档解档</code>操作</h3><p><code>yy_model</code>提供OC归档解档方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@implementation YYShadow</div><div class="line">// 直接添加以下代码即可自动完成</div><div class="line">- (void)encodeWithCoder:(NSCoder *)aCoder &#123; [self yy_modelEncodeWithCoder:aCoder]; &#125;</div><div class="line">- (id)initWithCoder:(NSCoder *)aDecoder &#123; self = [super init]; return [self yy_modelInitWithCoder:aDecoder]; &#125;</div></pre></td></tr></table></figure></p>
+<p>在模型中设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/// 使用`YYModel`实现归档/解档</div><div class="line">/// 归档</div><div class="line">func encode(with aCoder: NSCoder) &#123;</div><div class="line">  self.yy_modelEncode(with: aCoder)</div><div class="line">&#125;</div><div class="line">    </div><div class="line">/// 解档</div><div class="line">required init?(coder aDecoder: NSCoder) &#123;</div><div class="line">  super.init()</div><div class="line">  self.yy_modelInit(with: aDecoder)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>账号对象需要频繁使用，用单例管理对象的存储<br>viewModel中<br>沙盒路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/// 沙盒路径</div><div class="line">let file = (NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).last! as NSString).appendingPathComponent(&quot;userAccount.archiver&quot;)</div></pre></td></tr></table></figure></p>
+<p>对象存储<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/// 保存对象</div><div class="line">func saveAccountModel(model: LSUserAccountModel) -&gt; Void &#123;</div><div class="line">  NSKeyedArchiver.archiveRootObject(model, toFile: file)</div><div class="line">&#125;</div><div class="line">    </div><div class="line">/// 获取对象</div><div class="line">func getAccountModel()-&gt;LSUserAccountModel?&#123;</div><div class="line">  return NSKeyedUnarchiver.unarchiveObject(withFile: file) as? LSUserAccountModel</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>默认情况下，不实现模型的init方法会出现归档解档报错<br><img src="http://upload-images.jianshu.io/upload_images/2329629-468911ac34a0e74c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="error"><br>实现即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">override init() &#123;</div><div class="line">  super.init()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/04/网络请求/" rel="next" title="网络请求">
+                <i class="fa fa-chevron-left"></i> 网络请求
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/05/LSSina项目(五)/" rel="prev" title="LSSina项目(五)">
+                LSSina项目(五) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JS注入"><span class="nav-number">1.</span> <span class="nav-text">JS注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取授权码-code"><span class="nav-number">2.</span> <span class="nav-text">获取授权码 - code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取授权token"><span class="nav-number">3.</span> <span class="nav-text">获取授权token</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建模型"><span class="nav-number">3.1.</span> <span class="nav-text">创建模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#请求用户信息接口数据"><span class="nav-number">4.</span> <span class="nav-text">请求用户信息接口数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过YYModel调用归档解档保存用户信息"><span class="nav-number">5.</span> <span class="nav-text">通过YYModel调用归档解档保存用户信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用YYModel提供的方法做归档解档操作"><span class="nav-number">5.1.</span> <span class="nav-text">使用YYModel提供的方法做归档解档操作</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

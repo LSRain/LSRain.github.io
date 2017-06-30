@@ -1,0 +1,793 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="基本介绍 核心绘图内容都在CoreGraphics中 (graphics 图形，图像) coreGraphics 框架下的内容，是一个C语言级别的框架函数大多以CG开头 C语言中没有对象的概念，只有结构体.iOS中使用C语言框架不需要加*   核心绘图在iOS和Mac Os中都是可以用的 绘制图形的一般步骤:想要将图形绘制到视图上：  重写视图的drawRect方法    获取图形上下文 - 绘图">
+<meta property="og:type" content="article">
+<meta property="og:title" content="核心绘图-Quartz2D">
+<meta property="og:url" content="http://yoursite.com/2016/12/07/核心绘图_Quartz2D/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="基本介绍 核心绘图内容都在CoreGraphics中 (graphics 图形，图像) coreGraphics 框架下的内容，是一个C语言级别的框架函数大多以CG开头 C语言中没有对象的概念，只有结构体.iOS中使用C语言框架不需要加*   核心绘图在iOS和Mac Os中都是可以用的 绘制图形的一般步骤:想要将图形绘制到视图上：  重写视图的drawRect方法    获取图形上下文 - 绘图">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-734add36945276d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-456cf072887d996d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-be081e3edc364a0a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-0d6724e704979565.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-e2fa26c9eb8fb1ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-c2b9bd340f7bffa2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-12-08T09:32:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="核心绘图-Quartz2D">
+<meta name="twitter:description" content="基本介绍 核心绘图内容都在CoreGraphics中 (graphics 图形，图像) coreGraphics 框架下的内容，是一个C语言级别的框架函数大多以CG开头 C语言中没有对象的概念，只有结构体.iOS中使用C语言框架不需要加*   核心绘图在iOS和Mac Os中都是可以用的 绘制图形的一般步骤:想要将图形绘制到视图上：  重写视图的drawRect方法    获取图形上下文 - 绘图">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-734add36945276d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/07/核心绘图_Quartz2D/"/>
+
+
+
+
+
+  <title>核心绘图-Quartz2D | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/07/核心绘图_Quartz2D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">核心绘图-Quartz2D</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-07T16:40:55+08:00">
+                2016-12-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><ol>
+<li><code>核心绘图</code>内容都在CoreGraphics中 (graphics 图形，图像)</li>
+<li>coreGraphics 框架下的内容，是一个<code>C语言</code>级别的框架函数大多以<code>CG</code>开头<ul>
+<li>C语言中没有<code>对象的概念</code>，只有结构体.iOS中使用C语言框架不需要加<code>*</code></li>
+</ul>
+</li>
+<li><code>核心绘图</code>在iOS和Mac Os中都是可以用的</li>
+<li>绘制图形的一般步骤:<br>想要将图形绘制到视图上：<ul>
+<li><ol>
+<li>重写视图的<code>drawRect</code>方法</li>
+</ol>
+</li>
+<li><ol>
+<li>获取图形上下文 - <code>绘图的环境</code></li>
+</ol>
+</li>
+<li><ol>
+<li>创建想要绘制图形的<code>路径</code> -&gt; 几何图形</li>
+</ol>
+</li>
+<li><ol>
+<li>将<code>路径</code>添加到<code>环境</code>上</li>
+</ol>
+</li>
+<li><ol>
+<li>渲染 -&gt;将图形生成图像显示到屏幕上<br>如一些显示余额的动画，都可以用<code>核心绘图</code>来绘制</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>核心绘图的<code>目的</code> - 在应用中<code>根据数据实时更新图像</code></li>
+</ol>
+<h2 id="基本绘图步骤"><a href="#基本绘图步骤" class="headerlink" title="基本绘图步骤"></a>基本绘图步骤</h2><p><a href="https://github.com/iithinker/LSDrawRectLineDemo" target="_blank" rel="external">LSDrawRectLineDemo</a><br>步骤分为5步：</p>
+<ul>
+<li>重写<code>drawRect</code></li>
+<li>获取当前上下文</li>
+<li>在<code>当前上下文</code>设置一个<code>起点</code></li>
+<li>在<code>当前上下文</code>设置一个<code>终点</code></li>
+<li>渲染<code>描边</code></li>
+</ul>
+<p>自定义一个view<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (void)drawRect:(CGRect)rect &#123;</div><div class="line">    // Drawing code</div><div class="line">    /// 获取当前上下文</div><div class="line">    CGContextRef cxt = UIGraphicsGetCurrentContext();</div><div class="line">    /// 设置起点</div><div class="line">    CGContextMoveToPoint(cxt, 50, 50);</div><div class="line">    /// 设置终点 - 添加线</div><div class="line">    CGContextAddLineToPoint(cxt, 50, 250);</div><div class="line">    CGContextAddLineToPoint(cxt, 250, 50);</div><div class="line">    CGContextClosePath(cxt);</div><div class="line">    /// 描边 - 渲染</div><div class="line">    CGContextDrawPath(cxt, kCGPathStroke);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以发现，绘图操作都是在上下文<code>CGContext</code>环境中进行的</p>
+<blockquote>
+<p>渲染方式</p>
+</blockquote>
+<p>C语言枚举,基本是以<code>K</code>开头<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">typedef CF_ENUM (int32_t, CGPathDrawingMode) &#123;</div><div class="line">  kCGPathFill,</div><div class="line">  kCGPathEOFill,</div><div class="line">  kCGPathStroke,</div><div class="line">  kCGPathFillStroke,</div><div class="line">  kCGPathEOFillStroke</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h2 id="上下文解释"><a href="#上下文解释" class="headerlink" title="上下文解释"></a>上下文解释</h2><p><code>图形上下文</code>，文档解释是一个<code>Quartz2D的绘图环境</code>，可以理解成一块画布<br>渲染 -&gt; 是将在<code>画布</code>上描绘的图形显示在屏幕上</p>
+<h2 id="绘图方式二"><a href="#绘图方式二" class="headerlink" title="绘图方式二"></a>绘图方式二</h2><p>使用C语言的<code>路径</code>进行绘图<br>同样分为5步</p>
+<ol>
+<li><ul>
+<li>重写<code>drawRect</code></li>
+</ul>
+</li>
+<li>获取图形上下文</li>
+<li>创建路径<ul>
+<li>设置想要绘制的图形</li>
+</ul>
+</li>
+<li>将路径添加给图形上下文</li>
+<li>渲染</li>
+</ol>
+<p>使用<code>路径</code>的方式绘制 - 三角形<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/// 绘图方式二 - 使用C语言`路径`绘图</div><div class="line">- (void)drawRect:(CGRect)rect &#123;</div><div class="line">    CGContextRef cxt = UIGraphicsGetCurrentContext();</div><div class="line">    CGMutablePathRef path = CGPathCreateMutable();</div><div class="line">    /// 起点</div><div class="line">    CGPathMoveToPoint(path, NULL, 50, 50);</div><div class="line">    CGPathAddLineToPoint(path, NULL, 50, 250);</div><div class="line">    // 斜线</div><div class="line">    CGPathAddLineToPoint(path, NULL, 250, 50);</div><div class="line">    /// 关闭路径</div><div class="line">    CGPathCloseSubpath(path);</div><div class="line">    CGContextAddPath(cxt, path);</div><div class="line">    CGContextDrawPath(cxt, kCGPathStroke);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>发现，其实使用c函数直接用<code>上下文</code>的方式会比使用路径少一个步骤 - 不需要再将路径添加到上下文，因为是直接就在上下文绘制，而且也更便于理解</p>
+</blockquote>
+<p>在绘制诸如<code>三角形</code>之类的图形时，可以只画两条线，最后一根线可以用关闭路径的方式自动渲染:使用<code>CGContextClosePath(cxt);</code>或者<code>CGPathCloseSubpath(path);</code><br><img src="http://upload-images.jianshu.io/upload_images/2329629-734add36945276d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="绘制三角形"></p>
+<p>第一种是用C函数的方式绘图，简单直接<br>第二种是C路径的方式，有点绕，需要将C路径添加到上下文中</p>
+<h2 id="静态分析工具"><a href="#静态分析工具" class="headerlink" title="静态分析工具"></a>静态分析工具</h2><p>用<code>C路径</code>进行绘图时要注意：<br>需要使用<code>静态分析工具</code>查看是否存在内存泄漏<br>快捷键：<code>cmd + shift + b</code><br>或者在界面选择:<br>Xcode -&gt;product -&gt;Analyze选项<br><img src="http://upload-images.jianshu.io/upload_images/2329629-456cf072887d996d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Analyze"><br>工具作用： 程序不需要运行，从代码结构上分析代码是否有问题 - 内存泄漏等<br>在<code>MRC</code>中会用的更多一些<br>以C路径进行绘图时，创建的对象没有进行释放会报警告，内存泄漏<br><img src="http://upload-images.jianshu.io/upload_images/2329629-be081e3edc364a0a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="静态分析工具"></p>
+<blockquote>
+<p>解决办法，需要释放路径</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/// 释放路径</div><div class="line"> CGPathRelease(path);</div><div class="line"> /// 也可以使用 `CFRelease`</div><div class="line"> //CFRelease(path);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>疑问</p>
+</blockquote>
+<p>现在都是ARC管理内存，还需要关心内存？</p>
+<ul>
+<li>对于OC来说，不需要</li>
+<li>对于<code>C</code>，还是要注意</li>
+</ul>
+<p>常见使用场景：<br>对于<code>C语言框架</code>提供的内容，遇到<code>create</code>,<code>copy</code>,<code>retarin</code>这些创建的<code>结构体</code>，用完之后一定要记得<code>释放</code>-release<br>办法：可以借助<code>静态分析工具</code>来检测是否有<code>内存泄漏</code></p>
+<blockquote>
+<p>静态分析工具文档说明</p>
+</blockquote>
+<p>Performing Static Code Analysis<br>// 执行静态代码分析</p>
+<blockquote>
+<p>Find flaws-potential bugs-in the source code of a project with the static analyzer built into Xcode. Source code may have subtle errors that slip by the compiler and manifest themselves only at runtime, when they could be difficult to identify and fix.</p>
+</blockquote>
+<p>// 查找缺陷-潜在的bug-在项目的源代码中使用Xcode内置的静态分析工具。<br>// 源代码可能会存在一些很难被发现和修复的细微的错误，只有在运行的时候才能够被发现。</p>
+<blockquote>
+<p>Steps</p>
+</blockquote>
+<ol>
+<li>Choose Product Analyze.</li>
+<li>In the issue navigator, select an analyzer message.</li>
+<li>In the source editor, click the corresponding message.</li>
+<li>Use the pop-up menu in the analysis results bar above the edit area to study the flow path of the flaw. </li>
+<li>Edit the code to fix the flaw.</li>
+</ol>
+<blockquote>
+<p>步骤：</p>
+</blockquote>
+<p>// 1.选择 product -&gt; Analyze<br>// 2.在问题的导航器上，选择静态分析工具的信息。<br>// 3.在源代码编辑器上，点击相应的信息<br>// 4.在位置编辑区域顶部的菜单中查看错误的错误原因。<br>// 5.编辑代码修复缺陷。<br>The Xcode static analyzer parses the project source code and identifies these types of problems:</p>
+<ul>
+<li>Logic flaws, such as accessing uninitialized variables and dereferencing null pointers</li>
+<li>Memory management flaws, such as leaking allocated memory</li>
+<li>Dead store (unused variable) flaws</li>
+<li>API-usage flaws that result from not following the policies required by the frameworks and libraries the project is using</li>
+</ul>
+<p>// Xcode静态分析工具能够分析项目的源代码并且确定以下类型的问题：<br>// 1&gt; 逻辑缺陷，如访问没有初始化的变量和非关联化的空指针<br>// 2&gt; 内存管理缺陷，例如内存泄露问题<br>// 3&gt; 没有任何用处变量缺陷<br>// 4&gt; API使用缺陷，由于在项目中使用的框架或库没有遵守相关的要求而导致的错误<br>You can suppress false positive messages from the analyzer using assertions, attributes, or pragma directives.<br>// 你可以使用断言，属性，或编译指令抑制分析工具中报出的假消息。<br>When you analyze a project for the first time, you may uncover a lot of issues. But if you run the static analyzer regularly and fix the flaws it uncovers, you should see fewer problems in subsequent analyses. Analyze early; analyze often. It’s good for the code.<br>// 当第一次分析一个项目的时候，可能会发现很多问题。但是如果在开发中经常的进行静态分析并且及时修复发现的问题，在以后的分析中问题就会越来越少。<br>// 早发现，早治疗。对代码也是好的！<br>Note that if the static analyzer reports no problems, you can’t assume that there are none. The tool cannot necessarily detect all the flaws in the source code.<br>// 注意：如果静态分析工具没有报告任何问题，你不能假定认为就没有问题了。这个工具不能保证说任何在源代码中的问题都能够被准确发现。</p>
+<h2 id="简单图形绘制"><a href="#简单图形绘制" class="headerlink" title="简单图形绘制"></a>简单图形绘制</h2><p>矩形、圆形、弧形<br><a href="https://github.com/iithinker/WBDrawRectDemo" target="_blank" rel="external">WBDrawRectDemo</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">- (void)drawRect:(CGRect)rect &#123;</div><div class="line"></div><div class="line">    /// 绘图开关</div><div class="line">    /// - 0: 矩形</div><div class="line">    /// - 1: 椭圆</div><div class="line">    /// - 2: 弧形</div><div class="line">    NSInteger drawSwith = 1;</div><div class="line">    CGContextRef cxt = UIGraphicsGetCurrentContext();</div><div class="line">    switch (drawSwith) &#123;</div><div class="line">        case 0:</div><div class="line">            CGContextAddRect(cxt, CGRectMake(50, 50, 100, 100));</div><div class="line">            CGContextDrawPath(cxt, kCGPathStroke);</div><div class="line">            break;</div><div class="line">        case 1:</div><div class="line">            CGContextAddEllipseInRect(cxt, CGRectMake(50, 50, 100, 150));</div><div class="line">            CGContextDrawPath(cxt, kCGPathStroke);</div><div class="line">            break;</div><div class="line">        case 2:</div><div class="line">            CGContextAddArc(cxt, 100, 100, 60, 0, M_PI_4, 1);</div><div class="line">            CGContextDrawPath(cxt, kCGPathStroke);</div><div class="line">            break;</div><div class="line">        default:</div><div class="line">            break;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>渲染的填充方式：<code>kCGPathStroke</code>是描边，绘制边线，也可以用<code>kCGPathFillStroke</code>将图形<code>包围</code>的区域渲染出来<br>上面绘制的椭圆：<br><img src="http://upload-images.jianshu.io/upload_images/2329629-0d6724e704979565.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Ellipse"><br>其实是先绘制出一个矩形，再在矩形内填充一个椭圆<br><img src="http://upload-images.jianshu.io/upload_images/2329629-e2fa26c9eb8fb1ba.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="EllipseInrect"><br>如果使用的是一个正方形，那么用这种方式绘制一个<code>圆形</code><br>关于绘制的弧形，绘制时是有一个坐标系<br><img src="http://upload-images.jianshu.io/upload_images/2329629-c2b9bd340f7bffa2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="arc"><br>一个有意思的地方是方法<code>CGContextAddArc</code>最后的参数表示的是顺时针和逆时针，0：表示顺时针，1：表示逆时针<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CGContextAddArc(cxt, 100, 100, 60, 0, M_PI_4, 1);</div></pre></td></tr></table></figure></p>
+<p>这里是从0度到45度，可是却反过来画了一个不含有45度弧形的<code>弧</code>,原因是会从0度开始，逆时针的方向开始绘制，直到找到45度为止，所以就出现了上面这种效果，如果想绘制一个45度的弧形，那么久可以使用顺时针<code>0</code></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/06/LSSina项目(六)/" rel="next" title="LSSina项目(六)">
+                <i class="fa fa-chevron-left"></i> LSSina项目(六)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/07/Hexo小插曲/" rel="prev" title="Hexo小插曲">
+                Hexo小插曲 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本介绍"><span class="nav-number">1.</span> <span class="nav-text">基本介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本绘图步骤"><span class="nav-number">2.</span> <span class="nav-text">基本绘图步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上下文解释"><span class="nav-number">3.</span> <span class="nav-text">上下文解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘图方式二"><span class="nav-number">4.</span> <span class="nav-text">绘图方式二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态分析工具"><span class="nav-number">5.</span> <span class="nav-text">静态分析工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单图形绘制"><span class="nav-number">6.</span> <span class="nav-text">简单图形绘制</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

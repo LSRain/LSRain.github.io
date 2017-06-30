@@ -1,0 +1,841 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="数据解析 为什么要解析数据?  因为从服务器获取到的数据都是二进制的,客户端无法直接使用,就需要将二进制的数据转换成客户端可以直接使用的OC对象.    在网络开发中，从服务器获取的二进制数据包括：  html 图片 视频 音频 zip …   除以上文件格式之外，最常见的数据莫过于是 JSON，偶尔也会有 XML  无论 JSON 还是 XML. 都是一种特殊格式的字符串，按照特定的规则描述数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据解析_json">
+<meta property="og:url" content="http://yoursite.com/2016/11/13/数据解析_json/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="数据解析 为什么要解析数据?  因为从服务器获取到的数据都是二进制的,客户端无法直接使用,就需要将二进制的数据转换成客户端可以直接使用的OC对象.    在网络开发中，从服务器获取的二进制数据包括：  html 图片 视频 音频 zip …   除以上文件格式之外，最常见的数据莫过于是 JSON，偶尔也会有 XML  无论 JSON 还是 XML. 都是一种特殊格式的字符串，按照特定的规则描述数据">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-bd8744dd30bf8ddd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-13T04:24:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据解析_json">
+<meta name="twitter:description" content="数据解析 为什么要解析数据?  因为从服务器获取到的数据都是二进制的,客户端无法直接使用,就需要将二进制的数据转换成客户端可以直接使用的OC对象.    在网络开发中，从服务器获取的二进制数据包括：  html 图片 视频 音频 zip …   除以上文件格式之外，最常见的数据莫过于是 JSON，偶尔也会有 XML  无论 JSON 还是 XML. 都是一种特殊格式的字符串，按照特定的规则描述数据">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-bd8744dd30bf8ddd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/13/数据解析_json/"/>
+
+
+
+
+
+  <title>数据解析_json | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/13/数据解析_json/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据解析_json</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-13T12:18:09+08:00">
+                2016-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="数据解析"><a href="#数据解析" class="headerlink" title="数据解析"></a>数据解析</h2><blockquote>
+<p>为什么要解析数据?</p>
+<ul>
+<li>因为从服务器获取到的数据都是二进制的,客户端无法直接使用,就需要将二进制的数据转换成客户端可以直接使用的OC对象.</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>在网络开发中，从服务器获取的二进制数据包括：</p>
+<ul>
+<li>html</li>
+<li>图片</li>
+<li>视频</li>
+<li>音频</li>
+<li>zip</li>
+<li>…</li>
+</ul>
+</li>
+<li><p>除以上文件格式之外，最常见的数据莫过于是 <code>JSON</code>，偶尔也会有 <code>XML</code></p>
+</li>
+<li>无论 <code>JSON</code> 还是 <code>XML</code>. 都是一种特殊格式的字符串，按照特定的规则描述数据结构.</li>
+<li>数据解析必须了解<code>序列化</code> &amp; <code>反序列化</code>.</li>
+</ul>
+<h3 id="序列化-amp-反序列化"><a href="#序列化-amp-反序列化" class="headerlink" title="序列化 &amp; 反序列化"></a>序列化 &amp; 反序列化</h3><ul>
+<li><strong>序列化：</strong> 在向服务器发送数据之前，将<code>NSArry</code>/<code>NSDictionary</code>/<code>NSString</code>等<code>OC对象</code>转换成二进制的过程.</li>
+<li><strong>反序列化：</strong> 在从服务器接收到数据之后，将二进制数据转换成<code>NSArray</code>/<code>NSDictionary</code>/<code>NSString</code>等<code>OC对象</code>的过程.</li>
+</ul>
+<h2 id="JSON简介"><a href="#JSON简介" class="headerlink" title="JSON简介"></a>JSON简介</h2><ul>
+<li><code>JavaScript Object Notation</code> (<code>JavaScript</code>的对象表示法).</li>
+<li>JSON 本质上，就是一个”特殊格式”的字符串.</li>
+<li>JSON 是网络上用来传输数据使用最广泛的数据格式，没有之一.<code>JSON</code>比<code>XML</code>更轻量级.</li>
+<li>JSON 出身草根，是 <code>Javascript</code> 的子集，专门负责描述数据的一种格式.</li>
+<li><code>Javascript</code> 是做网页开发使用的一种”脚本”语言.</li>
+<li><code>Javascript</code> &amp; <code>Java</code> 没有任何关系！</li>
+<li>参考网站：<a href="http://www.w3cschool.cc" target="_blank" rel="external">http://www.w3cschool.cc</a></li>
+<li>JSON具有自我描述性，更易理解.</li>
+</ul>
+<h3 id="JSON-语法规则"><a href="#JSON-语法规则" class="headerlink" title="JSON 语法规则"></a>JSON 语法规则</h3><ul>
+<li>数据以 key/value 值对表示</li>
+<li>数据由逗号分隔</li>
+<li>花括号保存对象</li>
+<li>方括号保存数组</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;&#125; 对象 &#123;<span class="string">"key"</span>: <span class="string">"value"</span>,<span class="string">"name"</span>: <span class="string">"zhangjie"</span>&#125;</div><div class="line"></div><div class="line">[] 数组 [&#123;&#125;,&#123;&#125;]</div></pre></td></tr></table></figure>
+<ul>
+<li><strong>提示 :</strong> JSON描述对象的<strong>语法格式很像字典</strong>.但是,<strong>不是字典</strong>,仅仅是键值对的形式很像.</li>
+</ul>
+<h3 id="JSON-值"><a href="#JSON-值" class="headerlink" title="JSON 值"></a>JSON 值</h3><ul>
+<li>数字（整数或浮点数）</li>
+<li>字符串（在双引号中）</li>
+<li>逻辑值（true 或 false）</li>
+<li>数组（在方括号中）</li>
+<li>对象（在花括号中）</li>
+<li>null (空值)</li>
+</ul>
+<h3 id="JSON描述对象"><a href="#JSON描述对象" class="headerlink" title="JSON描述对象"></a>JSON描述对象</h3><ul>
+<li><p>新建工程,新建文件<code>demo.json</code></p>
+</li>
+<li><p>描述一个学生</p>
+</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="string">"name"</span>:<span class="string">"赏金猎人"</span>,</div><div class="line">    <span class="string">"age"</span>:<span class="string">"18"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 描述一个另学生</span></div><div class="line">&#123;</div><div class="line"></div><div class="line">    <span class="string">"name"</span>:<span class="string">"莫甘娜"</span>,</div><div class="line">    <span class="string">"age"</span>:<span class="number">19</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>描述多个学生</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    &#123;</div><div class="line">        <span class="string">"name"</span>:<span class="string">"金克斯"</span>,</div><div class="line">        <span class="string">"age"</span>:<span class="string">"18"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">         <span class="string">"name"</span>:<span class="string">"武器大师"</span>,</div><div class="line">         <span class="string">"age"</span>:<span class="string">"19"</span></div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">         <span class="string">"name"</span>:<span class="string">"邪恶小法师"</span>,</div><div class="line">         <span class="string">"age"</span>:<span class="string">"20"</span></div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<h2 id="NSJSONSerialization"><a href="#NSJSONSerialization" class="headerlink" title="NSJSONSerialization"></a>NSJSONSerialization</h2><blockquote>
+<p>为什么要解析JSON数据?</p>
+<ul>
+<li>因为从服务器获取到的<code>JSON</code>数据都是二进制的,客户端无法直接使用;</li>
+<li>我们需要将二进制的<code>JSON</code>数据转换成客户端可以直接使用的OC对象,客户端才能直接使用;</li>
+</ul>
+</blockquote>
+<h3 id="序列化-amp-反序列化-1"><a href="#序列化-amp-反序列化-1" class="headerlink" title="序列化 &amp; 反序列化"></a>序列化 &amp; 反序列化</h3><ul>
+<li><strong>序列化：</strong> 在向服务器发送数据之前，将<code>NSArry</code>/<code>NSDictionary</code>/<code>NSString</code>等<code>OC对象</code>转换成二进制的过程.</li>
+<li><strong>反序列化：</strong> 在从服务器接收到数据之后，将二进制数据转换成<code>NSArray</code>/<code>NSDictionary</code>/<code>NSString</code>等<code>OC对象</code>的过程.</li>
+</ul>
+<h3 id="JSON解析-amp-JSON反序列化"><a href="#JSON解析-amp-JSON反序列化" class="headerlink" title="JSON解析 &amp; JSON反序列化"></a>JSON解析 &amp; JSON反序列化</h3><ul>
+<li>加载JSON数据,并反序列化JSON</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)loadJSON</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 1.URL</span></div><div class="line">    <span class="built_in">NSURL</span> *URL = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"http://localhost/demo.json"</span>];</div><div class="line"></div><div class="line">    <span class="comment">// 2.session</span></div><div class="line">    <span class="built_in">NSURLSession</span> *session = [<span class="built_in">NSURLSession</span> sharedSession];</div><div class="line"></div><div class="line">    <span class="comment">// 3.发起任务(dataTask)</span></div><div class="line">    <span class="built_in">NSURLSessionDataTask</span> *dataTask = [session dataTaskWithURL:URL completionHandler:^(<span class="built_in">NSData</span> * _Nullable data, <span class="built_in">NSURLResponse</span> * _Nullable response, <span class="built_in">NSError</span> * _Nullable error) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 5.错误处理</span></div><div class="line">        <span class="keyword">if</span> (error == <span class="literal">nil</span> &amp;&amp; data != <span class="literal">nil</span>) &#123;</div><div class="line"></div><div class="line">            <span class="comment">// 提示 : 服务器返回给客户端的都是二进制数据,客户端无法直接使用;</span></div><div class="line">            <span class="comment">// 反序列化 / 数据解析 : 把服务器返回给客户端的二进制数据转换成客户端可以直接使用的OC对象;</span></div><div class="line"></div><div class="line">            <span class="comment">// 6.json反序列化</span></div><div class="line">            <span class="keyword">id</span> result = [<span class="built_in">NSJSONSerialization</span> JSONObjectWithData:data options:<span class="number">0</span> error:<span class="literal">NULL</span>];</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%@ -- %@"</span>,[result <span class="keyword">class</span>],result);</div><div class="line"></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,error);</div><div class="line">        &#125;</div><div class="line">    &#125;];</div><div class="line"></div><div class="line">    <span class="comment">// 4.启动任务</span></div><div class="line">    [dataTask resume];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>打印 <code>json</code> 类型的结果是 <code>__NSCFDictionary</code>,表示<code>字典</code>.</p>
+</li>
+<li><p><code>NSJSONSerialization</code> 自动将<code>二进制形式的JSON字符串</code>解析成了<code>字典</code>.</p>
+</li>
+<li><p>JSON解析返回的对象是<code>字典</code>或<code>数组</code>，是根据原始数据是由 <code>{}</code> 或者 <code>[]</code> 括起来决定的.</p>
+<ul>
+<li><code>{}</code> : 字典</li>
+<li><code>[]</code> : 数组</li>
+</ul>
+</li>
+</ul>
+<h2 id="JSON解析参数分析"><a href="#JSON解析参数分析" class="headerlink" title="JSON解析参数分析"></a>JSON解析参数分析</h2><ul>
+<li>JSON反序列化的方法</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> result = [<span class="built_in">NSJSONSerialization</span> JSONObjectWithData:data options:<span class="number">0</span> error:<span class="literal">NULL</span>];</div></pre></td></tr></table></figure>
+<h3 id="error参数说明"><a href="#error参数说明" class="headerlink" title="error参数说明"></a>error参数说明</h3><ul>
+<li>保存解析出错的信息</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 参数1 : 保存解析出错的信息</span></div><div class="line"><span class="built_in">NSError</span> *error_JSON;</div><div class="line"></div><div class="line"><span class="comment">// 6.json反序列化</span></div><div class="line"><span class="keyword">id</span> result = [<span class="built_in">NSJSONSerialization</span> JSONObjectWithData:data options:<span class="number">0</span> error:&amp;error_JSON];</div><div class="line"></div><div class="line"><span class="comment">// 判断解析是否出错</span></div><div class="line"><span class="keyword">if</span> (error_JSON == <span class="literal">nil</span>) &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@ -- %@"</span>,[result <span class="keyword">class</span>],result);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"解析出错 %@"</span>,error_JSON);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="options参数说明"><a href="#options参数说明" class="headerlink" title="options参数说明"></a>options参数说明</h3><ul>
+<li>NSJSONReadingOptions</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NSJSONReadingMutableContainers = (1UL &lt;&lt; 0)</code></td>
+<td>容器可变</td>
+</tr>
+<tr>
+<td><code>NSJSONReadingMutableLeaves = (1UL &lt;&lt; 1)</code></td>
+<td>叶子可变,在iOS7.0已经失效</td>
+</tr>
+<tr>
+<td><code>NSJSONReadingAllowFragments = (1UL &lt;&lt; 2)</code></td>
+<td>顶级节点可以不是 NSArray 或者 NSDictionary,但必须是有效的JSON内容,比如字符串必须带引号</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>在实际开发中，获得网络的数组或者字典之后，通常会做字典转模型！反序列化的结果是否可变并不重要</p>
+<p>选项选择 <code>0</code>，表示任何附加操作都不做，效率最高！</p>
+</blockquote>
+<h3 id="NSJSONSerialization-类"><a href="#NSJSONSerialization-类" class="headerlink" title="NSJSONSerialization 类"></a>NSJSONSerialization 类</h3><ul>
+<li>专门负责在 <code>JSON</code> 和 <code>Foundation</code> 对象直接转换的类</li>
+<li>可以转换成 <code>JSON</code> 的 <code>Foundation</code> 对象(即能够做JSON序列化的对象)需要具备以下条件：<ul>
+<li>顶级节点是 <code>NSArray</code> 或者 <code>NSDictionary</code></li>
+<li>所有的对象是 <code>NSString</code>, <code>NSNumber</code>, <code>NSArray</code>, <code>NSDictionary</code> 或者 <code>NSNull</code></li>
+<li>所有字典的 <code>key</code> 是 <code>NSString</code></li>
+<li><code>NSNumber</code> 不是空或者无穷大</li>
+</ul>
+</li>
+</ul>
+<h2 id="JSONKit"><a href="#JSONKit" class="headerlink" title="JSONKit"></a>JSONKit</h2><h3 id="常见的-JSON-解析第三方框架"><a href="#常见的-JSON-解析第三方框架" class="headerlink" title="常见的 JSON 解析第三方框架"></a>常见的 JSON 解析第三方框架</h3><ul>
+<li>JSONKit（最快）</li>
+<li>SBJson</li>
+<li>TouchJSON</li>
+<li>说明 : 以上三个框架的性能依次降低！</li>
+</ul>
+<h3 id="介绍-JSONKit-第三方框架的目的"><a href="#介绍-JSONKit-第三方框架的目的" class="headerlink" title="介绍 JSONKit 第三方框架的目的"></a>介绍 JSONKit 第三方框架的目的</h3><ul>
+<li>JSON 的解析并不是表面上那么简单</li>
+<li>官方说 JSONKit 比苹果原生的 JSON 解析速度快！</li>
+<li>JSONKit 在很多老的项目中仍然在使用</li>
+<li>知道 JSONKit 说明我们是资深 iOS 程序员</li>
+<li>JSONKit 已经在 2012 年停止更新，适用于 iOS 5.0 以前的版本开发使用</li>
+<li>了解 ARC &amp; MRC 混编的方法</li>
+</ul>
+<h3 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h3><ul>
+<li>下载框架 <a href="https://github.com/johnezang/JSONKit" target="_blank" rel="external">https://github.com/johnezang/JSONKit</a></li>
+<li>导入框架文件</li>
+<li>设置 MRC 标记,告诉编译器，编译 JSONKit.m 时不使用 ARC<br><img src="http://upload-images.jianshu.io/upload_images/2329629-bd8744dd30bf8ddd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="JSONKit_MRC.png"></li>
+</ul>
+<h3 id="JSONKit反序列化核心代码"><a href="#JSONKit反序列化核心代码" class="headerlink" title="JSONKit反序列化核心代码"></a>JSONKit反序列化核心代码</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">id</span> result = [[JSONDecoder decoder] objectWithData:data];</div></pre></td></tr></table></figure>
+<ul>
+<li>重要提示：<ul>
+<li>工作中如果发现之前的代码仍然还在使用老的框架解析JSON，可以直接替换成苹果原生的解析</li>
+<li>经过亲自测试发现,苹果原生的解析JSON的框架,比<code>JSONKit</code>的性能强很多倍,而且内存处理上更加合理.</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/13/自定义地图大头针/" rel="next" title="自定义地图大头针">
+                <i class="fa fa-chevron-left"></i> 自定义地图大头针
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/数据解析_xml/" rel="prev" title="数据解析_xml">
+                数据解析_xml <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据解析"><span class="nav-number">1.</span> <span class="nav-text">数据解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#序列化-amp-反序列化"><span class="nav-number">1.1.</span> <span class="nav-text">序列化 & 反序列化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON简介"><span class="nav-number">2.</span> <span class="nav-text">JSON简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON-语法规则"><span class="nav-number">2.1.</span> <span class="nav-text">JSON 语法规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON-值"><span class="nav-number">2.2.</span> <span class="nav-text">JSON 值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON描述对象"><span class="nav-number">2.3.</span> <span class="nav-text">JSON描述对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NSJSONSerialization"><span class="nav-number">3.</span> <span class="nav-text">NSJSONSerialization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#序列化-amp-反序列化-1"><span class="nav-number">3.1.</span> <span class="nav-text">序列化 & 反序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON解析-amp-JSON反序列化"><span class="nav-number">3.2.</span> <span class="nav-text">JSON解析 & JSON反序列化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON解析参数分析"><span class="nav-number">5.</span> <span class="nav-text">JSON解析参数分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#error参数说明"><span class="nav-number">5.1.</span> <span class="nav-text">error参数说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#options参数说明"><span class="nav-number">5.2.</span> <span class="nav-text">options参数说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSJSONSerialization-类"><span class="nav-number">5.3.</span> <span class="nav-text">NSJSONSerialization 类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONKit"><span class="nav-number">6.</span> <span class="nav-text">JSONKit</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的-JSON-解析第三方框架"><span class="nav-number">6.1.</span> <span class="nav-text">常见的 JSON 解析第三方框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍-JSONKit-第三方框架的目的"><span class="nav-number">6.2.</span> <span class="nav-text">介绍 JSONKit 第三方框架的目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用步骤"><span class="nav-number">6.3.</span> <span class="nav-text">使用步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSONKit反序列化核心代码"><span class="nav-number">6.4.</span> <span class="nav-text">JSONKit反序列化核心代码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

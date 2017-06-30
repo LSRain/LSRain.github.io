@@ -1,0 +1,690 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="错误日志1、libc++abi.dylib: terminating with uncaught exception of type NSException错误场景偏好设置获取值为空 12[[LLoad creat] app_myOpenAccountInfo:@&amp;#123;@&amp;quot;member_id&amp;quot;:NSUserDefault(UserId)&amp;#125; completeHan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="错误日志">
+<meta property="og:url" content="http://yoursite.com/2017/02/23/错误日志/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="错误日志1、libc++abi.dylib: terminating with uncaught exception of type NSException错误场景偏好设置获取值为空 12[[LLoad creat] app_myOpenAccountInfo:@&amp;#123;@&amp;quot;member_id&amp;quot;:NSUserDefault(UserId)&amp;#125; completeHan">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-40faed9096601b7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-02-24T15:19:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="错误日志">
+<meta name="twitter:description" content="错误日志1、libc++abi.dylib: terminating with uncaught exception of type NSException错误场景偏好设置获取值为空 12[[LLoad creat] app_myOpenAccountInfo:@&amp;#123;@&amp;quot;member_id&amp;quot;:NSUserDefault(UserId)&amp;#125; completeHan">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-40faed9096601b7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/02/23/错误日志/"/>
+
+
+
+
+
+  <title>错误日志 | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/23/错误日志/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">错误日志</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-23T13:05:20+08:00">
+                2017-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="错误日志"><a href="#错误日志" class="headerlink" title="错误日志"></a>错误日志</h1><h2 id="1、libc-abi-dylib-terminating-with-uncaught-exception-of-type-NSException"><a href="#1、libc-abi-dylib-terminating-with-uncaught-exception-of-type-NSException" class="headerlink" title="1、libc++abi.dylib: terminating with uncaught exception of type NSException"></a>1、libc++abi.dylib: terminating with uncaught exception of type NSException</h2><h3 id="错误场景"><a href="#错误场景" class="headerlink" title="错误场景"></a>错误场景</h3><p>偏好设置获取值为空</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[[LLoad creat] app_myOpenAccountInfo:@&#123;@&quot;member_id&quot;:NSUserDefault(UserId)&#125; completeHandler:^(id obj) &#123;</div><div class="line">   &#125;];</div></pre></td></tr></table></figure>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><p><a href="http://www.jianshu.com/p/faff29ef3edb" target="_blank" rel="external">libc++abi.dylib: terminating with uncaught exception of type NSException</a></p>
+<h2 id="2、ld-library-not-found-for-lPods-clang-error-linker-command-failed-with-exit-code-1-use-v-to-see-invocation"><a href="#2、ld-library-not-found-for-lPods-clang-error-linker-command-failed-with-exit-code-1-use-v-to-see-invocation" class="headerlink" title="2、ld: library not found for -lPods clang: error: linker command failed with exit code 1 (use -v to see invocation)"></a>2、ld: library not found for -lPods clang: error: linker command failed with exit code 1 (use -v to see invocation)</h2><ul>
+<li>重命名工程文件名后报错</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/2329629-40faed9096601b7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="重命名工程文件"></p>
+<p>上面的错误多数情况下是因为新导入了同名的文件，这个问题出现在重命名工程名后报错。暂时不知道是什么原因，该项目由cocopod管理框架，不知道是不是这个原因，如：改为<code>02普罗米</code>后就会报错</p>
+<ul>
+<li>参考<br><a href="http://www.jianshu.com/p/03aec7c4867d" target="_blank" rel="external">linker command failed with exit code 1 (use -v to see invocation)</a></li>
+</ul>
+<h2 id="3、unrecognized-selector-sent-to-instance"><a href="#3、unrecognized-selector-sent-to-instance" class="headerlink" title="3、unrecognized selector sent to instance"></a>3、unrecognized selector sent to instance</h2><ul>
+<li>出现unrecognized selector sent to instance问题，大部分是因为对象被提前释放，指针变成野指针，还有一种情况是本身就是野指针，如声明一个局部对象，没有初始化就直接调用。定位难的原因是你知道这个野指针指到哪个类了，但是不知道是哪里产生了野指针。如果一个正常的对象调用一个不存在的方法，也会给出这个提示，不过这种情况下Xcode会直接给出crash的代码行，不存在定位难的问题。</li>
+</ul>
+<p>参考：<br><a href="http://wonderffee.github.io/blog/2014/05/17/solve-unrecognized-selector-sent-to-instance-problem/" target="_blank" rel="external">Unrecognized Selector Sent to Instance</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/18/XCode快捷键/" rel="next" title="Xcode快捷键">
+                <i class="fa fa-chevron-left"></i> Xcode快捷键
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/24/URL资源参考/" rel="prev" title="URL资源参考">
+                URL资源参考 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#错误日志"><span class="nav-number">1.</span> <span class="nav-text">错误日志</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、libc-abi-dylib-terminating-with-uncaught-exception-of-type-NSException"><span class="nav-number">1.1.</span> <span class="nav-text">1、libc++abi.dylib: terminating with uncaught exception of type NSException</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#错误场景"><span class="nav-number">1.1.1.</span> <span class="nav-text">错误场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、ld-library-not-found-for-lPods-clang-error-linker-command-failed-with-exit-code-1-use-v-to-see-invocation"><span class="nav-number">1.2.</span> <span class="nav-text">2、ld: library not found for -lPods clang: error: linker command failed with exit code 1 (use -v to see invocation)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、unrecognized-selector-sent-to-instance"><span class="nav-number">1.3.</span> <span class="nav-text">3、unrecognized selector sent to instance</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

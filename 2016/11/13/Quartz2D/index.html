@@ -1,0 +1,762 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Quartz2D绘图 基本介绍核心绘图! CoreGraphics -&amp;gt; graphics 图形,图像是CoreGraphics 框架下的内容 C语言框架!函数大都以CG开头!  注意: C语言创建的结构体 不需要加 *;核心绘图,在iOS和Mac OS 两个系统系统里面都可以用 目的:在应用中,可以根据数据实时的更新图像!  基本绘图步骤 1.重写视图的drawRect方法 2.获取图形上">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quartz2D">
+<meta property="og:url" content="http://yoursite.com/2016/11/13/Quartz2D/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="Quartz2D绘图 基本介绍核心绘图! CoreGraphics -&amp;gt; graphics 图形,图像是CoreGraphics 框架下的内容 C语言框架!函数大都以CG开头!  注意: C语言创建的结构体 不需要加 *;核心绘图,在iOS和Mac OS 两个系统系统里面都可以用 目的:在应用中,可以根据数据实时的更新图像!  基本绘图步骤 1.重写视图的drawRect方法 2.获取图形上">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-ad69a91cff64ec9d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-709f3cd125082d52.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-13T09:14:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Quartz2D">
+<meta name="twitter:description" content="Quartz2D绘图 基本介绍核心绘图! CoreGraphics -&amp;gt; graphics 图形,图像是CoreGraphics 框架下的内容 C语言框架!函数大都以CG开头!  注意: C语言创建的结构体 不需要加 *;核心绘图,在iOS和Mac OS 两个系统系统里面都可以用 目的:在应用中,可以根据数据实时的更新图像!  基本绘图步骤 1.重写视图的drawRect方法 2.获取图形上">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-ad69a91cff64ec9d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/13/Quartz2D/"/>
+
+
+
+
+
+  <title>Quartz2D | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/13/Quartz2D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Quartz2D</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-13T14:29:14+08:00">
+                2016-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Quartz2D绘图"><a href="#Quartz2D绘图" class="headerlink" title="Quartz2D绘图"></a>Quartz2D绘图</h2><p><img src="http://upload-images.jianshu.io/upload_images/2329629-ad69a91cff64ec9d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Quartz2D.png"></p>
+<h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>核心绘图! CoreGraphics -&gt; graphics 图形,图像<br>是CoreGraphics 框架下的内容 C语言框架!<br>函数大都以CG开头!</p>
+<blockquote>
+<p>注意: C语言创建的结构体 不需要加 *;<br>核心绘图,在iOS和Mac OS 两个系统系统里面都可以用</p>
+<p>目的:在应用中,可以根据数据实时的更新图像!</p>
+</blockquote>
+<h3 id="基本绘图步骤"><a href="#基本绘图步骤" class="headerlink" title="基本绘图步骤"></a>基本绘图步骤</h3><ul>
+<li>1.重写视图的drawRect方法</li>
+<li>2.获取图形上下文 -&gt; 绘图的环境</li>
+<li>3.创建想要绘制的图形的路径 -&gt; 几何图形!</li>
+<li>4.将路径添加到环境上!</li>
+<li>5.渲染 -&gt; 将图形生成图像显示到屏幕上!</li>
+</ul>
+<p>其他绘图方式演示</p>
+<ol>
+<li>直接以C函数的方式进行绘图</li>
+</ol>
+<blockquote>
+<p>简单,直接</p>
+</blockquote>
+<p>2.以C函数路径的方式进行绘图<br>需要将路径添加给图形上下文</p>
+<blockquote>
+<p>注意:需要进行内存管理.<br>遇到带有Create.copy,retain这些词创建对象的函数时,用完以后需要释放!</p>
+</blockquote>
+<p>可以借助静态分析工具,从代码结构上分析,代码写的是否有问题!<br>静态分析工具<code>快捷键 cmd + shift + b</code><br><img src="http://upload-images.jianshu.io/upload_images/2329629-709f3cd125082d52.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="静态分析工具.png"></p>
+<h2 id="绘图其他信息"><a href="#绘图其他信息" class="headerlink" title="绘图其他信息"></a>绘图其他信息</h2><h3 id="图形属性设置"><a href="#图形属性设置" class="headerlink" title="图形属性设置"></a>图形属性设置</h3><p>线宽<br>CGContextSetLineWidth(cxt, 10);<br>线头<br>CGContextSetLineCap(cxt, kCGLineCapButt);<br>接头<br>CGContextSetLineJoin(cxt, kCGLineJoinBevel);<br>颜色<br>[[UIColor redColor] setFill];<br>[[UIColor yellowColor] setStroke];</p>
+<h3 id="渲染模式设置"><a href="#渲染模式设置" class="headerlink" title="渲染模式设置"></a>渲染模式设置</h3><p>画线<br>kCGPathStroke,     只画线<br>填充<br>kCGPathFill,       只填充<br>画线&amp;填充<br>kCGPathFillStroke  填充&amp;画线</p>
+<h3 id="填充规则介绍"><a href="#填充规则介绍" class="headerlink" title="填充规则介绍"></a>填充规则介绍</h3><h4 id="非零绕数填充规则"><a href="#非零绕数填充规则" class="headerlink" title="非零绕数填充规则"></a>非零绕数填充规则</h4><p>kCGPathFill<br>视图中的一个点,<br>被顺时针覆盖一次, 标记为 1<br>被逆时针覆盖一次, 标记为 -1</p>
+<blockquote>
+<p>最终结果只要是 0 ,就不填充! 否则,填充!</p>
+</blockquote>
+<h4 id="奇偶填充规则"><a href="#奇偶填充规则" class="headerlink" title="奇偶填充规则"></a>奇偶填充规则</h4><p>kCGPathEOFill<br>视图中的一个点<br>如果被覆盖奇数次,在渲染的时候填充!<br>如果被覆盖偶数次,在渲染的时候不填充!</p>
+<h2 id="drawRect方法介绍"><a href="#drawRect方法介绍" class="headerlink" title="drawRect方法介绍"></a>drawRect方法介绍</h2><h3 id="什么时候调用"><a href="#什么时候调用" class="headerlink" title="什么时候调用?"></a>什么时候调用?</h3><p>第一次显示视图的时候,会调用一次!</p>
+<h3 id="参数rect代表的含义"><a href="#参数rect代表的含义" class="headerlink" title="参数rect代表的含义?"></a>参数rect代表的含义?</h3><ul>
+<li>默认就是视图自己bounds</li>
+</ul>
+<h3 id="为什么要重写这个方法"><a href="#为什么要重写这个方法" class="headerlink" title="为什么要重写这个方法?"></a>为什么要重写这个方法?</h3><ul>
+<li>因为苹果要求在此方法中写绘图相关的代码!</li>
+<li>只有在这个方法中,我们才能够获取对应的图形上下文[视图相关的图形上下文_绘制的内容可以显示到视图上的]</li>
+</ul>
+<h3 id="如果需要图形发生变化-该怎么做"><a href="#如果需要图形发生变化-该怎么做" class="headerlink" title="如果需要图形发生变化,该怎么做?"></a>如果需要图形发生变化,该怎么做?</h3><p> _重新执行drawRect方法?</p>
+<ul>
+<li>程序员禁止直接调用drawRect方法! 原因:直接调用,不能保证上下文被创建好了,会出问题!</li>
+<li>如果需要进行重绘,可以通过setNeedsDisplay[常用!] 或者 </li>
+</ul>
+<blockquote>
+<p>setNeedsDisplayInRect:方法间接调用!</p>
+</blockquote>
+<h2 id="UIKit绘制图形"><a href="#UIKit绘制图形" class="headerlink" title="UIKit绘制图形"></a>UIKit绘制图形</h2><h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><ol>
+<li>通过UIBezierPath绘制图形</li>
+<li>通过UIBezierPath绘图时,设置属性</li>
+</ol>
+<ul>
+<li>lineWidth</li>
+<li>lineCapStyle</li>
+<li>lineJoinStyle</li>
+</ul>
+<h3 id="与C混用"><a href="#与C混用" class="headerlink" title="与C混用"></a>与C混用</h3><h4 id="绘图方式"><a href="#绘图方式" class="headerlink" title="绘图方式"></a>绘图方式</h4><ul>
+<li><ol>
+<li>获取上下文</li>
+</ol>
+</li>
+<li><ol>
+<li>创建OC路径</li>
+</ol>
+</li>
+<li><ol>
+<li>添加到上下文,需要将OC路径转为CGPathRef</li>
+</ol>
+</li>
+<li><ol>
+<li>注意:使用C函数的方式进行属性设置!</li>
+</ol>
+</li>
+<li><ol>
+<li>渲染</li>
+</ol>
+</li>
+</ul>
+<h4 id="基本图形绘制"><a href="#基本图形绘制" class="headerlink" title="基本图形绘制"></a>基本图形绘制</h4><p>矩形<br>rect<br>圆角矩形<br>roundRect<br>椭圆<br>Oval<br>弧形<br>arc</p>
+<h4 id="绘制文字"><a href="#绘制文字" class="headerlink" title="绘制文字"></a>绘制文字</h4><p>1.drawAtPoint: withAttributes:<br>// 从某个点开始绘制<br>2.drawInRect:withAttributes:<br>// 将文字绘制在某个区域!<br>3.绘制图片<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 从某个点开始画图片</div><div class="line">1.drawAtPoint</div><div class="line">// 从某个点开始画图片</div><div class="line">2.drawInRect</div><div class="line">// 以平铺的方式绘图</div><div class="line">3.drawAsPatternImageInRect</div></pre></td></tr></table></figure></p>
+<h2 id="图片的图形上下文"><a href="#图片的图形上下文" class="headerlink" title="图片的图形上下文"></a>图片的图形上下文</h2><h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>开启图片的图形上下文</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">// 1.开启图片的图形上下文[位置不固定,哪里需要哪里整!]</div><div class="line">// 参数1 上下文大小 -&gt; 画布的大小!</div><div class="line">// 参数2 是否透明 -&gt; NO! 透明  opaque 不透明!</div><div class="line">// 参数3 屏幕缩放因子! 直接写 0.0 -&gt; 对应的就是根据设备去匹配! [UIScreen mainScreen].scale;</div><div class="line">				UIGraphicsBeginImageContextWithOptions(CGSizeMake(300, 300), NO, 0.0);</div><div class="line">// 2.获取图片的图形上下文</div><div class="line">CGContextRef cxt = UIGraphicsGetCurrentContext();</div><div class="line">// 3.绘制路径</div><div class="line">UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(10, 10, 200, 80)];</div><div class="line">				</div><div class="line">CGContextAddPath(cxt, path.CGPath);</div><div class="line">				</div><div class="line">CGContextDrawPath(cxt, kCGPathStroke);</div><div class="line">// 4.从当前上下文中获取图片</div><div class="line">UIImage *img = UIGraphicsGetImageFromCurrentImageContext();</div><div class="line">// 5.关闭图片的图形上下文!</div><div class="line">UIGraphicsEndImageContext();</div></pre></td></tr></table></figure>
+<h3 id="屏幕截图"><a href="#屏幕截图" class="headerlink" title="屏幕截图"></a>屏幕截图</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 1.开启上下文				UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, 0.0);</div><div class="line">// 2.将试图的层次结构绘制出来 Hierarchy 层次结构!</div><div class="line">// updates: YES! 如果写NO,在滚动tableView的时候,可能会花屏[模糊]!</div><div class="line">[self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];</div><div class="line">// 3.获取图片</div><div class="line">UIImage *img = UIGraphicsGetImageFromCurrentImageContext();</div><div class="line">// 4.关闭上下文</div><div class="line">UIGraphicsEndImageContext();</div></pre></td></tr></table></figure>
+<h3 id="保存图片到相册"><a href="#保存图片到相册" class="headerlink" title="保存图片到相册"></a>保存图片到相册</h3><p>1.直接使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 保存图片到相册</div><div class="line">UIImageWriteToSavedPhotosAlbum(img, nil, nil, nil);</div></pre></td></tr></table></figure></p>
+<p>2.方法解释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 参数1 要保存的图片</div><div class="line">// 参数2 &amp; 参数3 保存结束后需要 参数2 执行 参数3 的方法</div><div class="line">// 参数4 上下文信息, 写个字符串或nil! -&gt; 可以帮助我们判断,保存的是那张图片!</div><div class="line">UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);</div><div class="line">#pragma mark - 保存成功以后调用的方法</div><div class="line">- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo &#123;</div><div class="line">				    </div><div class="line">//    NSLog(@&quot;%@&quot;, contextInfo);</div><div class="line">if (error) &#123;</div><div class="line">NSLog(@&quot;%@&quot;, error);</div><div class="line">return;</div><div class="line">&#125;		    </div><div class="line">NSLog(@&quot;保存成功&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/13/事件的传递和响应者链条/" rel="next" title="事件的传递和响应者链条">
+                <i class="fa fa-chevron-left"></i> 事件的传递和响应者链条
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/14/UI小情绪/" rel="prev" title="UI小情绪">
+                UI小情绪 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quartz2D绘图"><span class="nav-number">1.</span> <span class="nav-text">Quartz2D绘图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本介绍"><span class="nav-number">1.1.</span> <span class="nav-text">基本介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本绘图步骤"><span class="nav-number">1.2.</span> <span class="nav-text">基本绘图步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘图其他信息"><span class="nav-number">2.</span> <span class="nav-text">绘图其他信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图形属性设置"><span class="nav-number">2.1.</span> <span class="nav-text">图形属性设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#渲染模式设置"><span class="nav-number">2.2.</span> <span class="nav-text">渲染模式设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#填充规则介绍"><span class="nav-number">2.3.</span> <span class="nav-text">填充规则介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#非零绕数填充规则"><span class="nav-number">2.3.1.</span> <span class="nav-text">非零绕数填充规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#奇偶填充规则"><span class="nav-number">2.3.2.</span> <span class="nav-text">奇偶填充规则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drawRect方法介绍"><span class="nav-number">3.</span> <span class="nav-text">drawRect方法介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么时候调用"><span class="nav-number">3.1.</span> <span class="nav-text">什么时候调用?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数rect代表的含义"><span class="nav-number">3.2.</span> <span class="nav-text">参数rect代表的含义?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要重写这个方法"><span class="nav-number">3.3.</span> <span class="nav-text">为什么要重写这个方法?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如果需要图形发生变化-该怎么做"><span class="nav-number">3.4.</span> <span class="nav-text">如果需要图形发生变化,该怎么做?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UIKit绘制图形"><span class="nav-number">4.</span> <span class="nav-text">UIKit绘制图形</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本使用"><span class="nav-number">4.1.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与C混用"><span class="nav-number">4.2.</span> <span class="nav-text">与C混用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#绘图方式"><span class="nav-number">4.2.1.</span> <span class="nav-text">绘图方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本图形绘制"><span class="nav-number">4.2.2.</span> <span class="nav-text">基本图形绘制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#绘制文字"><span class="nav-number">4.2.3.</span> <span class="nav-text">绘制文字</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片的图形上下文"><span class="nav-number">5.</span> <span class="nav-text">图片的图形上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本用法"><span class="nav-number">5.1.</span> <span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#屏幕截图"><span class="nav-number">5.2.</span> <span class="nav-text">屏幕截图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#保存图片到相册"><span class="nav-number">5.3.</span> <span class="nav-text">保存图片到相册</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

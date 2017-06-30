@@ -1,0 +1,699 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="下文参考自(已征得作者同意/在此进行感谢)：文／兴宇是谁（简书作者）原文链接：http://www.jianshu.com/p/927c8384855a  什么是Runtime我们写的代码在程序运行过程中都会被转化成runtime的C代码执行，例如[target doSomething];会被转化成objc_msgSend(target, @selector(doSomething));。 O">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Runtime那些事">
+<meta property="og:url" content="http://yoursite.com/2016/11/15/Runtime那些事/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="下文参考自(已征得作者同意/在此进行感谢)：文／兴宇是谁（简书作者）原文链接：http://www.jianshu.com/p/927c8384855a  什么是Runtime我们写的代码在程序运行过程中都会被转化成runtime的C代码执行，例如[target doSomething];会被转化成objc_msgSend(target, @selector(doSomething));。 O">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-8be51fdb237c2918.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-16T09:56:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Runtime那些事">
+<meta name="twitter:description" content="下文参考自(已征得作者同意/在此进行感谢)：文／兴宇是谁（简书作者）原文链接：http://www.jianshu.com/p/927c8384855a  什么是Runtime我们写的代码在程序运行过程中都会被转化成runtime的C代码执行，例如[target doSomething];会被转化成objc_msgSend(target, @selector(doSomething));。 O">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-8be51fdb237c2918.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/15/Runtime那些事/"/>
+
+
+
+
+
+  <title>Runtime那些事 | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/15/Runtime那些事/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Runtime那些事</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-15T00:25:19+08:00">
+                2016-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://upload-images.jianshu.io/upload_images/2329629-8be51fdb237c2918.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="runtime.png"></p>
+<blockquote>
+<p>下文参考自(已征得作者同意/在此进行感谢)：<br>文／兴宇是谁（简书作者）原文链接：<a href="http://www.jianshu.com/p/927c8384855a" target="_blank" rel="external">http://www.jianshu.com/p/927c8384855a</a></p>
+</blockquote>
+<h2 id="什么是Runtime"><a href="#什么是Runtime" class="headerlink" title="什么是Runtime"></a>什么是Runtime</h2><p>我们写的代码在程序运行过程中都会被转化成runtime的C代码执行，例如[target doSomething];会被转化成objc_msgSend(target, @selector(doSomething));。</p>
+<p>OC中一切都被设计成了<code>对象</code>，我们都知道一个类被初始化成一个实例，这个实例是一个对象。实际上一个类本质上也是一个对象，在runtime中用结构体表示。<br>相关的定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">/// 描述类中的一个方法</div><div class="line">typedef struct objc_method *Method;</div><div class="line">/// 实例变量</div><div class="line">typedef struct objc_ivar *Ivar;</div><div class="line">/// 类别</div><div class="line">Categorytypedef struct objc_category *Category;</div><div class="line">/// 类中声明的属性</div><div class="line">typedef struct objc_property *objc_property_t;</div></pre></td></tr></table></figure></p>
+<h3 id="类在runtime中的表示"><a href="#类在runtime中的表示" class="headerlink" title="类在runtime中的表示"></a>类在runtime中的表示</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">//类在runtime中的表示</div><div class="line">struct objc_class &#123; </div><div class="line">Class isa;</div><div class="line">//指针，顾名思义，表示是一个什么</div><div class="line">//实例的isa指向类对象，类对象的isa指向元类</div><div class="line">#if !__OBJC2__ Class super_class; </div><div class="line">//指向父类 </div><div class="line">const char *name; </div><div class="line">//类名 </div><div class="line">long version; long info; </div><div class="line">long instance_size struct objc_ivar_list *ivars </div><div class="line">//成员变量列表 </div><div class="line">struct objc_method_list **methodLists; </div><div class="line">//方法列表 </div><div class="line">struct objc_cache *cache;</div><div class="line">//缓存 </div><div class="line">//一种优化，调用过的方法存入缓存列表，下次调用先找缓存 </div><div class="line">struct objc_protocol_list *protocols </div><div class="line">//协议列表 </div><div class="line">#endif</div><div class="line">&#125; </div><div class="line">OBJC2_UNAVAILABLE;</div><div class="line">/* Use `Class` instead of `struct objc_class *` */</div></pre></td></tr></table></figure>
+<h3 id="获取列表"><a href="#获取列表" class="headerlink" title="获取列表"></a>获取列表</h3><p>有时候会有这样的需求，我们需要知道当前类中每个属性的名字（比如字典转模型，字典的Key和模型对象的属性名字不匹配）。我们可以通过runtime的一系列方法获取类的一些信息（包括属性列表，方法列表，成员变量列表，和遵循的协议列表）。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">unsigned int count; </div><div class="line">//获取属性列表 </div><div class="line">objc_property_t *propertyList = class_copyPropertyList([self class], &amp;count); </div><div class="line">for (unsigned int i=0; i&lt;count; i++) &#123;</div><div class="line">const char *propertyName = property_getName(propertyList[i]); </div><div class="line">NSLog(@&quot;property----&gt;%@&quot;, [NSString stringWithUTF8String:propertyName]); &#125; </div><div class="line">//获取方法列表</div><div class="line">Method *methodList = class_copyMethodList([self class], &amp;count); </div><div class="line">for (unsigned int i; i&lt;count; i++) &#123;</div><div class="line">Method method = methodList[i]; </div><div class="line">NSLog(@&quot;method----&gt;%@&quot;, NSStringFromSelector(method_getName(method))); </div><div class="line">&#125; </div><div class="line">//获取成员变量列表 </div><div class="line">Ivar *ivarList = class_copyIvarList([self class], &amp;count); </div><div class="line">for (unsigned int i; i&lt;count; i++) &#123;</div><div class="line">Ivar myIvar = ivarList[i]; const char *ivarName = ivar_getName(myIvar); NSLog(@&quot;Ivar----&gt;%@&quot;, [NSString stringWithUTF8String:ivarName]); </div><div class="line">&#125; </div><div class="line">//获取协议列表 </div><div class="line">__unsafe_unretained Protocol **protocolList = class_copyProtocolList([self class], &amp;count); </div><div class="line">for (unsigned int i; i&lt;count; i++) &#123;</div><div class="line"> Protocol *myProtocal = protocolList[i]; const char *protocolName = protocol_getName(myProtocal); </div><div class="line">NSLog(@&quot;protocol----&gt;%@&quot;, [NSString stringWithUTF8String:protocolName]); </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在Xcode上跑一下看看输出吧，需要给你当前的类写几个属性，成员变量，方法和协议，不然获取的列表是没有东西的。注意，调用这些获取列表的方法别忘记导入头文件<br><code>#import &lt;objc/runtime.h&gt;</code>。</p>
+<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><p>让我们看一下方法调用在运行时的过程（参照前文类在runtime中的表示）<br><strong>如果用实例对象调用实例方法，会到实例的isa指针指向的对象（也就是类对象）操作。如果调用的是类方法，就会到类对象的isa指针指向的对象（也就是元类对象）中操作。</strong><br>首先，在相应操作的对象中的缓存方法列表中找调用的方法，如果找到，转向相应实现并执行。<br>如果没找到，在相应操作的对象中的方法列表中找调用的方法，如果找到，转向相应实现执行<br>如果没找到，去父类指针所指向的对象中执行1，2.<br>以此类推，如果一直到根类还没找到，转向拦截调用。<br>如果没有重写拦截调用的方法，程序报错。</p>
+<p><strong>以上的过程给我带来的启发：</strong><br>重写父类的方法，并没有覆盖掉父类的方法，只是在当前类对象中找到了这个方法后就不会再去父类中找了。<br>如果想调用已经重写过的方法的父类的实现，只需使用super<br>这个编译器标识，它会在运行时跳过在当前的类对象中寻找方法的过程。</p>
+<h3 id="拦截调用"><a href="#拦截调用" class="headerlink" title="拦截调用"></a>拦截调用</h3><p>在方法调用中说到了，如果没有找到方法就会转向拦截调用。那么什么是拦截调用呢。拦截调用就是，在找不到调用的方法程序崩溃之前，你有机会通过重写NSObject<br>的四个方法来处理。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">+ (BOOL)resolveClassMethod:(SEL)sel;</div><div class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel;</div><div class="line">//后两个方法需要转发到其他的类处理</div><div class="line">- (id)forwardingTargetForSelector:(SEL)aSelector;</div><div class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation;</div></pre></td></tr></table></figure></p>
+<p>第一个方法是当你调用一个不存在的类方法的时候，会调用这个方法，默认返回NO，你可以加上自己的处理然后返回YES。<br>第二个方法和第一个方法相似，只不过处理的是实例方法。<br>第三个方法是将你调用的不存在的方法重定向到一个其他声明了这个方法的类，只需要你返回一个有这个方法的target。<br>第四个方法是将你调用的不存在的方法打包成NSInvocation传给你。做完你自己的处理后，调用invokeWithTarget:方法让某个target触发这个方法。</p>
+<h3 id="动态添加方法"><a href="#动态添加方法" class="headerlink" title="动态添加方法"></a>动态添加方法</h3><p>重写了拦截调用的方法并且返回了YES，我们要怎么处理呢？有一个办法是根据传进来的SEL<br>类型的selector动态添加一个方法。<br>首先从外部隐式调用一个不存在的方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//隐式调用方法</div><div class="line">[target performSelector:@selector(resolveAdd:) withObject:@&quot;test&quot;];</div></pre></td></tr></table></figure></p>
+<p>然后，在target对象内部重写拦截调用的方法，动态添加方法.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">void runAddMethod(id self, SEL _cmd, NSString *string)&#123;</div><div class="line">NSLog(@&quot;add C IMP &quot;, string);</div><div class="line">&#125;</div><div class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel&#123;</div><div class="line">//给本类动态添加一个方法 </div><div class="line">if ([NSStringFromSelector(sel) isEqualToString:@&quot;resolveAdd:&quot;]) &#123; </div><div class="line">class_addMethod(self, sel, (IMP)runAddMethod, &quot;v@:*&quot;); </div><div class="line">&#125; </div><div class="line">return YES;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>其中class_addMethod的四个参数分别是：<br>Class cls<br>给哪个类添加方法，本例中是self<br>SEL name<br>添加的方法，本例中是重写的拦截调用传进来的selector。<br>IMP imp<br>方法的实现，C方法的方法实现可以直接获得。如果是OC方法，可以用+ (IMP)instanceMethodForSelector:(SEL)aSelector;<br>获得方法的实现。<br>“v@:*”<br>方法的签名，代表有一个参数的方法。</p>
+<h3 id="关联对象"><a href="#关联对象" class="headerlink" title="关联对象"></a>关联对象</h3><p>现在你准备用一个系统的类，但是系统的类并不能满足你的需求，你需要额外添加一个属性。这种情况的一般解决办法就是继承。但是，只增加一个属性，就去继承一个类，总是觉得太麻烦类。这个时候，runtime的关联属性就发挥它的作用了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//首先定义一个全局变量，用它的地址作为关联对象的keystatic char associatedObjectKey;</div><div class="line">//设置关联对象</div><div class="line">objc_setAssociatedObject(target, &amp;associatedObjectKey, @&quot;添加的字符串属性&quot;, OBJC_ASSOCIATION_RETAIN_NONATOMIC); </div><div class="line">//获取关联对象NSString *string = objc_getAssociatedObject(target, &amp;associatedObjectKey);</div><div class="line">NSLog(@&quot;AssociatedObject = %@&quot;, string);</div></pre></td></tr></table></figure></p>
+<p><code>objc_setAssociatedObject</code>的四个参数：<br>id object<br>给谁设置关联对象。<br>const void *key<br>关联对象唯一的key，获取时会用到。<br>id value<br>关联对象。<br>objc_AssociationPolicy<br>关联策略，有以下几种策略：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">enum &#123; OBJC_ASSOCIATION_ASSIGN = 0, </div><div class="line">OBJC_ASSOCIATION_RETAIN_NONATOMIC = 1, </div><div class="line">OBJC_ASSOCIATION_COPY_NONATOMIC = 3, OBJC_ASSOCIATION_RETAIN = </div><div class="line">01401, OBJC_ASSOCIATION_COPY = 01403 &#125;;</div></pre></td></tr></table></figure></p>
+<p>如果你熟悉OC，看名字应该知道这几种策略的意思了吧。<br>objc_getAssociatedObject的两个参数。<br>id object<br>获取谁的关联对象。<br>const void *key<br>根据这个唯一的key获取关联对象。</p>
+<p>其实，你还可以把添加和获取关联对象的方法写在你需要用到这个功能的类的类别中，方便使用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//添加关联对象</div><div class="line">- (void)addAssociatedObject:(id)object&#123;</div><div class="line">objc_setAssociatedObject(self, @selector(getAssociatedObject), object, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line">//获取关联对象</div><div class="line">- (id)getAssociatedObject&#123; return objc_getAssociatedObject(self, _cmd);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>注意：</strong>这里面我们把<code>getAssociatedObject</code>方法的地址作为唯一的key，_cmd<br>代表当前调用方法的地址。</p>
+<h3 id="方法交换"><a href="#方法交换" class="headerlink" title="方法交换"></a>方法交换</h3><p><code>方法交换</code>，顾名思义，就是将两个方法的实现交换。例如，将A方法和B方法交换，调用A方法的时候，就会执行B方法中的代码，反之亦然。话不多说，这是参考Mattt大神在NSHipster上的文章自己写的代码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">#import &quot;UIViewController+swizzling.h&quot;</div><div class="line">#import &lt;objc/runtime.h&gt;</div><div class="line">@implementation UIViewController (swizzling)</div><div class="line">//load方法会在类第一次加载的时候被调用</div><div class="line">//调用的时间比较靠前，适合在这个方法里做方法交换</div><div class="line">+ (void)load&#123; </div><div class="line">//方法交换应该被保证，在程序中只会执行一次 </div><div class="line">static dispatch_once_t onceToken; </div><div class="line">dispatch_once(&amp;onceToken, ^&#123; </div><div class="line">//获得viewController的生命周期方法的selector </div><div class="line">SEL systemSel = @selector(viewWillAppear:); </div><div class="line">//自己实现的将要被交换的方法的selector </div><div class="line">SEL swizzSel = @selector(swiz_viewWillAppear:); </div><div class="line">//两个方法的Method Method systemMethod = class_getInstanceMethod([self class], systemSel); </div><div class="line">Method swizzMethod = class_getInstanceMethod([self class], swizzSel); </div><div class="line">//首先动态添加方法，实现是被交换的方法，返回值表示添加成功还是失败 </div><div class="line">BOOL isAdd = class_addMethod(self, systemSel, </div><div class="line">method_getImplementation(swizzMethod), </div><div class="line">method_getTypeEncoding(swizzMethod)); </div><div class="line">if (isAdd) &#123; </div><div class="line">//如果成功，说明类中不存在这个方法的实现 </div><div class="line">//将被交换方法的实现替换到这个并不存在的实现 </div><div class="line">class_replaceMethod(self, swizzSel, method_getImplementation(systemMethod), method_getTypeEncoding(systemMethod)); </div><div class="line">&#125;else&#123; </div><div class="line">//否则，交换两个方法的实现 </div><div class="line">method_exchangeImplementations(systemMethod, swizzMethod); </div><div class="line">&#125; </div><div class="line">&#125;);</div><div class="line">&#125;</div><div class="line">- (void)swiz_viewWillAppear:(BOOL)animated&#123; </div><div class="line">//这时候调用自己，看起来像是死循环 </div><div class="line">//但是其实自己的实现已经被替换了 </div><div class="line">[self swiz_viewWillAppear:animated]; </div><div class="line">NSLog(@&quot;swizzle&quot;);</div><div class="line">&#125;</div><div class="line">@end</div></pre></td></tr></table></figure></p>
+<p>在一个自己定义的viewController中重写viewWillAppear<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">- (void)viewWillAppear:(BOOL)animated&#123; </div><div class="line">[super viewWillAppear:animated]; NSLog(@&quot;viewWillAppear&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Run起来看看输出吧！<br><strong>我的理解：</strong><br>方法交换对于我来说更像是实现一种思想的最佳技术：AOP面向切面编程。<br>既然是切面，就一定不要忘记，交换完再调回自己。<br>一定要保证只交换一次，否则就会很乱。<br>最后，据说这个技术很危险，谨慎使用。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/14/iOS中的Cookie/" rel="next" title="iOS中的Cookie">
+                <i class="fa fa-chevron-left"></i> iOS中的Cookie
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/15/瀑布流布局/" rel="prev" title="瀑布流">
+                瀑布流 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Runtime"><span class="nav-number">1.</span> <span class="nav-text">什么是Runtime</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类在runtime中的表示"><span class="nav-number">1.1.</span> <span class="nav-text">类在runtime中的表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取列表"><span class="nav-number">1.2.</span> <span class="nav-text">获取列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法调用"><span class="nav-number">1.3.</span> <span class="nav-text">方法调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拦截调用"><span class="nav-number">1.4.</span> <span class="nav-text">拦截调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态添加方法"><span class="nav-number">1.5.</span> <span class="nav-text">动态添加方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关联对象"><span class="nav-number">1.6.</span> <span class="nav-text">关联对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法交换"><span class="nav-number">1.7.</span> <span class="nav-text">方法交换</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

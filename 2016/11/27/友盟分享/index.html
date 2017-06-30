@@ -1,0 +1,756 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="GitHub地址WBShare 1. SDK下载最新版本的SDK目前最新iOS社会化组件为SDK v6.1.0(2016-11-24)   如果同时勾选了下载示例DEMO，文件会比较大  运行示例代码  默认的分为普通文本、图片、视屏、音乐的分享  点击分享(如，这里选择sina)，跳到新浪的OAuth授权界面，输入微博账号和密码  输入内容 分享成功  小提示  默认对于视频和音乐的分享间隔时间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实用技术之友盟分享">
+<meta property="og:url" content="http://yoursite.com/2016/11/27/友盟分享/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="GitHub地址WBShare 1. SDK下载最新版本的SDK目前最新iOS社会化组件为SDK v6.1.0(2016-11-24)   如果同时勾选了下载示例DEMO，文件会比较大  运行示例代码  默认的分为普通文本、图片、视屏、音乐的分享  点击分享(如，这里选择sina)，跳到新浪的OAuth授权界面，输入微博账号和密码  输入内容 分享成功  小提示  默认对于视频和音乐的分享间隔时间">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-a2ff6b2027f6dbd6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-ee5a10563efd1e0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-1b6b99512e235078.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-ce0b10a2dd5deb90.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-ee1bf0650c311441.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-8732e92ec7c37082.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-901bbc7ecf3bfcfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-2e33b44e09e73186.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-e8f0251aeca35851.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-2c8bb32d94ae05cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-27T16:54:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实用技术之友盟分享">
+<meta name="twitter:description" content="GitHub地址WBShare 1. SDK下载最新版本的SDK目前最新iOS社会化组件为SDK v6.1.0(2016-11-24)   如果同时勾选了下载示例DEMO，文件会比较大  运行示例代码  默认的分为普通文本、图片、视屏、音乐的分享  点击分享(如，这里选择sina)，跳到新浪的OAuth授权界面，输入微博账号和密码  输入内容 分享成功  小提示  默认对于视频和音乐的分享间隔时间">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-a2ff6b2027f6dbd6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/27/友盟分享/"/>
+
+
+
+
+
+  <title>实用技术之友盟分享 | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/27/友盟分享/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">实用技术之友盟分享</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-27T15:47:17+08:00">
+                2016-11-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="GitHub地址"><a href="#GitHub地址" class="headerlink" title="GitHub地址"></a>GitHub地址</h2><p><a href="https://github.com/iithinker/WBShare" target="_blank" rel="external">WBShare</a></p>
+<h2 id="1-SDK"><a href="#1-SDK" class="headerlink" title="1. SDK"></a>1. SDK</h2><h3 id="下载最新版本的SDK"><a href="#下载最新版本的SDK" class="headerlink" title="下载最新版本的SDK"></a>下载最新版本的SDK</h3><p>目前最新iOS社会化组件为SDK v6.1.0<strong>(2016-11-24)</strong></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2329629-a2ff6b2027f6dbd6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="sdk"></p>
+<blockquote>
+<p>如果同时勾选了下载示例DEMO，文件会比较大</p>
+</blockquote>
+<h3 id="运行示例代码"><a href="#运行示例代码" class="headerlink" title="运行示例代码"></a>运行示例代码</h3><p><img src="http://upload-images.jianshu.io/upload_images/2329629-ee5a10563efd1e0f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="demo"></p>
+<blockquote>
+<p>默认的分为普通文本、图片、视屏、音乐的分享</p>
+</blockquote>
+<p>点击分享(如，这里选择sina)，跳到新浪的OAuth授权界面，输入微博<code>账号和密码</code></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2329629-1b6b99512e235078.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="OAuth"></p>
+<p>输入内容<br><img src="http://upload-images.jianshu.io/upload_images/2329629-ce0b10a2dd5deb90.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="content"></p>
+<p>分享成功<br><img src="http://upload-images.jianshu.io/upload_images/2329629-ee1bf0650c311441.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="shared"></p>
+<blockquote>
+<p>小提示</p>
+</blockquote>
+<p>默认对于视频和音乐的分享间隔时间有限制，不能频繁的分享视频和音乐</p>
+<h3 id="个性化"><a href="#个性化" class="headerlink" title="个性化"></a>个性化</h3><p>上面的默认分享显然是不满足开发需求的，如分享来源默认是<code>友盟</code>的链接</p>
+<h2 id="2-绑定第三方账号"><a href="#2-绑定第三方账号" class="headerlink" title="2. 绑定第三方账号"></a>2. 绑定第三方账号</h2><blockquote>
+<p>友盟的官方API对于如何使用已经说明的很详细了，具体操作可以参照其官方文档，此处列出其中的注意事项</p>
+</blockquote>
+<h2 id="项目配置"><a href="#项目配置" class="headerlink" title="项目配置"></a>项目配置</h2><p><code>Linker Flags</code> 设置链接参数</p>
+<blockquote>
+<p>-ObjC  <code>注意大小写</code></p>
+</blockquote>
+<p>问题: 如果项目使用的类库中只有某个类的分类,而没有该类的<code>原类</code>,则在链接时就找不到该分类(该分类不会加载到项目中,一旦调用该分类的方法就会崩溃,报<code>找不到方法</code>的错)</p>
+<blockquote>
+<p>解决办法: 在Other Linker Flags中添加-ObjC ,添加后,项目会将类库中所有和 OC 相关的文件进行加载,这样链接时就可以找到对应的实现</p>
+</blockquote>
+<h3 id="添加U-Share-SDK"><a href="#添加U-Share-SDK" class="headerlink" title="添加U-Share SDK"></a>添加U-Share SDK</h3><p>有两种添加的方式<br>1&gt; 通过拖拽的方式添加到工程<br>2&gt; 通过Cocoapods集成</p>
+<h2 id="3-绑定第三方账号"><a href="#3-绑定第三方账号" class="headerlink" title="3. 绑定第三方账号"></a>3. 绑定第三方账号</h2><p>1&gt; 真实开发需要在各社交平台创建自己的开发者账号及对应的应用,设置相关推广数据<br>2&gt; 如果使用<code>友盟</code>集成分享,还需要将第三方平台的账号信息和友盟进行绑定<br>3&gt; 配置各平台URL Scheme<br>4&gt; 配置适配 iOS9/10 Https&amp;跳转白名单</p>
+<h3 id="配置URL-Scheme"><a href="#配置URL-Scheme" class="headerlink" title="配置URL Scheme"></a>配置URL Scheme</h3><p>帮助文档中使用步骤说的很详细</p>
+<blockquote>
+<p>iOS9之后，需要在跳转白名单中设置第三方平台参数，这里如果没有用到的平台，可以在infor.plist中将其删除</p>
+</blockquote>
+<p>遇到的问题</p>
+<ul>
+<li>当使用其弹出分享面板的方法时报错:<br><code>No known class method for selectort showShareMenuViewInView:sharePlatformSelectionBlock:</code></li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/2329629-8732e92ec7c37082.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="undeclared"></p>
+<blockquote>
+<p>解决方法</p>
+</blockquote>
+<p>手动敲<code>show</code>关键字，替换该block块</p>
+<ul>
+<li>点击分享没有弹出分享控制面板，报异常:<code>There is no any valid platform</code></li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/2329629-901bbc7ecf3bfcfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="platform"></p>
+<blockquote>
+<p>原因：other link中-ObjC大小写错误:</p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/2329629-2e33b44e09e73186.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="other link"></p>
+<blockquote>
+<p>解决方法： 第三方类库的关联要使用正确的大小写：<code>-ObjC</code></p>
+</blockquote>
+<p><img src="http://upload-images.jianshu.io/upload_images/2329629-e8f0251aeca35851.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="right"></p>
+<p>之后便会跳到微博的OAuth授权页面，再输入正确的账号和密码就可以了，分享来源便不再是默认的<code>友盟</code></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2329629-2c8bb32d94ae05cf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="share"></p>
+<p>这里显示的是<code>未审核的应用</code>是由于开发者账号对应的APP未经过审核，如果通过审核，便会显示对应的APP</p>
+<h2 id="4-SSO单点登录"><a href="#4-SSO单点登录" class="headerlink" title="4. SSO单点登录"></a>4. SSO单点登录</h2><p>1&gt; 由于移动端OAuth授权存在<code>不安全性</code>,所以现在主流社交平台都采用了<code>SSO</code>的方式进行授权<br>2&gt; SSO授权条件: 必须安装对应平台的APP并且登录账号<br>3&gt; 友盟分享机制: </p>
+<ul>
+<li>1&gt; 如果检测到没有安装对应平台的移动端/没有登录该移动端,采用OAuth授权(当前版本不支持图片分享) </li>
+<li>2&gt; 否则,使用SSO授权</li>
+</ul>
+<p>4&gt; 移动端SSO的原理: <code>应用跳转</code><br>5&gt; SSO过程:</p>
+<ul>
+<li>1&gt; 开发者APP发起请求,跳转到新浪微博 APP</li>
+<li>2&gt; 新浪微博 APP去请求新浪服务器,进行功能调用</li>
+<li>3&gt; 调用完成后,回到开发者APP</li>
+</ul>
+<p>其他信息参考另一篇文章<a href="http://www.lsrain.com/2016/11/28/%E7%A4%BE%E4%BA%A4%E5%88%86%E4%BA%AB/" target="_blank" rel="external">社交分享</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/24/iOSAPP上架流程/" rel="next" title="iOS APP上架流程(未完结)">
+                <i class="fa fa-chevron-left"></i> iOS APP上架流程(未完结)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/28/社交分享/" rel="prev" title="社交分享">
+                社交分享 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GitHub地址"><span class="nav-number">1.</span> <span class="nav-text">GitHub地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-SDK"><span class="nav-number">2.</span> <span class="nav-text">1. SDK</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载最新版本的SDK"><span class="nav-number">2.1.</span> <span class="nav-text">下载最新版本的SDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行示例代码"><span class="nav-number">2.2.</span> <span class="nav-text">运行示例代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个性化"><span class="nav-number">2.3.</span> <span class="nav-text">个性化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-绑定第三方账号"><span class="nav-number">3.</span> <span class="nav-text">2. 绑定第三方账号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目配置"><span class="nav-number">4.</span> <span class="nav-text">项目配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#添加U-Share-SDK"><span class="nav-number">4.1.</span> <span class="nav-text">添加U-Share SDK</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-绑定第三方账号"><span class="nav-number">5.</span> <span class="nav-text">3. 绑定第三方账号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置URL-Scheme"><span class="nav-number">5.1.</span> <span class="nav-text">配置URL Scheme</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-SSO单点登录"><span class="nav-number">6.</span> <span class="nav-text">4. SSO单点登录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

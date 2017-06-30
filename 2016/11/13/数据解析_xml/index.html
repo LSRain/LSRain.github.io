@@ -1,0 +1,795 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="XML简介 XML出身名门,W3C制定,微软和IBM曾经共同大力推荐过的数据格式. XML指可扩展标记语言(Extensible Markup Language). 被设计用来传输和存储数据.在以前是常用的数据格式. 对比 : HTML超文本标记语言,是设计用来显示网页的.并不是保存数据和传输数据的方式.  XML格式 XML由标记组成,xml的标记是可扩展的,没有预定义.  &amp;lt;tag&amp;gt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据解析_xml">
+<meta property="og:url" content="http://yoursite.com/2016/11/13/数据解析_xml/index.html">
+<meta property="og:site_name" content="LSRain">
+<meta property="og:description" content="XML简介 XML出身名门,W3C制定,微软和IBM曾经共同大力推荐过的数据格式. XML指可扩展标记语言(Extensible Markup Language). 被设计用来传输和存储数据.在以前是常用的数据格式. 对比 : HTML超文本标记语言,是设计用来显示网页的.并不是保存数据和传输数据的方式.  XML格式 XML由标记组成,xml的标记是可扩展的,没有预定义.  &amp;lt;tag&amp;gt">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-42773393b9ba23cc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2329629-cb8eefb2610c1a06.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-11-13T04:32:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据解析_xml">
+<meta name="twitter:description" content="XML简介 XML出身名门,W3C制定,微软和IBM曾经共同大力推荐过的数据格式. XML指可扩展标记语言(Extensible Markup Language). 被设计用来传输和存储数据.在以前是常用的数据格式. 对比 : HTML超文本标记语言,是设计用来显示网页的.并不是保存数据和传输数据的方式.  XML格式 XML由标记组成,xml的标记是可扩展的,没有预定义.  &amp;lt;tag&amp;gt">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2329629-42773393b9ba23cc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/13/数据解析_xml/"/>
+
+
+
+
+
+  <title>数据解析_xml | LSRain</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LSRain</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/13/数据解析_xml/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LSRain">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LSRain">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据解析_xml</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-13T12:32:35+08:00">
+                2016-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="XML简介"><a href="#XML简介" class="headerlink" title="XML简介"></a>XML简介</h2><ul>
+<li><code>XML</code>出身名门,<code>W3C</code>制定,微软和IBM曾经共同大力推荐过的数据格式.</li>
+<li><code>XML</code>指可扩展标记语言(Extensible Markup Language).</li>
+<li>被设计用来传输和存储数据.在以前是常用的数据格式.</li>
+<li><strong>对比 :</strong> <code>HTML</code>超文本标记语言,是设计用来显示网页的.并不是保存数据和传输数据的方式.</li>
+</ul>
+<h3 id="XML格式"><a href="#XML格式" class="headerlink" title="XML格式"></a>XML格式</h3><ul>
+<li><p><code>XML</code>由标记组成,xml的标记是可扩展的,没有预定义.</p>
+</li>
+<li><p><code>&lt;tag&gt;</code>这就是标记.有开始标记和结束标记.例如 <code>&lt;tag&gt;</code>表示开始标记,<code>&lt;/tag&gt;</code>表示结束标记.是成对出现的.</p>
+</li>
+<li><p><strong>注意 :</strong> 一个<code>XML</code>文件有且只有一个根节点(标签).</p>
+</li>
+</ul>
+<h3 id="XML演练"><a href="#XML演练" class="headerlink" title="XML演练"></a>XML演练</h3><ul>
+<li>新建一个empty空文件,取名demo.xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!-- 描述几个学生 --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">Class</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- 用name和age标签描述学生 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">student</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>卡特琳娜<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">age</span>&gt;</span>21<span class="tag">&lt;/<span class="name">age</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">student</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">student</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>牛头<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">age</span>&gt;</span>22<span class="tag">&lt;/<span class="name">age</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">student</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- 标签中定义属性也可以描述学生 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">student</span> <span class="attr">name</span>=<span class="string">"卡尔萨斯"</span> <span class="attr">age</span>=<span class="string">"23"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">studet</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- 标签中定义属性描述学生的简写 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">student</span> <span class="attr">name</span>=<span class="string">"瑞兹"</span> <span class="attr">age</span>=<span class="string">"24"</span> /&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">Class</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="XML文件解析方式"><a href="#XML文件解析方式" class="headerlink" title="XML文件解析方式"></a>XML文件解析方式</h2><ul>
+<li>如果想获取到<code>XML</code>文件中保存的数据,需要将<code>XML</code>文件中的数据解析出来.</li>
+<li><code>SAX</code>方式解析和<code>DOM</code>方式解析</li>
+</ul>
+<h3 id="SAX方式解析XML"><a href="#SAX方式解析XML" class="headerlink" title="SAX方式解析XML"></a>SAX方式解析XML</h3><ul>
+<li>苹果官方提供的原生的解析<code>XML</code>文件的方式</li>
+<li>在iOS上解析<code>XML</code>文件的方式.</li>
+<li>速度快,内存占用小.</li>
+<li>是只读的,只能读取<code>XML</code>文件数据不能做修改操作.</li>
+</ul>
+<h3 id="DOM方式解析XML"><a href="#DOM方式解析XML" class="headerlink" title="DOM方式解析XML"></a>DOM方式解析XML</h3><ul>
+<li>是在<code>MAC</code>使用的解析方式.</li>
+<li>注意 : <strong>内存消耗极大,不适用于手机</strong>.</li>
+<li>可以读写<code>XML</code>文件.</li>
+<li>iPhone无法直接使用<code>DOM</code>方式解析<code>XML</code>.</li>
+<li>如果要在iPhone上使用<code>DOM</code>方式解析<code>XML</code>文件,可以使用第三方框架.</li>
+</ul>
+<h2 id="SAX方式解析XML之加载XML数据"><a href="#SAX方式解析XML之加载XML数据" class="headerlink" title="SAX方式解析XML之加载XML数据"></a>SAX方式解析XML之加载XML数据</h2><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)loadXMLData</div><div class="line">&#123;</div><div class="line">    <span class="comment">// URL</span></div><div class="line">    <span class="built_in">NSURL</span> *URL = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"http://localhost/videos.xml"</span>];</div><div class="line"></div><div class="line">    <span class="comment">// 发起任务</span></div><div class="line">    [[[<span class="built_in">NSURLSession</span> sharedSession] dataTaskWithURL:URL completionHandler:^(<span class="built_in">NSData</span> * _Nullable data, <span class="built_in">NSURLResponse</span> * _Nullable response, <span class="built_in">NSError</span> * _Nullable error) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 处理错误</span></div><div class="line">        <span class="keyword">if</span> (error == <span class="literal">nil</span> &amp;&amp; data != <span class="literal">nil</span>) &#123;</div><div class="line"></div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,data);</div><div class="line"></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,error);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;] resume];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="SAX方式解析XML之代理方法"><a href="#SAX方式解析XML之代理方法" class="headerlink" title="SAX方式解析XML之代理方法"></a>SAX方式解析XML之代理方法</h2><h3 id="SAX方式解析XML步骤"><a href="#SAX方式解析XML步骤" class="headerlink" title="SAX方式解析XML步骤"></a>SAX方式解析XML步骤</h3><ul>
+<li>创建<code>XML</code>文件解析器.</li>
+<li>遵守解析器的代理协议.</li>
+<li>启动解析器,开始解析.</li>
+</ul>
+<blockquote>
+<p><code>XML</code>文件的解析是在代理方法中完成的.需要实现以下代理方法.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">1.开始解析`XML`文件.</div><div class="line">2.找开始节点(标签).</div><div class="line">3.找节点之间的内容.</div><div class="line">4.找结束节点.</div><div class="line">5.结束解析`XML`文件.</div><div class="line">6.监听`XML`文件是否解析出错.</div></pre></td></tr></table></figure>
+<h3 id="SAX方式解析XML实现"><a href="#SAX方式解析XML实现" class="headerlink" title="SAX方式解析XML实现"></a>SAX方式解析XML实现</h3><p><strong> 1. 拿到二进制的<code>XML</code>数据之后,创建<code>XML</code>解析器,设置代理,启动解析器.</strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)loadXMLData</div><div class="line">&#123;</div><div class="line">    <span class="comment">// URL</span></div><div class="line">    <span class="built_in">NSURL</span> *URL = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"http://localhost/videos.xml"</span>];</div><div class="line"></div><div class="line">    <span class="comment">// 发起任务</span></div><div class="line">    [[[<span class="built_in">NSURLSession</span> sharedSession] dataTaskWithURL:URL completionHandler:^(<span class="built_in">NSData</span> * _Nullable data, <span class="built_in">NSURLResponse</span> * _Nullable response, <span class="built_in">NSError</span> * _Nullable error) &#123;</div><div class="line"></div><div class="line">        <span class="comment">// 处理错误</span></div><div class="line">        <span class="keyword">if</span> (error == <span class="literal">nil</span> &amp;&amp; data != <span class="literal">nil</span>) &#123;</div><div class="line"></div><div class="line">            <span class="comment">// 1.创建XML解析器</span></div><div class="line">            <span class="built_in">NSXMLParser</span> *parser = [[<span class="built_in">NSXMLParser</span> alloc] initWithData:data];</div><div class="line"></div><div class="line">            <span class="comment">// 2.遵守XML解析器代理</span></div><div class="line">            parser.delegate = <span class="keyword">self</span>;</div><div class="line"></div><div class="line">            <span class="comment">// 3.开始解析</span></div><div class="line">            [parser parse];</div><div class="line"></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,error);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;] resume];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong> 2.实现代理方法 </strong></p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 1.开始解析文档</span></div><div class="line">- (<span class="keyword">void</span>)parserDidStartDocument:(<span class="built_in">NSXMLParser</span> *)parser</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"1.开始解析文档 %@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 2.找开始节点</span></div><div class="line">- (<span class="keyword">void</span>)parser:(<span class="built_in">NSXMLParser</span> *)parser didStartElement:(<span class="built_in">NSString</span> *)elementName namespaceURI:(<span class="built_in">NSString</span> *)namespaceURI qualifiedName:(<span class="built_in">NSString</span> *)qName attributes:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *,<span class="built_in">NSString</span> *&gt; *)attributeDict</div><div class="line">&#123;</div><div class="line">    <span class="comment">// elementName : 开始节点</span></div><div class="line">    <span class="comment">// attributeDict : 节点属性</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"2.找开始节点 %@--%@"</span>,elementName,attributeDict);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 3.找节点之间的内容</span></div><div class="line">- (<span class="keyword">void</span>)parser:(<span class="built_in">NSXMLParser</span> *)parser foundCharacters:(<span class="built_in">NSString</span> *)string</div><div class="line">&#123;</div><div class="line">    <span class="comment">// string : 节点之间的内容.</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"3.找节点之间的内容 %@"</span>,string);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 4.找结束节点</span></div><div class="line">- (<span class="keyword">void</span>)parser:(<span class="built_in">NSXMLParser</span> *)parser didEndElement:(<span class="built_in">NSString</span> *)elementName namespaceURI:(<span class="built_in">NSString</span> *)namespaceURI qualifiedName:(<span class="built_in">NSString</span> *)qName</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"4.找结束节点 %@"</span>,elementName);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 5.结束解析文档</span></div><div class="line">- (<span class="keyword">void</span>)parserDidEndDocument:(<span class="built_in">NSXMLParser</span> *)parser</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"5.结束解析文档"</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 6.监听解析是否出错</span></div><div class="line">- (<span class="keyword">void</span>)parser:(<span class="built_in">NSXMLParser</span> *)parser parseErrorOccurred:(<span class="built_in">NSError</span> *)parseError</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"6.监听解析是否出错 %@"</span>,parseError);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><ul>
+<li>通过代理方法中的<code>NSLog</code>,可以了解到解析<code>XML</code>文件中数据的过程.</li>
+<li>以上步骤,<code>2---&gt;3---&gt;4</code>,会不断循环,一直到所有数据解析完成.</li>
+<li><code>节点之间的内容</code>并不是一次就能找全的,有时候需要循环多次才能找全.</li>
+<li>如果解析数据量非常大的<code>XML</code>文件是很耗时的.当在哪个线程设置了代理协议,就在哪个线程中解析.</li>
+</ul>
+<h2 id="SAX方式解析XML之转模型"><a href="#SAX方式解析XML之转模型" class="headerlink" title="SAX方式解析XML之转模型"></a>SAX方式解析XML之转模型</h2><h3 id="准备模型类"><a href="#准备模型类" class="headerlink" title="准备模型类"></a>准备模型类</h3><ul>
+<li>.h文件中的声明</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VideoModel</span> : <span class="title">NSObject</span></span></div><div class="line"></div><div class="line"><span class="comment">/// 视频编号</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>) <span class="built_in">NSString</span> *videoId;</div><div class="line"><span class="comment">/// 视频名称</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;</div><div class="line"><span class="comment">/// 视频长度</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>) <span class="built_in">NSString</span> *length;</div><div class="line"><span class="comment">/// 视频链接</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>) <span class="built_in">NSString</span> *videoURL;</div><div class="line"><span class="comment">/// 视频图标</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>) <span class="built_in">NSString</span> *imageURL;</div><div class="line"><span class="comment">/// 视频标题</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>) <span class="built_in">NSString</span> *desc;</div><div class="line"><span class="comment">/// 视频作者</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>) <span class="built_in">NSString</span> *teacher;</div><div class="line"></div><div class="line"><span class="comment">/// 字典转模型 : 解析XML的时候,没有字典,所以这个不需要</span></div><div class="line"><span class="comment">//+ (instancetype)videoWithDict:(NSDictionary *)dict;</span></div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> &lt;video videoId="1"&gt;</div><div class="line"> &lt;name&gt;01.C语言-语法预览&lt;/name&gt;</div><div class="line"> &lt;length&gt;320&lt;/length&gt;</div><div class="line"> &lt;videoURL&gt;/lsrain/videos/01.C语言-语法预览.mp4&lt;/videoURL&gt;</div><div class="line"> &lt;imageURL&gt;/lsrain/images/head1.png&lt;/imageURL&gt;</div><div class="line"> &lt;desc&gt;C语言-语法预览&lt;/desc&gt;</div><div class="line"> &lt;teacher&gt;李雷&lt;/teacher&gt;</div><div class="line"> &lt;/video&gt;</div><div class="line"> */</div></pre></td></tr></table></figure>
+<ul>
+<li>.m文件中的实现</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">VideoModel</span></span></div><div class="line"></div><div class="line"><span class="comment">/// 无用处</span></div><div class="line">+ (<span class="keyword">instancetype</span>)videoWithDict:(<span class="built_in">NSDictionary</span> *)dict</div><div class="line">&#123;</div><div class="line">    <span class="comment">// 创建模型对象</span></div><div class="line">    VideoModel *v = [[VideoModel alloc] init];</div><div class="line"></div><div class="line">    <span class="comment">// KVC 字典转模型</span></div><div class="line">    [v setValuesForKeysWithDictionary:dict];</div><div class="line"></div><div class="line">    <span class="comment">// 返回模型对象</span></div><div class="line">    <span class="keyword">return</span> v;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/// 打印模型的详细内容</span></div><div class="line">- (<span class="built_in">NSString</span> *)description</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"&lt;%@ : %p&gt; &#123; videoId : %@, name : %@, length : %@, videoURL : %@, imageURL : %@, desc : %@, teacher : %@&#125;"</span>, [<span class="keyword">self</span> <span class="keyword">class</span>], <span class="keyword">self</span>, <span class="keyword">self</span>.videoId, <span class="keyword">self</span>.name, <span class="keyword">self</span>.length, <span class="keyword">self</span>.videoURL, <span class="keyword">self</span>.imageURL, <span class="keyword">self</span>.desc, <span class="keyword">self</span>.teacher];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<h3 id="解析XML文件"><a href="#解析XML文件" class="headerlink" title="解析XML文件"></a>解析XML文件</h3><blockquote>
+<p>将<code>XML</code>文件中的数据读取出来,转换成可以直接使用的模型数据.</p>
+</blockquote>
+<ul>
+<li><code>XML</code>数据转模型数据的准备工作</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ViewController</span> () &lt;<span class="title">NSXMLParserDelegate</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">/// video对应的模型对象</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">strong</span>) VideoModel *currentVideo;</div><div class="line"><span class="comment">/// 拼接节点之间内容的字符串</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>) <span class="built_in">NSMutableString</span> *stringM;</div><div class="line"><span class="comment">/// 模型数组</span></div><div class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">strong</span>) <span class="built_in">NSMutableArray</span> *videoM;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ViewController</span></span></div><div class="line"></div><div class="line">- (<span class="built_in">NSMutableString</span> *)stringM</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (_stringM == <span class="literal">nil</span>) &#123;</div><div class="line">        _stringM = [<span class="built_in">NSMutableString</span> string];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> _stringM;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (<span class="built_in">NSMutableArray</span> *)videoM</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (_videoM == <span class="literal">nil</span>) &#123;</div><div class="line">        _videoM = [<span class="built_in">NSMutableArray</span> array];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> _videoM;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="实现代理方法"><a href="#实现代理方法" class="headerlink" title="实现代理方法"></a>实现代理方法</h3><ul>
+<li>1.开始解析文档</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)parserDidStartDocument:(<span class="built_in">NSXMLParser</span> *)parser</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"1.开始解析文档 %@"</span>,[<span class="built_in">NSThread</span> currentThread]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>2.找开始节点</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)parser:(<span class="built_in">NSXMLParser</span> *)parser didStartElement:(<span class="built_in">NSString</span> *)elementName namespaceURI:(<span class="built_in">NSString</span> *)namespaceURI qualifiedName:(<span class="built_in">NSString</span> *)qName attributes:(<span class="built_in">NSDictionary</span>&lt;<span class="built_in">NSString</span> *,<span class="built_in">NSString</span> *&gt; *)attributeDict</div><div class="line">&#123;</div><div class="line">    <span class="comment">// elementName : 开始节点</span></div><div class="line">    <span class="comment">// attributeDict : 节点属性</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"2.找开始节点 %@--%@"</span>,elementName,attributeDict);</div><div class="line"></div><div class="line">    <span class="comment">// 每找到一个video节点(标签),就创建一个对应的模型对象</span></div><div class="line">    <span class="keyword">if</span> ([elementName isEqualToString:<span class="string">@"video"</span>]) &#123;</div><div class="line">        <span class="comment">// 创建video标签对应的模型对象</span></div><div class="line">        <span class="keyword">self</span>.currentVideo = [[VideoModel alloc] init];</div><div class="line">        <span class="comment">// 拿到标签的属性,可以给模型的videoId属性赋值</span></div><div class="line">        <span class="keyword">self</span>.currentVideo.videoId = attributeDict[<span class="string">@"videoId"</span>];</div><div class="line">        <span class="comment">// 将模型对象添加到模型数组中</span></div><div class="line">        [<span class="keyword">self</span>.videoM addObject:<span class="keyword">self</span>.currentVideo];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>3.找节点之间的内容</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)parser:(<span class="built_in">NSXMLParser</span> *)parser foundCharacters:(<span class="built_in">NSString</span> *)string</div><div class="line">&#123;</div><div class="line">    <span class="comment">// string : 节点之间的内容.(内容不会一次性找全)</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"3.找节点之间的内容 %@"</span>,string);</div><div class="line"></div><div class="line">    <span class="comment">// 拼接节点之间的字符串</span></div><div class="line">    [<span class="keyword">self</span>.stringM appendString:string];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>4.找结束节点</p>
+</li>
+<li><p><strong>注意 : </strong> 在KVC给模型的属性赋值的过程中,一定要排除<code>videos</code>和<code>video</code>两个节点.因为这两个节点不需要转模型,且在模型类中没有对应的属性值.不排除掉,KVC在赋值过程中程序会崩溃.</p>
+</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)parser:(<span class="built_in">NSXMLParser</span> *)parser didEndElement:(<span class="built_in">NSString</span> *)elementName namespaceURI:(<span class="built_in">NSString</span> *)namespaceURI qualifiedName:(<span class="built_in">NSString</span> *)qName</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"4.找结束节点 %@"</span>,elementName);</div><div class="line"></div><div class="line">    <span class="comment">// 找到了结束节点,说明节点之间的内容已经获取到了,就可以给模型的属性赋值了</span></div><div class="line">    <span class="comment">// 如果要在这个方法里面获取到模型,那么模型需要定义成全局的</span></div><div class="line">    <span class="comment">// 一定要排除`videos`和`video`两个节点,这两个节点不需要转模型</span></div><div class="line">    <span class="keyword">if</span> (![elementName isEqualToString:<span class="string">@"videos"</span>]&amp;&amp;![elementName isEqualToString:<span class="string">@"video"</span>]) &#123;</div><div class="line">        [<span class="keyword">self</span>.currentVideo setValue:<span class="keyword">self</span>.stringM forKey:elementName];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>5.结束解析文档</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)parserDidEndDocument:(<span class="built_in">NSXMLParser</span> *)parser</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"5.结束解析文档"</span>);</div><div class="line"></div><div class="line">    <span class="comment">// 打印全部模型</span></div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,<span class="keyword">self</span>.videoM);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>6.监听解析是否出错</li>
+</ul>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (<span class="keyword">void</span>)parser:(<span class="built_in">NSXMLParser</span> *)parser parseErrorOccurred:(<span class="built_in">NSError</span> *)parseError</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"6.监听解析是否出错 %@"</span>,parseError);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="结论-1"><a href="#结论-1" class="headerlink" title="结论"></a>结论</h3><ul>
+<li><p>不能按照<code>字典转模型</code>的逻辑来处理<code>XML转模型</code>.解析<code>XML</code>数据的过程中没有字典.</p>
+</li>
+<li><p>每个<code>video标签</code>就是描述一个视频的.每个<code>模型对象</code>也是用来描述一个视频的.所以每找到一个<code>video标签</code>就要创建一个对应的<code>模型对象.</code>模型对象属性赋值会在多个代理方法中进行赋值.所以需要定义成<code>全局的模型对象</code>.</p>
+</li>
+<li><p><code>节点之间的内容</code>有时候不会一次性就找全,所以需要多次<code>拼接字符串</code>,而且要在<code>找结束节点</code>代理方法中使用,所以也要定义成<code>全局的可变字符串</code>.</p>
+</li>
+<li><p>为了能够打印出所有的模型对象,需要将模型对象添加到数组中.</p>
+</li>
+</ul>
+<h3 id="没有清空供拼接的可变字符串"><a href="#没有清空供拼接的可变字符串" class="headerlink" title="没有清空供拼接的可变字符串"></a>没有清空供拼接的可变字符串</h3><p><img src="http://upload-images.jianshu.io/upload_images/2329629-42773393b9ba23cc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="没有清空可变字符串.png"></p>
+<ul>
+<li><p>问题 : <code>节点之间的内容</code>重复拼接了.</p>
+</li>
+<li><p>解决 : 在拼接下一个节点之间的内容之前,给模型属性付完值之后,将供拼接的可变字符串清空.</p>
+</li>
+</ul>
+<h3 id="清空供拼接的可变字符串"><a href="#清空供拼接的可变字符串" class="headerlink" title="清空供拼接的可变字符串"></a>清空供拼接的可变字符串</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 4.找结束节点</span></div><div class="line">- (<span class="keyword">void</span>)parser:(<span class="built_in">NSXMLParser</span> *)parser didEndElement:(<span class="built_in">NSString</span> *)elementName namespaceURI:(<span class="built_in">NSString</span> *)namespaceURI qualifiedName:(<span class="built_in">NSString</span> *)qName</div><div class="line">&#123;</div><div class="line">    <span class="built_in">NSLog</span>(<span class="string">@"4.找结束节点 %@"</span>,elementName);</div><div class="line"></div><div class="line">    <span class="comment">// 找到了结束节点,说明节点之间的内容已经获取到了,就可以给模型的属性赋值了</span></div><div class="line">    <span class="comment">// 如果要在这个方法里面获取到模型,那么模型需要定义成全局的</span></div><div class="line">    <span class="comment">// 一定要排除`videos`和`video`两个节点,这两个节点不需要转模型</span></div><div class="line">    <span class="keyword">if</span> (![elementName isEqualToString:<span class="string">@"videos"</span>]&amp;&amp;![elementName isEqualToString:<span class="string">@"video"</span>]) &#123;</div><div class="line">        [<span class="keyword">self</span>.currentVideo setValue:<span class="keyword">self</span>.stringM forKey:elementName];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 给模型属性赋值完成之后,需要清空字符串.</span></div><div class="line">    [<span class="keyword">self</span>.stringM setString:<span class="string">@""</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/2329629-cb8eefb2610c1a06.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="清空可变字符串.png"><br>images/清空可变字符串.png)</p>
+<ul>
+<li><strong>注意 : </strong> 多次拼接完<code>节点之间的内容</code>,且在<code>找结束节点</code>代理方法中,给模型属性赋值完成之后,需要清空这个用于拼接的可变字符串.否则,会c重复拼接字符串,即将<code>上一个节点之间的内容</code>继续拼接到<code>下一个节点之间的内容</code>前面.</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/13/数据解析_json/" rel="next" title="数据解析_json">
+                <i class="fa fa-chevron-left"></i> 数据解析_json
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/13/SQLite/" rel="prev" title="SQLite">
+                SQLite <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="LSRain" />
+          <p class="site-author-name" itemprop="name">LSRain</p>
+           
+              <p class="site-description motion-element" itemprop="description">精于心，简于形</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#XML简介"><span class="nav-number">1.</span> <span class="nav-text">XML简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#XML格式"><span class="nav-number">1.1.</span> <span class="nav-text">XML格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XML演练"><span class="nav-number">1.2.</span> <span class="nav-text">XML演练</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML文件解析方式"><span class="nav-number">2.</span> <span class="nav-text">XML文件解析方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SAX方式解析XML"><span class="nav-number">2.1.</span> <span class="nav-text">SAX方式解析XML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM方式解析XML"><span class="nav-number">2.2.</span> <span class="nav-text">DOM方式解析XML</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SAX方式解析XML之加载XML数据"><span class="nav-number">3.</span> <span class="nav-text">SAX方式解析XML之加载XML数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SAX方式解析XML之代理方法"><span class="nav-number">4.</span> <span class="nav-text">SAX方式解析XML之代理方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SAX方式解析XML步骤"><span class="nav-number">4.1.</span> <span class="nav-text">SAX方式解析XML步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SAX方式解析XML实现"><span class="nav-number">4.2.</span> <span class="nav-text">SAX方式解析XML实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结论"><span class="nav-number">4.3.</span> <span class="nav-text">结论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SAX方式解析XML之转模型"><span class="nav-number">5.</span> <span class="nav-text">SAX方式解析XML之转模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备模型类"><span class="nav-number">5.1.</span> <span class="nav-text">准备模型类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析XML文件"><span class="nav-number">5.2.</span> <span class="nav-text">解析XML文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现代理方法"><span class="nav-number">5.3.</span> <span class="nav-text">实现代理方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结论-1"><span class="nav-number">5.4.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#没有清空供拼接的可变字符串"><span class="nav-number">5.5.</span> <span class="nav-text">没有清空供拼接的可变字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#清空供拼接的可变字符串"><span class="nav-number">5.6.</span> <span class="nav-text">清空供拼接的可变字符串</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LSRain</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
